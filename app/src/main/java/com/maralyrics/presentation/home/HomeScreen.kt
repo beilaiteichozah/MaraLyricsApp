@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -98,20 +95,44 @@ fun HomeScreen(
                         }
                     }
 
-                    item {
-                        SongSection(
-                            title = stringResource(R.string.popular_songs),
-                            songs = state?.popular ?: emptyList(),
-                            onSongClick = onSongClick
-                        )
+                    if (state?.popular?.isNotEmpty() == true) {
+                        item {
+                            SongSection(
+                                title = stringResource(R.string.popular_songs),
+                                songs = state?.popular ?: emptyList(),
+                                onSongClick = onSongClick
+                            )
+                        }
                     }
 
-                    item {
-                        SongSection(
-                            title = stringResource(R.string.random_suggestions),
-                            songs = state?.random ?: emptyList(),
-                            onSongClick = onSongClick
-                        )
+                    if (state?.random?.isNotEmpty() == true) {
+                        item {
+                            SongSection(
+                                title = stringResource(R.string.random_suggestions),
+                                songs = state?.random ?: emptyList(),
+                                onSongClick = onSongClick
+                            )
+                        }
+                    }
+
+                    if (state?.recentlyViewed?.isEmpty() == true && 
+                        state?.favorites?.isEmpty() == true && 
+                        state?.popular?.isEmpty() == true && 
+                        state?.random?.isEmpty() == true) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 32.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "No songs found in this category: ${state?.category?.name}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                )
+                            }
+                        }
                     }
                 }
             }
