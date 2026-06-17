@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Mara Lyrics</string>
+
+    <!-- Setup -->
+    <string name="setup_welcome">Welcome to Mara Lyrics</string>
+    <string name="setup_description">Your spiritual companion in Mara language.</string>
+    <string name="setup_language_title">Select Language</string>
+    <string name="setup_category_title">Select Default Category</string>
+    <string name="setup_download_title">Downloading Database</string>
+    <string name="setup_download_desc">Downloading songs for offline use. This might take a minute.</string>
+    <string name="setup_category_desc">Choose your preferred category. This can be changed later in settings.</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_get_started">Get Started</string>
+    <string name="btn_finish">Finish</string>
+
+    <!-- Home -->
+    <string name="home_title">Mara Lyrics</string>
+    <string name="search_hint">Search title, lyrics or number…</string>
+    <string name="recently_viewed">Recently Viewed</string>
+    <string name="favorite_songs">Favorite Songs</string>
+    <string name="popular_songs">Popular Songs</string>
+    <string name="random_suggestions">Random Suggestions</string>
+    <string name="no_recent_songs">No recent songs. Start exploring!</string>
+    <string name="no_favorites">You haven\'t added any favorites yet.</string>
+    <string name="view_all">View All</string>
+    <string name="categories">Categories</string>
+
+    <!-- Categories -->
+    <string name="cat_gospel">Gospel</string>
+    <string name="cat_love">Love</string>
+    <string name="cat_patriotic">Patriotic</string>
+    <string name="cat_traditional">Traditional</string>
+
+    <!-- Song Detail -->
+    <string name="song_number">Song #%1$d</string>
+    <string name="lyrics_copied">Lyrics copied to clipboard</string>
+    <string name="share_lyrics">Share Lyrics</string>
+    <string name="font_size">Font Size</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="set_language">App Language</string>
+    <string name="set_theme">App Theme</string>
+    <string name="set_theme_light">Light</string>
+    <string name="set_theme_dark">Dark</string>
+    <string name="set_theme_system">System Default</string>
+    <string name="set_default_cat">Default Category</string>
+    <string name="set_offline_data">Offline Data</string>
+    <string name="total_songs">Total Stored Songs</string>
+    <string name="db_size">Database Size</string>
+    <string name="last_sync">Last Sync Date</string>
+    <string name="app_version">App Version</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="redownload_db">Re-download Database</string>
+    <string name="clear_data">Clear Offline Data</string>
+    <string name="clear_data_confirm">Are you sure you want to clear all offline data? You will need an internet connection to download it again.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
+    <!-- Sync -->
+    <string name="sync_available_title">Updates Available</string>
+    <string name="sync_available_msg">New song updates are available. Download for offline use?</string>
+    <string name="sync_later">Later</string>
+    <string name="sync_download">Download</string>
+    <string name="sync_complete">Sync completed successfully!</string>
+    <string name="sync_failed">Sync failed. Please check your connection.</string>
+    <string name="sync_progress">%1$d songs downloaded</string>
+    <string name="sync_remaining">Estimated: %1$d seconds remaining</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Mara Lyrics</string>
+
+    <!-- Setup -->
+    <string name="setup_welcome">Mara Lyrics lâ na vaw tlô na</string>
+    <string name="setup_description">Mara reih ta thlahpahliana hla bu.</string>
+    <string name="setup_language_title">Reih tlyhna</string>
+    <string name="setup_category_title">Hla phu tlyhna</string>
+    <string name="setup_download_title">Hla download liahmaoh</string>
+    <string name="btn_get_started">Pathao ah</string>
+    <!-- Add more translations here as needed -->
+</resources>
