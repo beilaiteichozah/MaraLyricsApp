@@ -16,12 +16,22 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.R
 import com.maralyrics.presentation.MainViewModel
+import com.maralyrics.presentation.common.notification.NotificationHost
+import com.maralyrics.presentation.common.notification.NotificationManager
 import com.maralyrics.presentation.navigation.MaraLyricsNavHost
 import com.maralyrics.presentation.theme.MaraLyricsTheme
+import com.maralyrics.utils.ConnectivityObserver
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
+
+    @Inject
+    lateinit var connectivityObserver: ConnectivityObserver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -32,8 +42,11 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = hiltViewModel()
             val isReady by viewModel.isReady.collectAsState()
             val theme by viewModel.theme.collectAsState()
+            val colorTheme by viewModel.colorTheme.collectAsState()
             val isSetupComplete by viewModel.isSetupComplete.collectAsState()
             val syncAvailable by viewModel.syncAvailable.collectAsState()
+            
+            val networkStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
             
             var showSyncDialog by remember { mutableStateOf(false) }
             
@@ -41,12 +54,25 @@ class MainActivity : ComponentActivity() {
                 if (syncAvailable) showSyncDialog = true
             }
 
+            LaunchedEffect(networkStatus) {
+                when (networkStatus) {
+                    ConnectivityObserver.Status.Available -> notificationManager.showOnline()
+                    ConnectivityObserver.Status.Lost, ConnectivityObserver.Status.Unavailable -> {
+                        if (isSetupComplete) {
+                            notificationManager.showOffline()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+
             splashScreen.setKeepOnScreenCondition { !isReady }
 
-            MaraLyricsTheme(theme = theme) {
+            MaraLyricsTheme(theme = theme, colorTheme = colorTheme) {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     if (isReady) {
                         MaraLyricsNavHost(isSetupComplete = isSetupComplete)
+                        NotificationHost(manager = notificationManager)
                         
                         if (showSyncDialog) {
                             AlertDialog(

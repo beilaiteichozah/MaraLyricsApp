@@ -4,11 +4,11 @@
     <selectionStates>
       <SelectionState runConfigName="Mara Lyrics">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-17T14:52:12.394316600Z">
+        <DropdownSelection timestamp="2026-06-20T02:11:51.625854400Z">
           <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R5CY827SVTP" />
-            </handle>
+            <template>
+              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=pa3q/36" />
+            </template>
           </Target>
         </DropdownSelection>
         <DialogSelection>

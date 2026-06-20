@@ -17,7 +17,7 @@ class SyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            val result = syncDatabaseUseCase.checkAndSync()
+            val result = syncDatabaseUseCase.checkAndSync(isAutomatic = true)
             if (result.isSuccess) {
                 Result.success()
             } else {

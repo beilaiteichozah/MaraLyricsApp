@@ -1,29 +1,40 @@
 package com.maralyrics.presentation.setup
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.R
 import com.maralyrics.domain.model.AppLanguage
-import com.maralyrics.domain.model.SongCategory
 
 @Composable
 fun SetupScreen(
     viewModel: SetupViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -35,13 +46,36 @@ fun SetupScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(32.dp))
+            
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(id = R.drawable.mara_lyrics_logo),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(24.dp))
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 text = stringResource(R.string.setup_welcome),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
+                ),
                 textAlign = TextAlign.Center
             )
             
-            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = stringResource(R.string.setup_description),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
 
             Box(modifier = Modifier.weight(1f)) {
                 AnimatedContent(
@@ -68,27 +102,52 @@ fun SetupScreen(
                         2 -> DownloadStep(
                             progress = uiState.downloadProgress,
                             error = uiState.error,
-                            isComplete = uiState.isDownloadComplete
+                            isComplete = uiState.isDownloadComplete,
+                            isOnline = uiState.isOnline,
+                            onRetry = viewModel::retryDownload,
+                            onCheckInternet = {
+                                context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+                            },
+                            onContinueOffline = viewModel::continueOffline
                         )
                     }
                 }
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (uiState.currentStep > 0 && uiState.currentStep < 2) {
-                    TextButton(onClick = viewModel::previousStep) {
-                        Text(stringResource(R.string.btn_back))
+                    TextButton(
+                        onClick = viewModel::previousStep,
+                        modifier = Modifier.height(56.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.btn_back),
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                 } else {
                     Spacer(modifier = Modifier.width(1.dp))
                 }
 
                 if (uiState.currentStep < 2) {
-                    Button(onClick = viewModel::nextStep) {
-                        Text(stringResource(R.string.btn_next))
+                    Button(
+                        onClick = viewModel::nextStep,
+                        modifier = Modifier
+                            .height(56.dp)
+                            .padding(start = 16.dp)
+                            .weight(1f),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.btn_next),
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                        )
                     }
                 }
             }
@@ -104,32 +163,37 @@ fun LanguageStep(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.setup_language_title),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(Modifier.selectableGroup()) {
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier.selectableGroup(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             AppLanguage.entries.forEach { language ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .selectable(
-                            selected = (language == selectedLanguage),
-                            onClick = { onLanguageSelected(language) },
-                            role = Role.RadioButton
-                        )
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                val isSelected = language == selectedLanguage
+                Surface(
+                    onClick = { onLanguageSelected(language) },
+                    shape = RoundedCornerShape(16.dp),
+                    color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    border = if (isSelected) null else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    RadioButton(
-                        selected = (language == selectedLanguage),
-                        onClick = null
-                    )
-                    Text(
-                        text = if (language == AppLanguage.MARA) "Mara" else "English",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = null
+                        )
+                        Text(
+                            text = if (language == AppLanguage.MARA) "Mara (Native)" else "English",
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
                 }
             }
         }
@@ -138,44 +202,51 @@ fun LanguageStep(
 
 @Composable
 fun CategoryStep(
-    selectedCategory: SongCategory,
-    onCategorySelected: (SongCategory) -> Unit
+    selectedCategory: String,
+    onCategorySelected: (String) -> Unit
 ) {
+    val categories = listOf("Gospel", "Love", "Patriotic", "Traditional")
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.setup_category_title),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
         Text(
             text = stringResource(R.string.setup_category_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(Modifier.selectableGroup()) {
-            SongCategory.entries.forEach { category ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .selectable(
-                            selected = (category == selectedCategory),
-                            onClick = { onCategorySelected(category) },
-                            role = Role.RadioButton
-                        )
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier.selectableGroup(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            categories.forEach { category ->
+                val isSelected = category == selectedCategory
+                Surface(
+                    onClick = { onCategorySelected(category) },
+                    shape = RoundedCornerShape(16.dp),
+                    color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                    border = if (isSelected) null else androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    RadioButton(
-                        selected = (category == selectedCategory),
-                        onClick = null
-                    )
-                    Text(
-                        text = category.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = null
+                        )
+                        Text(
+                            text = category,
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
                 }
             }
         }
@@ -186,49 +257,117 @@ fun CategoryStep(
 fun DownloadStep(
     progress: com.maralyrics.domain.model.DownloadProgress?,
     error: String?,
-    isComplete: Boolean
+    isComplete: Boolean,
+    isOnline: Boolean,
+    onRetry: () -> Unit,
+    onCheckInternet: () -> Unit,
+    onContinueOffline: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = stringResource(R.string.setup_download_title),
-            style = MaterialTheme.typography.titleLarge
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        if (error != null) {
-            Text(text = "Error: $error", color = MaterialTheme.colorScheme.error)
-        } else if (isComplete) {
-            Text(text = stringResource(R.string.sync_complete))
+        if (!isOnline && !isComplete && progress == null) {
             Icon(
-                imageVector = Icons.Filled.CheckCircle,
+                imageVector = Icons.Default.CloudOff,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier.size(80.dp),
+                tint = MaterialTheme.colorScheme.error
             )
-        } else {
-            LinearProgressIndicator(
-                progress = { progress?.percentage?.div(100f) ?: 0f },
-                modifier = Modifier.fillMaxWidth().height(8.dp),
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = stringResource(
-                    R.string.sync_progress,
-                    progress?.downloadedSongs ?: 0
-                )
+                text = "Connection Required",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
             )
-            if (progress != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Mara Lyrics needs an internet connection for the initial download of the song database.",
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = onCheckInternet,
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Wifi, contentDescription = null)
+                Spacer(modifier = Modifier.width(12.dp))
+                Text("Check Internet Settings")
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedButton(
+                onClick = onContinueOffline,
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("Continue Offline (Demo mode)")
+            }
+        } else {
+            Text(
+                text = if (isComplete) "Setup Complete" else stringResource(R.string.setup_download_title),
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+
+            if (error != null) {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Error: $error",
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) {
+                    Text("Try Again")
+                }
+            } else if (isComplete) {
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = stringResource(R.string.sync_complete),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                LinearProgressIndicator(
+                    progress = { progress?.percentage?.div(100f) ?: 0f },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(12.dp)
+                        .clip(RoundedCornerShape(6.dp)),
+                    strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = stringResource(
-                        R.string.sync_remaining,
-                        progress.estimatedSecondsRemaining
+                        R.string.sync_progress,
+                        progress?.downloadedItems ?: 0
                     ),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
+                if (progress != null) {
+                    Text(
+                        text = "Downloading ${progress.currentEntity}...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
     }

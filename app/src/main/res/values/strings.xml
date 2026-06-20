@@ -27,16 +27,19 @@
     <string name="categories">Categories</string>
 
     <!-- Categories -->
+    <string name="cat_all">All</string>
     <string name="cat_gospel">Gospel</string>
     <string name="cat_love">Love</string>
     <string name="cat_patriotic">Patriotic</string>
     <string name="cat_traditional">Traditional</string>
+    <string name="cat_uncategorized">Uncategorized</string>
 
     <!-- Song Detail -->
     <string name="song_number">Song #%1$d</string>
     <string name="lyrics_copied">Lyrics copied to clipboard</string>
     <string name="share_lyrics">Share Lyrics</string>
     <string name="font_size">Font Size</string>
+    <string name="views_suffix">Views</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
@@ -67,4 +70,62 @@
     <string name="sync_failed">Sync failed. Please check your connection.</string>
     <string name="sync_progress">%1$d songs downloaded</string>
     <string name="sync_remaining">Estimated: %1$d seconds remaining</string>
+    <string name="no_songs">No songs available</string>
+    <string name="no_results">No matching songs found</string>
+    <string name="offline_no_data">Connect to the internet to download songs.</string>
+
+    <!-- Artist & Composer -->
+    <string name="artist">Artist</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="composer">Composer</string>
+    <string name="unknown_composer">Unknown Composer</string>
+    <string name="category">Category</string>
+    <string name="songs">Songs</string>
+    <string name="song_count_format">%1$d Songs</string>
+
+    <!-- Feedback -->
+    <string name="feedback">Feedback</string>
+    <string name="report_issue">Report Issue</string>
+    <string name="feedback_title">Send Feedback</string>
+    <string name="feedback_name">Name</string>
+    <string name="feedback_email">Email</string>
+    <string name="feedback_message">Message</string>
+    <string name="btn_submit">Submit</string>
+    <string name="feedback_success">Thank you for your feedback!</string>
+    <string name="feedback_saved">Offline. Feedback saved and will be sent later.</string>
+
+    <!-- New Settings -->
+    <string name="about_app">About App</string>
+    <string name="about_app_desc">Mara Lyrics is your spiritual companion, providing access to a vast collection of lyrics in the Mara language. Designed for worshippers, church groups, and anyone who loves Mara hymns and songs.</string>
+    <string name="credits">Credits</string>
+    <string name="credits_desc">Songwriters, contributors, and translators who made this app possible.</string>
+    <string name="licenses">Licenses</string>
+    <string name="mit_license_title">MIT License</string>
+    <string name="mit_license_text">Copyright (c) 2026 Maralyrics\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+    <string name="preview_text">Kraisapa ta khizaw chutyh hlu n\'awpa ta vaw tlô ta, Khazohpa Sawchapawpa khizaw pachatuhpa a châ tahpa eimâ pahno.</string>
+    <string name="support_feedback">Support &amp; Feedback</string>
+    <string name="help_faq">Help / FAQ</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="rate_app">Rate this App</string>
+    <string name="share_app">Share App</string>
+    <string name="share_app_text">Check out Mara Lyrics app for Mara hymns and songs!</string>
+    <string name="data_sync">Data &amp; Sync</string>
+    <string name="auto_sync">Auto-Sync</string>
+    <string name="auto_sync_desc">Automatically check for updates</string>
+    <string name="wifi_only">Wi-Fi Only</string>
+    <string name="wifi_only_desc">Only sync when connected to Wi-Fi</string>
+    <string name="backup_restore_favorites">Backup/Restore Favorites</string>
+    <string name="backup_favorites">Backup Favorites</string>
+    <string name="restore_favorites">Restore Favorites</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="clear_cache_desc">Free up space by clearing image cache</string>
+    <string name="accessibility_display">Accessibility &amp; Display</string>
+    <string name="default_font_size">Default Font Size</string>
+    <string name="line_spacing">Line Spacing</string>
+    <string name="legal">Legal</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="build_date">Build Date</string>
+    <string name="copyright_format">Copyright © %1$s</string>
 </resources>

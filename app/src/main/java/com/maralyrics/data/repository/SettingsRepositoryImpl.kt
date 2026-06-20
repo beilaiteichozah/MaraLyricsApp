@@ -19,6 +19,11 @@ object PreferencesKeys {
     val LAST_SYNC = longPreferencesKey("last_sync")
     val SETUP_COMPLETE = booleanPreferencesKey("setup_complete")
     val DATABASE_VERSION = intPreferencesKey("database_version")
+    val AUTO_SYNC = booleanPreferencesKey("auto_sync")
+    val WIFI_ONLY = booleanPreferencesKey("wifi_only")
+    val DEFAULT_FONT_SIZE = intPreferencesKey("default_font_size")
+    val LINE_SPACING = floatPreferencesKey("line_spacing")
+    val COLOR_THEME = stringPreferencesKey("color_theme")
 }
 
 @Singleton
@@ -40,12 +45,17 @@ class SettingsRepositoryImpl @Inject constructor(
                     theme = AppTheme.valueOf(
                         preferences[PreferencesKeys.THEME] ?: AppTheme.SYSTEM.name
                     ),
-                    defaultCategory = SongCategory.fromKey(
-                        preferences[PreferencesKeys.DEFAULT_CATEGORY] ?: SongCategory.GOSPEL.key
-                    ),
+                    defaultCategory = preferences[PreferencesKeys.DEFAULT_CATEGORY] ?: "Gospel",
                     lastSyncTimestamp = preferences[PreferencesKeys.LAST_SYNC] ?: 0L,
                     isSetupComplete = preferences[PreferencesKeys.SETUP_COMPLETE] ?: false,
-                    databaseVersion = preferences[PreferencesKeys.DATABASE_VERSION] ?: 0
+                    databaseVersion = preferences[PreferencesKeys.DATABASE_VERSION] ?: 0,
+                    autoSyncEnabled = preferences[PreferencesKeys.AUTO_SYNC] ?: true,
+                    wifiOnlySync = preferences[PreferencesKeys.WIFI_ONLY] ?: true,
+                    defaultFontSize = preferences[PreferencesKeys.DEFAULT_FONT_SIZE] ?: 18,
+                    lineSpacing = preferences[PreferencesKeys.LINE_SPACING] ?: 1.5f,
+                    colorTheme = AppColorTheme.valueOf(
+                        preferences[PreferencesKeys.COLOR_THEME] ?: AppColorTheme.MARA.name
+                    )
                 )
             }
 
@@ -57,8 +67,8 @@ class SettingsRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferencesKeys.THEME] = theme.name }
     }
 
-    override suspend fun updateDefaultCategory(category: SongCategory) {
-        dataStore.edit { it[PreferencesKeys.DEFAULT_CATEGORY] = category.key }
+    override suspend fun updateDefaultCategory(category: String) {
+        dataStore.edit { it[PreferencesKeys.DEFAULT_CATEGORY] = category }
     }
 
     override suspend fun updateLastSync(timestamp: Long) {
@@ -75,6 +85,26 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun getLocalDatabaseVersion(): Int =
         dataStore.data.first()[PreferencesKeys.DATABASE_VERSION] ?: 0
+
+    override suspend fun updateAutoSync(enabled: Boolean) {
+        dataStore.edit { it[PreferencesKeys.AUTO_SYNC] = enabled }
+    }
+
+    override suspend fun updateWifiOnly(enabled: Boolean) {
+        dataStore.edit { it[PreferencesKeys.WIFI_ONLY] = enabled }
+    }
+
+    override suspend fun updateDefaultFontSize(size: Int) {
+        dataStore.edit { it[PreferencesKeys.DEFAULT_FONT_SIZE] = size }
+    }
+
+    override suspend fun updateLineSpacing(spacing: Float) {
+        dataStore.edit { it[PreferencesKeys.LINE_SPACING] = spacing }
+    }
+
+    override suspend fun updateColorTheme(theme: AppColorTheme) {
+        dataStore.edit { it[PreferencesKeys.COLOR_THEME] = theme.name }
+    }
 }
 
 // Exposed for SyncRepository

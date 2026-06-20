@@ -1,11 +1,7 @@
 package com.maralyrics.di
 
-import com.maralyrics.data.repository.SettingsRepositoryImpl
-import com.maralyrics.data.repository.SongRepositoryImpl
-import com.maralyrics.data.repository.SyncRepositoryImpl
-import com.maralyrics.domain.repository.SettingsRepository
-import com.maralyrics.domain.repository.SongRepository
-import com.maralyrics.domain.repository.SyncRepository
+import com.maralyrics.data.repository.*
+import com.maralyrics.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,6 +17,24 @@ abstract class RepositoryModule {
     abstract fun bindSongRepository(
         songRepositoryImpl: SongRepositoryImpl
     ): SongRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindArtistRepository(
+        artistRepositoryImpl: ArtistRepositoryImpl
+    ): ArtistRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindComposerRepository(
+        composerRepositoryImpl: ComposerRepositoryImpl
+    ): ComposerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFeedbackRepository(
+        feedbackRepositoryImpl: FeedbackRepositoryImpl
+    ): FeedbackRepository
 
     @Binds
     @Singleton

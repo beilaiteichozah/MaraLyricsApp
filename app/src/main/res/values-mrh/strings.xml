@@ -8,5 +8,7 @@
     <string name="setup_category_title">Hla phu tlyhna</string>
     <string name="setup_download_title">Hla download liahmaoh</string>
     <string name="btn_get_started">Pathao ah</string>
+    <string name="unknown_artist">Artist pahno liah</string>
+    <string name="unknown_composer">Composer pahno liah</string>
     <!-- Add more translations here as needed -->
 </resources>

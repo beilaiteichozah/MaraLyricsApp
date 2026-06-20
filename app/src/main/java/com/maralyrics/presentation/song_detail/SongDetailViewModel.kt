@@ -3,13 +3,15 @@ package com.maralyrics.presentation.song_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maralyrics.domain.model.Feedback
 import com.maralyrics.domain.model.Song
+import com.maralyrics.domain.usecase.GetSettingsUseCase
 import com.maralyrics.domain.usecase.GetSongDetailUseCase
+import com.maralyrics.domain.usecase.SubmitFeedbackUseCase
 import com.maralyrics.domain.usecase.ToggleFavoriteUseCase
+import com.maralyrics.presentation.common.notification.NotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +19,9 @@ import javax.inject.Inject
 class SongDetailViewModel @Inject constructor(
     private val getSongDetailUseCase: GetSongDetailUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val submitFeedbackUseCase: SubmitFeedbackUseCase,
+    private val getSettingsUseCase: GetSettingsUseCase,
+    private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -28,8 +33,24 @@ class SongDetailViewModel @Inject constructor(
     private val _fontSize = MutableStateFlow(18)
     val fontSize: StateFlow<Int> = _fontSize.asStateFlow()
 
+    private val _lineSpacing = MutableStateFlow(1.5f)
+    val lineSpacing: StateFlow<Float> = _lineSpacing.asStateFlow()
+
+    private val _feedbackStatus = MutableStateFlow<FeedbackStatus?>(null)
+    val feedbackStatus: StateFlow<FeedbackStatus?> = _feedbackStatus.asStateFlow()
+
     init {
         loadSong()
+        loadSettings()
+    }
+
+    private fun loadSettings() {
+        viewModelScope.launch {
+            getSettingsUseCase().collectLatest { settings ->
+                _fontSize.value = settings.defaultFontSize
+                _lineSpacing.value = settings.lineSpacing
+            }
+        }
     }
 
     private fun loadSong() {
@@ -49,21 +70,46 @@ class SongDetailViewModel @Inject constructor(
         if (currentState is SongDetailUiState.Success) {
             viewModelScope.launch {
                 toggleFavoriteUseCase(songId)
+                val isFav = !currentState.song.isFavorite
+                if (isFav) {
+                    notificationManager.showFavoriteAdded()
+                } else {
+                    notificationManager.showFavoriteRemoved()
+                }
                 // Reload to get updated favorite status
                 loadSong()
             }
         }
     }
 
-    fun increaseFontSize() {
-        if (_fontSize.value < 40) {
-            _fontSize.value += 2
+    fun submitFeedback(name: String, email: String, message: String) {
+        val song = (uiState.value as? SongDetailUiState.Success)?.song ?: return
+        viewModelScope.launch {
+            val feedback = Feedback(
+                songId = song.id,
+                songSlug = song.slug,
+                songTitle = song.title,
+                artistName = song.artistName,
+                name = name,
+                email = email,
+                message = message
+            )
+            val result = submitFeedbackUseCase(feedback)
+            if (result.isSuccess) {
+                notificationManager.showSuccess("Report submitted successfully.")
+            } else {
+                notificationManager.showInfo("Report saved. It will be sent automatically when you're online.")
+            }
         }
     }
 
-    fun decreaseFontSize() {
-        if (_fontSize.value > 12) {
-            _fontSize.value -= 2
+    fun clearFeedbackStatus() {
+        _feedbackStatus.value = null
+    }
+
+    fun onLyricsCopied() {
+        viewModelScope.launch {
+            notificationManager.showCopied()
         }
     }
 }
@@ -72,4 +118,8 @@ sealed interface SongDetailUiState {
     object Loading : SongDetailUiState
     data class Success(val song: Song) : SongDetailUiState
     data class Error(val message: String) : SongDetailUiState
+}
+
+enum class FeedbackStatus {
+    Success, SavedOffline
 }

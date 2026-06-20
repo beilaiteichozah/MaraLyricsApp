@@ -1,3 +1,7 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,10 +26,9 @@ android {
 
         resConfigs("en", "mrh")
 
-        // Room schema export
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
+        val buildDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
+        buildConfigField("String", "BUILD_DATE", "\"$buildDate\"")
+
     }
 
     buildTypes {
@@ -57,6 +60,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -71,6 +78,9 @@ dependencies {
     implementation(libs.splashscreen)
     implementation(libs.material)
     implementation(libs.androidx.appcompat)
+
+    // Coil for image loading and caching
+    implementation(libs.coil.compose)
 
     // Navigation
     implementation(libs.navigation.compose)

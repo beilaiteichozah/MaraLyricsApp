@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.maralyrics.utils.ConnectivityObserver
+import com.maralyrics.utils.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +24,11 @@ object AppModule {
         return PreferenceDataStoreFactory.create(
             produceFile = { context.preferencesDataStoreFile("settings") }
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityObserver(@ApplicationContext context: Context): ConnectivityObserver {
+        return NetworkConnectivityObserver(context)
     }
 }
