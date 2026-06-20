@@ -66,13 +66,15 @@ class HomeViewModel @Inject constructor(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val searchResponse: StateFlow<SearchResponse> = _searchQuery
+    val searchResponse: StateFlow<SearchResponse> = combine(_searchQuery, settings.filterNotNull()) { query, s ->
+        query to s.defaultCategory
+    }
         .debounce(300)
-        .flatMapLatest { query ->
+        .flatMapLatest { (query, categoryKey) ->
             if (query.isBlank()) {
                 flowOf(SearchResponse.Empty)
             } else {
-                val category = settings.value?.defaultCategory.let { if (it == "All") null else it }
+                val category = if (categoryKey == "All") null else categoryKey
                 searchSongsWithFuzzyUseCase(query, category)
             }
         }
