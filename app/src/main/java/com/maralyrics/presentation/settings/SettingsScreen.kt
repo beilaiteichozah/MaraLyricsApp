@@ -35,6 +35,7 @@ import com.maralyrics.presentation.theme.MaraColorSchemes
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
+    onCreditsClick: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val settings by viewModel.settings.collectAsState()
@@ -54,7 +55,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.btn_back))
                     }
                 }
             )
@@ -77,7 +78,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Text(
-                        text = "Color Palette",
+                        text = stringResource(R.string.color_palette),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 12.dp)
@@ -100,7 +101,7 @@ fun SettingsScreen(
                 // 3. Default Category
                 SettingsSection(title = stringResource(R.string.set_default_cat)) {
                     CategorySelector(
-                        selected = currentSettings.defaultCategory,
+                        selectedCategories = currentSettings.defaultCategories,
                         availableCategories = availableCategories,
                         onSelected = viewModel::updateCategory
                     )
@@ -144,7 +145,7 @@ fun SettingsScreen(
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Preview",
+                                text = stringResource(R.string.preview_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold
@@ -173,6 +174,12 @@ fun SettingsScreen(
                         description = stringResource(R.string.wifi_only_desc),
                         checked = currentSettings.wifiOnlySync,
                         onCheckedChange = viewModel::updateWifiOnly
+                    )
+                    SwitchItem(
+                        title = stringResource(R.string.resume_session),
+                        description = stringResource(R.string.resume_session_desc),
+                        checked = currentSettings.resumeSessionEnabled,
+                        onCheckedChange = viewModel::updateResumeSession
                     )
                     SettingsItem(
                         title = stringResource(R.string.backup_favorites),
@@ -225,9 +232,17 @@ fun SettingsScreen(
                         onClick = { showAboutDialog = true }
                     )
                     SettingsItem(
+                        title = stringResource(R.string.view_tutorial_again),
+                        icon = Icons.Default.PlayCircle,
+                        onClick = {
+                            viewModel.resetOnboarding()
+                            onBackClick() // Go back to Home which will trigger NavHost to show Onboarding
+                        }
+                    )
+                    SettingsItem(
                         title = stringResource(R.string.credits),
                         icon = Icons.Default.People,
-                        onClick = { showCreditsDialog = true }
+                        onClick = onCreditsClick
                     )
                     SettingsItem(
                         title = stringResource(R.string.licenses),
@@ -291,7 +306,7 @@ fun SettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showAboutDialog = false }) {
-                    Text("OK")
+                    Text(stringResource(R.string.btn_ok))
                 }
             }
         )
@@ -304,7 +319,7 @@ fun SettingsScreen(
             text = { Text(stringResource(R.string.credits_desc)) },
             confirmButton = {
                 TextButton(onClick = { showCreditsDialog = false }) {
-                    Text("OK")
+                    Text(stringResource(R.string.btn_ok))
                 }
             }
         )
@@ -329,7 +344,7 @@ fun SettingsScreen(
                     HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                     
                     Text(
-                        text = "Open Source Libraries",
+                        text = stringResource(R.string.open_source_libs),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -369,7 +384,7 @@ fun SettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showLicensesDialog = false }) {
-                    Text("OK")
+                    Text(stringResource(R.string.btn_ok))
                 }
             }
         )
@@ -507,7 +522,7 @@ fun LanguageSelector(selected: AppLanguage, onSelected: (AppLanguage) -> Unit) {
             FilterChip(
                 selected = language == selected,
                 onClick = { onSelected(language) },
-                label = { Text(if (language == AppLanguage.MARA) "Mara" else "English") },
+                label = { Text(if (language == AppLanguage.MARA) stringResource(R.string.lang_mara) else stringResource(R.string.lang_english)) },
                 shape = RoundedCornerShape(12.dp)
             )
         }
@@ -523,9 +538,9 @@ fun ThemeSelector(selected: AppTheme, onSelected: (AppTheme) -> Unit) {
                 onClick = { onSelected(theme) },
                 label = { 
                     Text(when(theme) {
-                        AppTheme.LIGHT -> "Light"
-                        AppTheme.DARK -> "Dark"
-                        AppTheme.SYSTEM -> "System"
+                        AppTheme.LIGHT -> stringResource(R.string.theme_light)
+                        AppTheme.DARK -> stringResource(R.string.theme_dark)
+                        AppTheme.SYSTEM -> stringResource(R.string.theme_system)
                     })
                 },
                 shape = RoundedCornerShape(12.dp)
@@ -536,7 +551,7 @@ fun ThemeSelector(selected: AppTheme, onSelected: (AppTheme) -> Unit) {
 
 @Composable
 fun CategorySelector(
-    selected: String,
+    selectedCategories: List<String>,
     availableCategories: List<SongCategory>,
     onSelected: (String) -> Unit
 ) {
@@ -553,8 +568,20 @@ fun CategorySelector(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(category.displayName, style = MaterialTheme.typography.bodyLarge)
-                RadioButton(selected = category.key == selected, onClick = null)
+                val displayName = when (category.key) {
+                    "All" -> stringResource(R.string.cat_all)
+                    "Gospel" -> stringResource(R.string.cat_gospel)
+                    "Love" -> stringResource(R.string.cat_love)
+                    "Patriotic" -> stringResource(R.string.cat_patriotic)
+                    "Traditional" -> stringResource(R.string.cat_traditional)
+                    "Uncategorized" -> stringResource(R.string.cat_uncategorized)
+                    else -> category.displayName
+                }
+                Text(displayName, style = MaterialTheme.typography.bodyLarge)
+                Checkbox(
+                    checked = selectedCategories.contains(category.key),
+                    onCheckedChange = null
+                )
             }
         }
     }
@@ -576,20 +603,20 @@ fun OfflineDataInfo(
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Last Sync", style = MaterialTheme.typography.bodySmall)
-                Text(if (lastSync > 0) java.text.DateFormat.getDateTimeInstance().format(java.util.Date(lastSync)) else "Never", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.last_sync), style = MaterialTheme.typography.bodySmall)
+                Text(if (lastSync > 0) java.text.DateFormat.getDateTimeInstance().format(java.util.Date(lastSync)) else stringResource(R.string.never), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Database Version", style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(R.string.db_version), style = MaterialTheme.typography.bodySmall)
                 Text(dbVersion.toString(), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Total Songs", style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(R.string.total_songs), style = MaterialTheme.typography.bodySmall)
                 Text(songCount.toString(), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Storage Used", style = MaterialTheme.typography.bodySmall)
-                Text("${dbSize / 1024} KB", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.db_size), style = MaterialTheme.typography.bodySmall)
+                Text("${dbSize / 1024} ${stringResource(R.string.kb)}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             }
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -600,14 +627,14 @@ fun OfflineDataInfo(
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Sync Now")
+                    Text(stringResource(R.string.sync_now))
                 }
                 OutlinedButton(
                     onClick = onRedownloadClick,
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Redownload")
+                    Text(stringResource(R.string.redownload_db))
                 }
             }
         }
@@ -619,15 +646,15 @@ fun OfflineDataInfo(
 fun SettingsSectionPreview() {
     com.maralyrics.presentation.theme.MaraLyricsTheme {
         Column {
-            SettingsSection(title = "App Info") {
+            SettingsSection(title = stringResource(R.string.about_app)) {
                 SettingsItem(
-                    title = "About App",
+                    title = stringResource(R.string.about_app),
                     icon = Icons.Default.Info,
                     onClick = {}
                 )
                 SwitchItem(
-                    title = "Auto-Sync",
-                    description = "Automatically check for updates",
+                    title = stringResource(R.string.auto_sync),
+                    description = stringResource(R.string.auto_sync_desc),
                     checked = true,
                     onCheckedChange = {}
                 )

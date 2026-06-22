@@ -47,7 +47,7 @@ fun ProfileDetailScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.btn_back))
                     }
                 }
             )
@@ -115,7 +115,8 @@ private fun ProfileContent(
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = profile.type.name,
+                        text = if (profile.type == com.maralyrics.domain.model.ProfileType.ARTIST) 
+                            stringResource(R.string.artist) else stringResource(R.string.composer),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
@@ -155,7 +156,7 @@ private fun ProfileContent(
         // Song List Section
         item {
             Text(
-                text = stringResource(R.string.songs),
+                text = stringResource(R.string.songs_by_format, profile.name),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)

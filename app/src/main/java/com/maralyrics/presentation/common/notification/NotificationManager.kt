@@ -31,17 +31,17 @@ class NotificationManager @Inject constructor() {
     suspend fun showWarning(message: String) = showNotification(NotificationData(message = message, type = NotificationType.WARNING))
     suspend fun showInfo(message: String) = showNotification(NotificationData(message = message, type = NotificationType.INFO))
     
-    suspend fun showOffline() = showNotification(NotificationData(message = "You're offline. Showing downloaded content.", type = NotificationType.OFFLINE))
-    suspend fun showOnline() = showNotification(NotificationData(message = "Back online.", type = NotificationType.ONLINE))
+    suspend fun showOffline() = showNotification(NotificationData(message = "notif_offline", type = NotificationType.OFFLINE))
+    suspend fun showOnline() = showNotification(NotificationData(message = "notif_online", type = NotificationType.ONLINE))
     
-    suspend fun showFavoriteAdded() = showNotification(NotificationData(message = "Added to favorites.", type = NotificationType.FAVORITE_ADDED))
-    suspend fun showFavoriteRemoved() = showNotification(NotificationData(message = "Removed from favorites.", type = NotificationType.FAVORITE_REMOVED))
+    suspend fun showFavoriteAdded() = showNotification(NotificationData(message = "notif_fav_added", type = NotificationType.FAVORITE_ADDED))
+    suspend fun showFavoriteRemoved() = showNotification(NotificationData(message = "notif_fav_removed", type = NotificationType.FAVORITE_REMOVED))
     
-    suspend fun showLanguageChanged(language: String) = showNotification(NotificationData(message = "Language changed to $language.", type = NotificationType.LANGUAGE_CHANGED))
-    suspend fun showThemeChanged(theme: String) = showNotification(NotificationData(message = "$theme enabled.", type = NotificationType.THEME_CHANGED))
-    suspend fun showCopied() = showNotification(NotificationData(message = "Lyrics copied.", type = NotificationType.COPIED))
+    suspend fun showLanguageChanged(language: String) = showNotification(NotificationData(message = "notif_lang_changed|$language", type = NotificationType.LANGUAGE_CHANGED))
+    suspend fun showThemeChanged(theme: String) = showNotification(NotificationData(message = "notif_theme_enabled|$theme", type = NotificationType.THEME_CHANGED))
+    suspend fun showCopied() = showNotification(NotificationData(message = "notif_copied", type = NotificationType.COPIED))
     
-    suspend fun showSyncStarted() = showNotification(NotificationData(message = "Synchronizing data...", type = NotificationType.SYNCING))
-    suspend fun showSyncSuccess() = showNotification(NotificationData(message = "Database synchronized successfully.", type = NotificationType.SUCCESS))
-    suspend fun showSyncFailed() = showNotification(NotificationData(message = "Synchronization failed.", type = NotificationType.ERROR))
+    suspend fun showSyncStarted() = showNotification(NotificationData(message = "notif_sync_started", type = NotificationType.SYNCING))
+    suspend fun showSyncSuccess() = showNotification(NotificationData(message = "notif_sync_success", type = NotificationType.SUCCESS))
+    suspend fun showSyncFailed() = showNotification(NotificationData(message = "notif_sync_failed", type = NotificationType.ERROR))
 }

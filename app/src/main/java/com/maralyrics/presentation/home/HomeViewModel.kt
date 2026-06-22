@@ -3,6 +3,7 @@ package com.maralyrics.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.domain.model.*
+import com.maralyrics.domain.repository.SettingsRepository
 import com.maralyrics.domain.usecase.*
 import com.maralyrics.presentation.common.notification.NotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ class HomeViewModel @Inject constructor(
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val getSearchInitializationStateUseCase: GetSearchInitializationStateUseCase,
+    private val settingsRepository: SettingsRepository,
     private val notificationManager: NotificationManager
 ) : ViewModel() {
 
@@ -35,6 +37,9 @@ class HomeViewModel @Inject constructor(
 
     private val _layoutType = MutableStateFlow(SongLayoutType.NUMBER_TITLE)
     val layoutType = _layoutType.asStateFlow()
+
+    private val _initialScrollState = MutableStateFlow(0 to 0)
+    val initialScrollState = _initialScrollState.asStateFlow()
 
     val searchInitializationState: StateFlow<SearchInitializationState> = getSearchInitializationStateUseCase()
         .stateIn(
@@ -55,10 +60,10 @@ class HomeViewModel @Inject constructor(
         settings.filterNotNull(),
         _sortOrder
     ) { s, sort ->
-        val category = if (s.defaultCategory == "All") null else s.defaultCategory
-        category to sort
-    }.flatMapLatest { (category, sort) ->
-        getAllSongsUseCase(category, sort)
+        val categories = if (s.defaultCategories.contains("All")) null else s.defaultCategories
+        categories to sort
+    }.flatMapLatest { (categories, sort) ->
+        getAllSongsUseCase(categories, sort)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -66,16 +71,13 @@ class HomeViewModel @Inject constructor(
     )
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val searchResponse: StateFlow<SearchResponse> = combine(_searchQuery, settings.filterNotNull()) { query, s ->
-        query to s.defaultCategory
-    }
+    val searchResponse: StateFlow<SearchResponse> = _searchQuery
         .debounce(300)
-        .flatMapLatest { (query, categoryKey) ->
+        .flatMapLatest { query ->
             if (query.isBlank()) {
                 flowOf(SearchResponse.Empty)
             } else {
-                val category = if (categoryKey == "All") null else categoryKey
-                searchSongsWithFuzzyUseCase(query, category)
+                searchSongsWithFuzzyUseCase(query, null)
             }
         }
         .stateIn(
@@ -94,16 +96,43 @@ class HomeViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
+    init {
+        viewModelScope.launch {
+            val settings = getSettingsUseCase().first()
+            if (settings.resumeSessionEnabled) {
+                _searchQuery.value = settingsRepository.getHomeSearchQuery().first()
+                _sortOrder.value = settingsRepository.getHomeSortOrder().first()
+                _layoutType.value = settingsRepository.getHomeLayoutType().first()
+                _initialScrollState.value = settingsRepository.getHomeScrollState().first()
+            }
+        }
+    }
+
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
+        viewModelScope.launch {
+            settingsRepository.saveHomeSearchQuery(query)
+        }
     }
 
     fun onSortOrderChange(order: SongSortOrder) {
         _sortOrder.value = order
+        viewModelScope.launch {
+            settingsRepository.saveHomeSortOrder(order)
+        }
     }
 
     fun onLayoutTypeChange(type: SongLayoutType) {
         _layoutType.value = type
+        viewModelScope.launch {
+            settingsRepository.saveHomeLayoutType(type)
+        }
+    }
+
+    fun onScrollStateChanged(index: Int, offset: Int) {
+        viewModelScope.launch {
+            settingsRepository.saveHomeScrollState(index, offset)
+        }
     }
 
     fun toggleFavorite(songId: Long) {
@@ -122,7 +151,7 @@ class HomeViewModel @Inject constructor(
 
     fun onBackPressed() {
         viewModelScope.launch {
-            notificationManager.showInfo("Press back again to exit.")
+            notificationManager.showInfo("exit_press_back")
         }
     }
 }

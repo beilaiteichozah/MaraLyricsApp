@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.maralyrics.R
 import com.maralyrics.domain.model.SocialLink
@@ -62,12 +63,26 @@ private fun SocialIconButton(
         else -> Icons.Default.Link
     }
 
+    val contentDesc = when {
+        platform.contains("facebook") -> stringResource(R.string.platform_facebook)
+        platform.contains("youtube") -> stringResource(R.string.platform_youtube)
+        platform.contains("instagram") -> stringResource(R.string.platform_instagram)
+        platform.contains("tiktok") -> stringResource(R.string.platform_tiktok)
+        platform.contains("spotify") -> stringResource(R.string.platform_spotify)
+        platform.contains("soundcloud") -> stringResource(R.string.platform_soundcloud)
+        platform.contains("telegram") -> stringResource(R.string.platform_telegram)
+        platform.contains("whatsapp") -> stringResource(R.string.platform_whatsapp)
+        platform.contains("twitter") || platform == "x" -> stringResource(R.string.platform_twitter)
+        platform.contains("website") -> stringResource(R.string.platform_website)
+        else -> stringResource(R.string.platform_link)
+    }
+
     IconButton(onClick = onClick) {
         when (icon) {
             is Painter -> {
                 Icon(
                     painter = icon,
-                    contentDescription = link.platform,
+                    contentDescription = contentDesc,
                     modifier = Modifier.size(28.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -75,7 +90,7 @@ private fun SocialIconButton(
             is androidx.compose.ui.graphics.vector.ImageVector -> {
                 Icon(
                     imageVector = icon,
-                    contentDescription = link.platform,
+                    contentDescription = contentDesc,
                     modifier = Modifier.size(28.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )

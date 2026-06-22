@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetAllSongsUseCase @Inject constructor(
     private val songRepository: SongRepository
 ) {
-    operator fun invoke(category: String?, sortOrder: SongSortOrder): Flow<List<Song>> {
-        return songRepository.getAllSongs(category, sortOrder)
+    operator fun invoke(categories: List<String>?, sortOrder: SongSortOrder): Flow<List<Song>> {
+        return songRepository.getAllSongs(categories, sortOrder)
     }
 }

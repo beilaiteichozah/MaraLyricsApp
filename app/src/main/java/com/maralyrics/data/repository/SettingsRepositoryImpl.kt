@@ -18,12 +18,30 @@ object PreferencesKeys {
     val DEFAULT_CATEGORY = stringPreferencesKey("default_category")
     val LAST_SYNC = longPreferencesKey("last_sync")
     val SETUP_COMPLETE = booleanPreferencesKey("setup_complete")
+    val ONBOARDING_COMPLETE = booleanPreferencesKey("onboarding_complete")
     val DATABASE_VERSION = intPreferencesKey("database_version")
     val AUTO_SYNC = booleanPreferencesKey("auto_sync")
     val WIFI_ONLY = booleanPreferencesKey("wifi_only")
+    val RESUME_SESSION = booleanPreferencesKey("resume_session")
     val DEFAULT_FONT_SIZE = intPreferencesKey("default_font_size")
     val LINE_SPACING = floatPreferencesKey("line_spacing")
     val COLOR_THEME = stringPreferencesKey("color_theme")
+    val LAST_SURPRISE_SONG_ID = longPreferencesKey("last_surprise_song_id")
+    val SURPRISE_ME_USES = intPreferencesKey("surprise_me_uses")
+    val LAST_SONG_ID = longPreferencesKey("last_song_id")
+    val SONG_SCROLL_POSITION = intPreferencesKey("song_scroll_position")
+    val HOME_SEARCH_QUERY = stringPreferencesKey("home_search_query")
+    val HOME_SORT_ORDER = stringPreferencesKey("home_sort_order")
+    val HOME_LAYOUT_TYPE = stringPreferencesKey("home_layout_type")
+    val HOME_SCROLL_INDEX = intPreferencesKey("home_scroll_index")
+    val HOME_SCROLL_OFFSET = intPreferencesKey("home_scroll_offset")
+    val FAVORITE_SEARCH_QUERY = stringPreferencesKey("favorite_search_query")
+    val FAVORITE_SORT_ORDER = stringPreferencesKey("favorite_sort_order")
+    val FAVORITE_CATEGORY_FILTER = stringPreferencesKey("favorite_category_filter")
+    val FAVORITE_LAYOUT_TYPE = stringPreferencesKey("favorite_layout_type")
+    val FAVORITE_SCROLL_INDEX = intPreferencesKey("favorite_scroll_index")
+    val FAVORITE_SCROLL_OFFSET = intPreferencesKey("favorite_scroll_offset")
+    val LAST_ROUTE = stringPreferencesKey("last_route")
 }
 
 @Singleton
@@ -45,12 +63,14 @@ class SettingsRepositoryImpl @Inject constructor(
                     theme = AppTheme.valueOf(
                         preferences[PreferencesKeys.THEME] ?: AppTheme.SYSTEM.name
                     ),
-                    defaultCategory = preferences[PreferencesKeys.DEFAULT_CATEGORY] ?: "Gospel",
+                    defaultCategories = preferences[PreferencesKeys.DEFAULT_CATEGORY]?.split(",")?.filter { it.isNotBlank() } ?: listOf("Gospel"),
                     lastSyncTimestamp = preferences[PreferencesKeys.LAST_SYNC] ?: 0L,
                     isSetupComplete = preferences[PreferencesKeys.SETUP_COMPLETE] ?: false,
+                    hasCompletedOnboarding = preferences[PreferencesKeys.ONBOARDING_COMPLETE] ?: false,
                     databaseVersion = preferences[PreferencesKeys.DATABASE_VERSION] ?: 0,
                     autoSyncEnabled = preferences[PreferencesKeys.AUTO_SYNC] ?: true,
                     wifiOnlySync = preferences[PreferencesKeys.WIFI_ONLY] ?: true,
+                    resumeSessionEnabled = preferences[PreferencesKeys.RESUME_SESSION] ?: true,
                     defaultFontSize = preferences[PreferencesKeys.DEFAULT_FONT_SIZE] ?: 18,
                     lineSpacing = preferences[PreferencesKeys.LINE_SPACING] ?: 1.5f,
                     colorTheme = AppColorTheme.valueOf(
@@ -67,8 +87,8 @@ class SettingsRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferencesKeys.THEME] = theme.name }
     }
 
-    override suspend fun updateDefaultCategory(category: String) {
-        dataStore.edit { it[PreferencesKeys.DEFAULT_CATEGORY] = category }
+    override suspend fun updateDefaultCategories(categories: List<String>) {
+        dataStore.edit { it[PreferencesKeys.DEFAULT_CATEGORY] = categories.joinToString(",") }
     }
 
     override suspend fun updateLastSync(timestamp: Long) {
@@ -77,6 +97,14 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun markSetupComplete() {
         dataStore.edit { it[PreferencesKeys.SETUP_COMPLETE] = true }
+    }
+
+    override suspend fun markOnboardingComplete() {
+        dataStore.edit { it[PreferencesKeys.ONBOARDING_COMPLETE] = true }
+    }
+
+    override suspend fun resetOnboarding() {
+        dataStore.edit { it[PreferencesKeys.ONBOARDING_COMPLETE] = false }
     }
 
     override suspend fun updateDatabaseVersion(version: Int) {
@@ -94,6 +122,10 @@ class SettingsRepositoryImpl @Inject constructor(
         dataStore.edit { it[PreferencesKeys.WIFI_ONLY] = enabled }
     }
 
+    override suspend fun updateResumeSession(enabled: Boolean) {
+        dataStore.edit { it[PreferencesKeys.RESUME_SESSION] = enabled }
+    }
+
     override suspend fun updateDefaultFontSize(size: Int) {
         dataStore.edit { it[PreferencesKeys.DEFAULT_FONT_SIZE] = size }
     }
@@ -105,6 +137,142 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun updateColorTheme(theme: AppColorTheme) {
         dataStore.edit { it[PreferencesKeys.COLOR_THEME] = theme.name }
     }
+
+    override fun getLastSurpriseSongId(): Flow<Long?> =
+        dataStore.data.map { it[PreferencesKeys.LAST_SURPRISE_SONG_ID] }
+
+    override suspend fun setLastSurpriseSongId(id: Long) {
+        dataStore.edit { it[PreferencesKeys.LAST_SURPRISE_SONG_ID] = id }
+    }
+
+    override fun getSurpriseMeUses(): Flow<Int> =
+        dataStore.data.map { it[PreferencesKeys.SURPRISE_ME_USES] ?: 0 }
+
+    override suspend fun incrementSurpriseMeUses() {
+        dataStore.edit { 
+            val current = it[PreferencesKeys.SURPRISE_ME_USES] ?: 0
+            it[PreferencesKeys.SURPRISE_ME_USES] = current + 1
+        }
+    }
+
+    override suspend fun saveLastSongId(songId: Long?) {
+        dataStore.edit { 
+            if (songId == null) it.remove(PreferencesKeys.LAST_SONG_ID)
+            else it[PreferencesKeys.LAST_SONG_ID] = songId
+        }
+    }
+
+    override fun getLastSongId(): Flow<Long?> =
+        dataStore.data.map { it[PreferencesKeys.LAST_SONG_ID] }
+
+    override suspend fun saveSongScrollPosition(position: Int) {
+        dataStore.edit { it[PreferencesKeys.SONG_SCROLL_POSITION] = position }
+    }
+
+    override fun getSongScrollPosition(): Flow<Int> =
+        dataStore.data.map { it[PreferencesKeys.SONG_SCROLL_POSITION] ?: 0 }
+
+    override suspend fun saveHomeSearchQuery(query: String) {
+        dataStore.edit { it[PreferencesKeys.HOME_SEARCH_QUERY] = query }
+    }
+
+    override fun getHomeSearchQuery(): Flow<String> =
+        dataStore.data.map { it[PreferencesKeys.HOME_SEARCH_QUERY] ?: "" }
+
+    override suspend fun saveHomeSortOrder(order: SongSortOrder) {
+        dataStore.edit { it[PreferencesKeys.HOME_SORT_ORDER] = order.name }
+    }
+
+    override fun getHomeSortOrder(): Flow<SongSortOrder> =
+        dataStore.data.map { 
+            val name = it[PreferencesKeys.HOME_SORT_ORDER] ?: SongSortOrder.NUMBER_ASC.name
+            try { SongSortOrder.valueOf(name) } catch (e: Exception) { SongSortOrder.NUMBER_ASC }
+        }
+
+    override suspend fun saveHomeLayoutType(type: SongLayoutType) {
+        dataStore.edit { it[PreferencesKeys.HOME_LAYOUT_TYPE] = type.name }
+    }
+
+    override fun getHomeLayoutType(): Flow<SongLayoutType> =
+        dataStore.data.map { 
+            val name = it[PreferencesKeys.HOME_LAYOUT_TYPE] ?: SongLayoutType.NUMBER_TITLE.name
+            try { SongLayoutType.valueOf(name) } catch (e: Exception) { SongLayoutType.NUMBER_TITLE }
+        }
+
+    override suspend fun saveHomeScrollState(index: Int, offset: Int) {
+        dataStore.edit { 
+            it[PreferencesKeys.HOME_SCROLL_INDEX] = index
+            it[PreferencesKeys.HOME_SCROLL_OFFSET] = offset
+        }
+    }
+
+    override fun getHomeScrollState(): Flow<Pair<Int, Int>> =
+        dataStore.data.map { 
+            val index = it[PreferencesKeys.HOME_SCROLL_INDEX] ?: 0
+            val offset = it[PreferencesKeys.HOME_SCROLL_OFFSET] ?: 0
+            index to offset
+        }
+
+    override suspend fun saveFavoriteSearchQuery(query: String) {
+        dataStore.edit { it[PreferencesKeys.FAVORITE_SEARCH_QUERY] = query }
+    }
+
+    override fun getFavoriteSearchQuery(): Flow<String> =
+        dataStore.data.map { it[PreferencesKeys.FAVORITE_SEARCH_QUERY] ?: "" }
+
+    override suspend fun saveFavoriteSortOrder(order: SongSortOrder) {
+        dataStore.edit { it[PreferencesKeys.FAVORITE_SORT_ORDER] = order.name }
+    }
+
+    override fun getFavoriteSortOrder(): Flow<SongSortOrder> =
+        dataStore.data.map { 
+            val name = it[PreferencesKeys.FAVORITE_SORT_ORDER] ?: SongSortOrder.RECENTLY_ADDED.name
+            try { SongSortOrder.valueOf(name) } catch (e: Exception) { SongSortOrder.RECENTLY_ADDED }
+        }
+
+    override suspend fun saveFavoriteCategoryFilter(category: String?) {
+        dataStore.edit { 
+            if (category == null) it.remove(PreferencesKeys.FAVORITE_CATEGORY_FILTER)
+            else it[PreferencesKeys.FAVORITE_CATEGORY_FILTER] = category 
+        }
+    }
+
+    override fun getFavoriteCategoryFilter(): Flow<String?> =
+        dataStore.data.map { it[PreferencesKeys.FAVORITE_CATEGORY_FILTER] }
+
+    override suspend fun saveFavoriteLayoutType(type: SongLayoutType) {
+        dataStore.edit { it[PreferencesKeys.FAVORITE_LAYOUT_TYPE] = type.name }
+    }
+
+    override fun getFavoriteLayoutType(): Flow<SongLayoutType> =
+        dataStore.data.map { 
+            val name = it[PreferencesKeys.FAVORITE_LAYOUT_TYPE] ?: SongLayoutType.NUMBER_TITLE.name
+            try { SongLayoutType.valueOf(name) } catch (e: Exception) { SongLayoutType.NUMBER_TITLE }
+        }
+
+    override suspend fun saveFavoriteScrollState(index: Int, offset: Int) {
+        dataStore.edit { 
+            it[PreferencesKeys.FAVORITE_SCROLL_INDEX] = index
+            it[PreferencesKeys.FAVORITE_SCROLL_OFFSET] = offset
+        }
+    }
+
+    override fun getFavoriteScrollState(): Flow<Pair<Int, Int>> =
+        dataStore.data.map { 
+            val index = it[PreferencesKeys.FAVORITE_SCROLL_INDEX] ?: 0
+            val offset = it[PreferencesKeys.FAVORITE_SCROLL_OFFSET] ?: 0
+            index to offset
+        }
+
+    override suspend fun saveLastRoute(route: String?) {
+        dataStore.edit { 
+            if (route == null) it.remove(PreferencesKeys.LAST_ROUTE)
+            else it[PreferencesKeys.LAST_ROUTE] = route 
+        }
+    }
+
+    override fun getLastRoute(): Flow<String?> =
+        dataStore.data.map { it[PreferencesKeys.LAST_ROUTE] }
 }
 
 // Exposed for SyncRepository

@@ -8,52 +8,52 @@ import kotlinx.coroutines.flow.Flow
 interface SongDao {
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY id ASC")
-    fun getSongsByCategory(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY id ASC")
+    fun getSongsByCategories(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
     @Query("SELECT s.* FROM songs s INNER JOIN recent_views r ON s.id = r.song_id ORDER BY r.viewed_at DESC LIMIT :limit")
     fun getRecentlyViewed(limit: Int): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT s.* FROM songs s INNER JOIN favorites f ON s.id = f.song_id ORDER BY f.added_at DESC")
+    @Query("SELECT s.* FROM songs s INNER JOIN favorites f ON s.id = f.song_id ORDER BY f.favorited_at DESC")
     fun getFavoriteSongs(): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY views DESC LIMIT :limit")
-    fun getPopularSongs(category: String?, limit: Int): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY views DESC LIMIT :limit")
+    fun getPopularSongs(categories: List<String>, isFiltered: Boolean, limit: Int): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY RANDOM() LIMIT :limit")
-    fun getRandomSongs(category: String?, limit: Int): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY RANDOM() LIMIT :limit")
+    fun getRandomSongs(categories: List<String>, isFiltered: Boolean, limit: Int): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
     @Query("SELECT * FROM songs WHERE id = :id")
     suspend fun getSongById(id: Long): SongWithArtistAndComposer?
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY id ASC")
-    fun getAllSongsByNumberAsc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY id ASC")
+    fun getAllSongsByNumberAsc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY id DESC")
-    fun getAllSongsByNumberDesc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY id DESC")
+    fun getAllSongsByNumberDesc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY title ASC")
-    fun getAllSongsByTitleAsc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY title ASC")
+    fun getAllSongsByTitleAsc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY title DESC")
-    fun getAllSongsByTitleDesc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY title DESC")
+    fun getAllSongsByTitleDesc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY created_at DESC")
-    fun getAllSongsByDateDesc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY created_at DESC")
+    fun getAllSongsByDateDesc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
-    @Query("SELECT * FROM songs WHERE (:category IS NULL OR category = :category) ORDER BY created_at ASC")
-    fun getAllSongsByDateAsc(category: String?): Flow<List<SongWithArtistAndComposer>>
+    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY created_at ASC")
+    fun getAllSongsByDateAsc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
     @Query("SELECT * FROM songs WHERE slug = :slug")
@@ -85,19 +85,19 @@ interface SongDao {
             UNION
             SELECT s3.id FROM songs s3 JOIN composers c ON s3.composer_id = c.id WHERE c.name LIKE '%' || :query || '%'
         )
-        AND (:category IS NULL OR s.category = :category)
+        AND (:isFiltered = 0 OR s.category IN (:categories))
         ORDER BY 
             CASE WHEN s.id = :query THEN 0 ELSE 1 END,
             s.id ASC
     """)
-    fun searchSongs(query: String, ftsQuery: String, category: String?): Flow<List<SongWithArtistAndComposer>>
+    fun searchSongs(query: String, ftsQuery: String, categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Transaction
     @Query("""
         SELECT s.* FROM songs s
         LEFT JOIN artists a ON s.artist_id = a.id
         LEFT JOIN composers c ON s.composer_id = c.id
-        WHERE (:category IS NULL OR s.category = :category) AND (
+        WHERE (:isFiltered = 0 OR s.category IN (:categories)) AND (
             s.id = :query OR
             s.title LIKE '%' || :query || '%' OR
             s.lyrics LIKE '%' || :query || '%' OR
@@ -108,7 +108,7 @@ interface SongDao {
             CASE WHEN s.id = :query THEN 0 ELSE 1 END,
             s.id ASC
     """)
-    fun searchSongsFallback(query: String, category: String?): Flow<List<SongWithArtistAndComposer>>
+    fun searchSongsFallback(query: String, categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
     @Query("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='songs_search_index'")
     suspend fun isSearchIndexPresent(): Int
@@ -245,6 +245,18 @@ interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFavorites(favorites: List<FavoriteEntity>)
+
+    @Query("SELECT COUNT(*) FROM favorites")
+    fun getFavoriteCount(): Flow<Int>
+
+    @Query("SELECT COUNT(DISTINCT s.artist_id) FROM favorites f JOIN songs s ON f.song_id = s.id")
+    fun getFavoriteArtistCount(): Flow<Int>
+
+    @Query("SELECT COUNT(DISTINCT s.composer_id) FROM favorites f JOIN songs s ON f.song_id = s.id")
+    fun getFavoriteComposerCount(): Flow<Int>
+
+    @Query("SELECT DISTINCT s.category FROM favorites f JOIN songs s ON f.song_id = s.id WHERE s.category IS NOT NULL AND s.category != ''")
+    fun getFavoriteCategories(): Flow<List<String>>
 }
 
 @Dao

@@ -11,17 +11,20 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.R
 import com.maralyrics.domain.model.SearchInitializationState
+import com.maralyrics.domain.model.SearchResponse
 import com.maralyrics.domain.model.SongLayoutType
 import com.maralyrics.domain.model.SuggestionType
 import com.maralyrics.presentation.common.components.SearchProgressBar
 import com.maralyrics.presentation.common.components.SongListContent
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,25 +33,50 @@ fun HomeScreen(
     onSongClick: (Long) -> Unit,
     onArtistClick: (String) -> Unit,
     onComposerClick: (String) -> Unit,
+    onFavoritesClick: () -> Unit,
     onSettingsClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val allSongs by viewModel.allSongs.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResponse by viewModel.searchResponse.collectAsState()
-    val searchResults by viewModel.searchResults.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val sortOrder by viewModel.sortOrder.collectAsState()
     val layoutType by viewModel.layoutType.collectAsState()
+    val initialScrollState by viewModel.initialScrollState.collectAsState()
     val searchInitState by viewModel.searchInitializationState.collectAsState()
     
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+
+    LaunchedEffect(initialScrollState) {
+        if (initialScrollState.first > 0 || initialScrollState.second > 0) {
+            listState.scrollToItem(initialScrollState.first, initialScrollState.second)
+        }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+            .distinctUntilChanged()
+            .collect { pair ->
+                viewModel.onScrollStateChanged(pair.first, pair.second)
+            }
+    }
+
     var backPressedOnce by remember { mutableStateOf(false) }
 
     BackHandler {
         if (backPressedOnce) {
-            (context as? android.app.Activity)?.finish()
+            var currentContext = context
+            while (currentContext is android.content.ContextWrapper) {
+                if (currentContext is android.app.Activity) {
+                    currentContext.finish()
+                    return@BackHandler
+                }
+                currentContext = currentContext.baseContext
+            }
         } else {
             backPressedOnce = true
             scope.launch {
@@ -77,17 +105,24 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onFavoritesClick) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = stringResource(R.string.favorites_label),
+                            tint = Color.Red
+                        )
+                    }
                     IconButton(onClick = {
                         val nextLayout = if (layoutType == SongLayoutType.NUMBER_TITLE) SongLayoutType.TITLE_BADGE else SongLayoutType.NUMBER_TITLE
                         viewModel.onLayoutTypeChange(nextLayout)
                     }) {
                         Icon(
                             imageVector = if (layoutType == SongLayoutType.NUMBER_TITLE) Icons.Default.FormatListNumbered else Icons.Default.Label,
-                            contentDescription = "Toggle Layout"
+                            contentDescription = stringResource(R.string.toggle_layout)
                         )
                     }
                     IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings_title))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -114,7 +149,7 @@ fun HomeScreen(
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { viewModel.onSearchQueryChange("") }) {
-                                Icon(Icons.Default.Close, contentDescription = "Clear")
+                                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.btn_clear))
                             }
                         }
                     },
@@ -132,7 +167,13 @@ fun HomeScreen(
                     onRefresh = viewModel::refresh,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    val displaySongs = if (searchQuery.isNotEmpty()) searchResults else allSongs
+                    val displaySongs = if (searchQuery.isNotEmpty() && searchResponse is SearchResponse.Results) {
+                        (searchResponse as SearchResponse.Results).songs
+                    } else if (searchQuery.isNotEmpty()) {
+                        emptyList()
+                    } else {
+                        allSongs
+                    }
 
                     SongListContent(
                         songs = displaySongs,
@@ -144,6 +185,7 @@ fun HomeScreen(
                         onSongClick = onSongClick,
                         onFavoriteClick = viewModel::toggleFavorite,
                         searchResponse = searchResponse,
+                        listState = listState,
                         onSuggestionClick = { suggestion ->
                             when (suggestion.type) {
                                 SuggestionType.SONG -> onSongClick(suggestion.id)

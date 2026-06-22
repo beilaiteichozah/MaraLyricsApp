@@ -96,7 +96,7 @@ fun SetupScreen(
                             onLanguageSelected = viewModel::setLanguage
                         )
                         1 -> CategoryStep(
-                            selectedCategory = uiState.selectedCategory,
+                            selectedCategories = uiState.selectedCategories,
                             onCategorySelected = viewModel::setCategory
                         )
                         2 -> DownloadStep(
@@ -189,7 +189,7 @@ fun LanguageStep(
                             onClick = null
                         )
                         Text(
-                            text = if (language == AppLanguage.MARA) "Mara (Native)" else "English",
+                            text = if (language == AppLanguage.MARA) stringResource(R.string.lang_mara) + " (" + stringResource(R.string.lang_native) + ")" else stringResource(R.string.lang_english),
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
                             modifier = Modifier.padding(start = 16.dp)
                         )
@@ -202,10 +202,10 @@ fun LanguageStep(
 
 @Composable
 fun CategoryStep(
-    selectedCategory: String,
+    selectedCategories: List<String>,
     onCategorySelected: (String) -> Unit
 ) {
-    val categories = listOf("Gospel", "Love", "Patriotic", "Traditional")
+    val categories = listOf("All", "Gospel", "Love", "Patriotic", "Traditional")
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.setup_category_title),
@@ -224,7 +224,7 @@ fun CategoryStep(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             categories.forEach { category ->
-                val isSelected = category == selectedCategory
+                val isSelected = selectedCategories.contains(category)
                 Surface(
                     onClick = { onCategorySelected(category) },
                     shape = RoundedCornerShape(16.dp),
@@ -237,12 +237,20 @@ fun CategoryStep(
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(
-                            selected = isSelected,
-                            onClick = null
+                        Checkbox(
+                            checked = isSelected,
+                            onCheckedChange = null
                         )
+                        val displayName = when (category) {
+                            "All" -> stringResource(R.string.cat_all)
+                            "Gospel" -> stringResource(R.string.cat_gospel)
+                            "Love" -> stringResource(R.string.cat_love)
+                            "Patriotic" -> stringResource(R.string.cat_patriotic)
+                            "Traditional" -> stringResource(R.string.cat_traditional)
+                            else -> category
+                        }
                         Text(
-                            text = category,
+                            text = displayName,
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
                             modifier = Modifier.padding(start = 16.dp)
                         )
@@ -277,13 +285,13 @@ fun DownloadStep(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Connection Required",
+                text = stringResource(R.string.connection_required),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Mara Lyrics needs an internet connection for the initial download of the song database.",
+                text = stringResource(R.string.connection_required_desc),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -297,7 +305,7 @@ fun DownloadStep(
             ) {
                 Icon(Icons.Default.Wifi, contentDescription = null)
                 Spacer(modifier = Modifier.width(12.dp))
-                Text("Check Internet Settings")
+                Text(stringResource(R.string.btn_check_internet))
             }
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
@@ -305,11 +313,11 @@ fun DownloadStep(
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Text("Continue Offline (Demo mode)")
+                Text(stringResource(R.string.btn_continue_offline))
             }
         } else {
             Text(
-                text = if (isComplete) "Setup Complete" else stringResource(R.string.setup_download_title),
+                text = if (isComplete) stringResource(R.string.setup_complete_title) else stringResource(R.string.setup_download_title),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -320,7 +328,7 @@ fun DownloadStep(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Error: $error",
+                        text = stringResource(R.string.error_prefix, error),
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(16.dp)
@@ -328,7 +336,7 @@ fun DownloadStep(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) {
-                    Text("Try Again")
+                    Text(stringResource(R.string.btn_try_again))
                 }
             } else if (isComplete) {
                 Icon(
@@ -362,7 +370,7 @@ fun DownloadStep(
                 )
                 if (progress != null) {
                     Text(
-                        text = "Downloading ${progress.currentEntity}...",
+                        text = stringResource(R.string.sync_downloading_prefix, progress.currentEntity),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)

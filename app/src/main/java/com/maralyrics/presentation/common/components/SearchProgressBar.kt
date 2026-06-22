@@ -9,10 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.maralyrics.R
 import com.maralyrics.domain.model.SearchInitializationState
 
 @Composable
@@ -34,10 +36,10 @@ fun SearchProgressBar(
     )
 
     val message = when (state) {
-        SearchInitializationState.IDLE -> "Starting search engine..."
-        SearchInitializationState.LOADING_DATA -> "Preparing lyrics database..."
-        SearchInitializationState.BUILDING_INDEX -> "Building search index..."
-        SearchInitializationState.READY -> "Ready"
+        SearchInitializationState.IDLE -> stringResource(R.string.search_init_idle)
+        SearchInitializationState.LOADING_DATA -> stringResource(R.string.search_init_loading)
+        SearchInitializationState.BUILDING_INDEX -> stringResource(R.string.search_init_building)
+        SearchInitializationState.READY -> stringResource(R.string.search_init_ready)
     }
 
     Column(
@@ -81,7 +83,7 @@ fun SearchProgressBar(
         Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "Optimizing for offline use",
+            text = stringResource(R.string.search_optimizing),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
         )

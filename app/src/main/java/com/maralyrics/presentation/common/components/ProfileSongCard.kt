@@ -40,7 +40,9 @@ fun ProfileSongCard(
                     text = song.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
@@ -60,29 +62,20 @@ fun ProfileSongCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    val displayCategory = when (song.category) {
+                        "Gospel" -> stringResource(R.string.cat_gospel)
+                        "Love" -> stringResource(R.string.cat_love)
+                        "Patriotic" -> stringResource(R.string.cat_patriotic)
+                        "Traditional" -> stringResource(R.string.cat_traditional)
+                        "Uncategorized" -> stringResource(R.string.cat_uncategorized)
+                        else -> song.category
+                    }
                     Text(
-                        text = song.category,
+                        text = displayCategory,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
-            
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Visibility,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = song.views.toString(),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
     }

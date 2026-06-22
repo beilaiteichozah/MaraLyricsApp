@@ -74,12 +74,14 @@ data class AppSettings(
     val language: AppLanguage,
     val theme: AppTheme,
     val colorTheme: AppColorTheme = AppColorTheme.MARA,
-    val defaultCategory: String,
+    val defaultCategories: List<String>,
     val lastSyncTimestamp: Long,
     val isSetupComplete: Boolean,
+    val hasCompletedOnboarding: Boolean,
     val databaseVersion: Int,
     val autoSyncEnabled: Boolean = true,
     val wifiOnlySync: Boolean = true,
+    val resumeSessionEnabled: Boolean = true,
     val defaultFontSize: Int = 18,
     val lineSpacing: Float = 1.5f
 )
@@ -128,7 +130,7 @@ data class Feedback(
 )
 
 enum class SongSortOrder {
-    NUMBER_ASC, NUMBER_DESC, A_Z, Z_A, NEWEST, OLDEST
+    NUMBER_ASC, NUMBER_DESC, A_Z, Z_A, NEWEST, OLDEST, RECENTLY_ADDED
 }
 
 enum class SongLayoutType {
@@ -152,4 +154,24 @@ data class Profile(
     val socialLinks: List<SocialLink>,
     val songCount: Int,
     val type: ProfileType
+)
+
+data class FavoriteStats(
+    val songCount: Int,
+    val artistCount: Int,
+    val composerCount: Int
+)
+
+@Serializable
+data class Contributor(
+    val name: String,
+    val url: String
+)
+
+@Serializable
+data class CreditsData(
+    val songContributors: List<Contributor> = emptyList(),
+    val translators: List<Contributor> = emptyList(),
+    val supporters: List<Contributor> = emptyList(),
+    val specialThanks: List<Contributor> = emptyList()
 )

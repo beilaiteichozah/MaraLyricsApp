@@ -3,6 +3,7 @@ package com.maralyrics.presentation.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.domain.model.*
+import com.maralyrics.domain.repository.CreditsRepository
 import com.maralyrics.domain.repository.SongRepository
 import com.maralyrics.domain.usecase.*
 import com.maralyrics.presentation.common.notification.NotificationManager
@@ -21,6 +22,7 @@ class SettingsViewModel @Inject constructor(
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val songRepository: SongRepository,
     private val getAvailableCategoriesUseCase: GetAvailableCategoriesUseCase,
+    private val creditsRepository: CreditsRepository,
     private val notificationManager: NotificationManager,
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
@@ -30,6 +32,9 @@ class SettingsViewModel @Inject constructor(
 
     val availableCategories: StateFlow<List<SongCategory>> = getAvailableCategoriesUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val credits: StateFlow<CreditsData> = creditsRepository.getCredits()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CreditsData())
 
     private val _songCount = MutableStateFlow(0)
     val songCount: StateFlow<Int> = _songCount.asStateFlow()
@@ -51,25 +56,50 @@ class SettingsViewModel @Inject constructor(
     fun updateLanguage(language: AppLanguage) {
         viewModelScope.launch {
             updateSettingsUseCase.updateLanguage(language)
-            notificationManager.showLanguageChanged(if (language == AppLanguage.MARA) "Mara" else "English")
+            val langStr = if (language == AppLanguage.MARA) "Mara" else "English"
+            notificationManager.showLanguageChanged(langStr)
         }
     }
 
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
             updateSettingsUseCase.updateTheme(theme)
-            notificationManager.showThemeChanged(when(theme) {
-                AppTheme.LIGHT -> "Light mode"
-                AppTheme.DARK -> "Dark mode"
-                AppTheme.SYSTEM -> "System theme"
-            })
+            val themeKey = when(theme) {
+                AppTheme.LIGHT -> "notif_mode_light"
+                AppTheme.DARK -> "notif_mode_dark"
+                AppTheme.SYSTEM -> "notif_mode_system"
+            }
+            notificationManager.showThemeChanged(themeKey)
         }
     }
 
     fun updateCategory(category: String) {
         viewModelScope.launch {
-            updateSettingsUseCase.updateCategory(category)
-            notificationManager.showSuccess("Default category updated to $category")
+            val currentSettings = settings.value ?: return@launch
+            val currentCategories = currentSettings.defaultCategories.toMutableList()
+            
+            if (category == "All") {
+                currentCategories.clear()
+                currentCategories.add("All")
+            } else {
+                currentCategories.remove("All")
+                if (currentCategories.contains(category)) {
+                    currentCategories.remove(category)
+                    if (currentCategories.isEmpty()) currentCategories.add("All")
+                } else {
+                    currentCategories.add(category)
+                }
+            }
+            
+            updateSettingsUseCase.updateCategories(currentCategories)
+            
+            val message = if (currentCategories.contains("All")) "All" else currentCategories.joinToString(", ")
+            notificationManager.showNotification(
+                com.maralyrics.presentation.common.notification.NotificationData(
+                    message = "notif_default_cat_updated|$message",
+                    type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
+                )
+            )
         }
     }
 
@@ -82,6 +112,12 @@ class SettingsViewModel @Inject constructor(
     fun updateWifiOnly(enabled: Boolean) {
         viewModelScope.launch {
             updateSettingsUseCase.updateWifiOnly(enabled)
+        }
+    }
+
+    fun updateResumeSession(enabled: Boolean) {
+        viewModelScope.launch {
+            updateSettingsUseCase.updateResumeSession(enabled)
         }
     }
 
@@ -100,7 +136,20 @@ class SettingsViewModel @Inject constructor(
     fun updateColorTheme(theme: AppColorTheme) {
         viewModelScope.launch {
             updateSettingsUseCase.updateColorTheme(theme)
-            notificationManager.showSuccess("Color theme updated")
+            val themeName = theme.name.lowercase(java.util.Locale.ROOT)
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.ROOT) else it.toString() }
+            notificationManager.showNotification(
+                com.maralyrics.presentation.common.notification.NotificationData(
+                    message = "notif_color_theme_updated|$themeName",
+                    type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
+                )
+            )
+        }
+    }
+
+    fun resetOnboarding() {
+        viewModelScope.launch {
+            updateSettingsUseCase.resetOnboarding()
         }
     }
 
@@ -110,7 +159,12 @@ class SettingsViewModel @Inject constructor(
             val imageLoader = coil.ImageLoader(context)
             imageLoader.diskCache?.clear()
             imageLoader.memoryCache?.clear()
-            notificationManager.showSuccess("Cache cleared successfully")
+            notificationManager.showNotification(
+                com.maralyrics.presentation.common.notification.NotificationData(
+                    message = "notif_cache_cleared",
+                    type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
+                )
+            )
         }
     }
 
@@ -123,9 +177,19 @@ class SettingsViewModel @Inject constructor(
                 context.openFileOutput(fileName, android.content.Context.MODE_PRIVATE).use {
                     it.write(json.toByteArray())
                 }
-                notificationManager.showSuccess("Favorites backed up locally")
+                notificationManager.showNotification(
+                    com.maralyrics.presentation.common.notification.NotificationData(
+                        message = "notif_fav_backup_success",
+                        type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
+                    )
+                )
             } catch (e: Exception) {
-                notificationManager.showError("Backup failed: ${e.message}")
+                notificationManager.showNotification(
+                    com.maralyrics.presentation.common.notification.NotificationData(
+                        message = "notif_fav_backup_failed|${e.message}",
+                        type = com.maralyrics.presentation.common.notification.NotificationType.ERROR
+                    )
+                )
             }
         }
     }
@@ -139,12 +203,27 @@ class SettingsViewModel @Inject constructor(
                     val json = file.readText()
                     val favoriteIds = Json.decodeFromString<List<Long>>(json)
                     songRepository.restoreFavorites(favoriteIds)
-                    notificationManager.showSuccess("${favoriteIds.size} favorites restored")
+                    notificationManager.showNotification(
+                        com.maralyrics.presentation.common.notification.NotificationData(
+                            message = "notif_fav_restore_success|${favoriteIds.size}",
+                            type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
+                        )
+                    )
                 } else {
-                    notificationManager.showError("No backup file found")
+                    notificationManager.showNotification(
+                        com.maralyrics.presentation.common.notification.NotificationData(
+                            message = "notif_fav_restore_no_file",
+                            type = com.maralyrics.presentation.common.notification.NotificationType.ERROR
+                        )
+                    )
                 }
             } catch (e: Exception) {
-                notificationManager.showError("Restore failed: ${e.message}")
+                notificationManager.showNotification(
+                    com.maralyrics.presentation.common.notification.NotificationData(
+                        message = "notif_fav_restore_failed|${e.message}",
+                        type = com.maralyrics.presentation.common.notification.NotificationType.ERROR
+                    )
+                )
             }
         }
     }
@@ -163,7 +242,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             notificationManager.showNotification(
                 com.maralyrics.presentation.common.notification.NotificationData(
-                    message = "Redownloading database...",
+                    message = "sync_redownloading",
                     type = com.maralyrics.presentation.common.notification.NotificationType.SYNCING,
                     showProgress = true
                 )
@@ -171,13 +250,13 @@ class SettingsViewModel @Inject constructor(
             syncDatabaseUseCase.fullDownload { }
                 .onSuccess { notificationManager.showNotification(
                     com.maralyrics.presentation.common.notification.NotificationData(
-                        message = "Songs downloaded successfully.",
+                        message = "sync_download_success",
                         type = com.maralyrics.presentation.common.notification.NotificationType.DOWNLOAD_COMPLETE
                     )
                 ) }
                 .onFailure { notificationManager.showNotification(
                     com.maralyrics.presentation.common.notification.NotificationData(
-                        message = "Failed to download songs.",
+                        message = "sync_download_failed",
                         type = com.maralyrics.presentation.common.notification.NotificationType.ERROR
                     )
                 ) }

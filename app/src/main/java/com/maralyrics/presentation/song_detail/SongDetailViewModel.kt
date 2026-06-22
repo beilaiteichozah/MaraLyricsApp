@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.domain.model.Feedback
 import com.maralyrics.domain.model.Song
+import com.maralyrics.domain.repository.SettingsRepository
 import com.maralyrics.domain.usecase.GetSettingsUseCase
 import com.maralyrics.domain.usecase.GetSongDetailUseCase
 import com.maralyrics.domain.usecase.SubmitFeedbackUseCase
@@ -21,6 +22,7 @@ class SongDetailViewModel @Inject constructor(
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val submitFeedbackUseCase: SubmitFeedbackUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
+    private val settingsRepository: SettingsRepository,
     private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -36,12 +38,30 @@ class SongDetailViewModel @Inject constructor(
     private val _lineSpacing = MutableStateFlow(1.5f)
     val lineSpacing: StateFlow<Float> = _lineSpacing.asStateFlow()
 
+    private val _initialScrollPosition = MutableStateFlow(0)
+    val initialScrollPosition: StateFlow<Int> = _initialScrollPosition.asStateFlow()
+
     private val _feedbackStatus = MutableStateFlow<FeedbackStatus?>(null)
     val feedbackStatus: StateFlow<FeedbackStatus?> = _feedbackStatus.asStateFlow()
 
     init {
         loadSong()
         loadSettings()
+        loadSessionState()
+    }
+
+    private fun loadSessionState() {
+        viewModelScope.launch {
+            val settings = getSettingsUseCase().first()
+            if (settings.resumeSessionEnabled) {
+                val lastSongId = settingsRepository.getLastSongId().first()
+                if (lastSongId == songId) {
+                    _initialScrollPosition.value = settingsRepository.getSongScrollPosition().first()
+                }
+            }
+            // Save this song as last viewed
+            settingsRepository.saveLastSongId(songId)
+        }
     }
 
     private fun loadSettings() {
@@ -110,6 +130,12 @@ class SongDetailViewModel @Inject constructor(
     fun onLyricsCopied() {
         viewModelScope.launch {
             notificationManager.showCopied()
+        }
+    }
+
+    fun onScrollChanged(position: Int) {
+        viewModelScope.launch {
+            settingsRepository.saveSongScrollPosition(position)
         }
     }
 }

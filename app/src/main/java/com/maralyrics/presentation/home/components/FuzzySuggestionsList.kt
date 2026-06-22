@@ -5,9 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.maralyrics.R
 import com.maralyrics.domain.model.SearchSuggestion
 import com.maralyrics.domain.model.SuggestionType
 
@@ -26,12 +25,12 @@ fun FuzzySuggestionsList(
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
         Text(
-            text = "No exact results found.",
+            text = stringResource(R.string.no_exact_results),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = "Did you mean?",
+            text = stringResource(R.string.closest_matches),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
@@ -47,14 +46,9 @@ fun FuzzySuggestionsList(
                     item {
                         SuggestionHeader(
                             title = when (type) {
-                                SuggestionType.SONG -> "Songs"
-                                SuggestionType.ARTIST -> "Artists"
-                                SuggestionType.COMPOSER -> "Composers"
-                            },
-                            icon = when (type) {
-                                SuggestionType.SONG -> Icons.Default.MusicNote
-                                SuggestionType.ARTIST -> Icons.Default.Person
-                                SuggestionType.COMPOSER -> Icons.Default.Translate
+                                SuggestionType.SONG -> stringResource(R.string.suggest_songs)
+                                SuggestionType.ARTIST -> stringResource(R.string.suggest_artists)
+                                SuggestionType.COMPOSER -> stringResource(R.string.suggest_composers)
                             }
                         )
                     }
@@ -72,27 +66,15 @@ fun FuzzySuggestionsList(
 
 @Composable
 private fun SuggestionHeader(
-    title: String,
-    icon: ImageVector
+    title: String
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(vertical = 8.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(18.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
-    }
+    )
 }
 
 @Composable

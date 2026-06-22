@@ -3,8 +3,8 @@ package com.maralyrics.presentation.song_detail
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.R
 import com.maralyrics.domain.model.Song
+import com.maralyrics.presentation.common.components.EmptyState
+import kotlinx.coroutines.flow.distinctUntilChanged
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SongDetailScreen(
     onBackClick: () -> Unit,
@@ -44,8 +46,27 @@ fun SongDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     val fontSize by viewModel.fontSize.collectAsState()
     val lineSpacing by viewModel.lineSpacing.collectAsState()
+    val initialScrollPosition by viewModel.initialScrollPosition.collectAsState()
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
+
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(initialScrollPosition) {
+        if (initialScrollPosition > 0) {
+            scrollState.scrollTo(initialScrollPosition)
+        }
+    }
+
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.value }
+            .distinctUntilChanged()
+            .collect { position ->
+                if (position > 0) {
+                    viewModel.onScrollChanged(position)
+                }
+            }
+    }
 
     var showFeedbackDialog by remember { mutableStateOf(false) }
 
@@ -56,14 +77,15 @@ fun SongDetailScreen(
                     if (uiState is SongDetailUiState.Success) {
                         Text(
                             text = (uiState as SongDetailUiState.Success).song.title,
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            maxLines = 1
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                         )
                     }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.btn_back))
                     }
                 },
                 actions = {
@@ -72,7 +94,7 @@ fun SongDetailScreen(
                         IconButton(onClick = viewModel::toggleFavorite) {
                             Icon(
                                 imageVector = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "Favorite",
+                                contentDescription = stringResource(R.string.favorites_label),
                                 tint = if (song.isFavorite) Color.Red else LocalContentColor.current
                             )
                         }
@@ -80,12 +102,12 @@ fun SongDetailScreen(
                             clipboardManager.setText(AnnotatedString(song.lyrics))
                             viewModel.onLyricsCopied()
                         }) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = "Copy")
+                            Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.btn_copy))
                         }
                         IconButton(onClick = {
                             shareSong(context, song)
                         }) {
-                            Icon(Icons.Default.Share, contentDescription = "Share")
+                            Icon(Icons.Default.Share, contentDescription = stringResource(R.string.btn_share))
                         }
                     }
                 },
@@ -107,10 +129,9 @@ fun SongDetailScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is SongDetailUiState.Error -> {
-                    Text(
-                        text = state.message,
-                        modifier = Modifier.align(Alignment.Center),
-                        style = MaterialTheme.typography.bodyLarge
+                    EmptyState(
+                        icon = Icons.Default.ErrorOutline,
+                        message = state.message
                     )
                 }
                 is SongDetailUiState.Success -> {
@@ -118,109 +139,134 @@ fun SongDetailScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(scrollState)
                     ) {
-                        // 1. Metadata Section (Chips)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState())
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            AssistChip(
-                                onClick = { song.artistSlug?.let { onArtistClick(it) } },
-                                label = { Text(song.artistName ?: stringResource(R.string.unknown_artist)) },
-                                leadingIcon = { Icon(Icons.Outlined.Mic, contentDescription = null, Modifier.size(18.dp)) },
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            AssistChip(
-                                onClick = { song.composerSlug?.let { onComposerClick(it) } },
-                                label = { Text(song.composerName ?: stringResource(R.string.unknown_composer)) },
-                                leadingIcon = { Icon(Icons.Outlined.MusicNote, contentDescription = null, Modifier.size(18.dp)) },
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            AssistChip(
-                                onClick = { onCategoryClick(song.category) },
-                                label = { Text(song.category.ifBlank { stringResource(R.string.cat_uncategorized) }) },
-                                leadingIcon = { Icon(Icons.Outlined.LocalOffer, contentDescription = null, Modifier.size(18.dp)) },
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            AssistChip(
-                                onClick = { },
-                                label = { Text("${song.views} views") },
-                                leadingIcon = { Icon(Icons.Outlined.Visibility, contentDescription = null, Modifier.size(18.dp)) },
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                        }
+                        // 1. Full Song Title
+                        Text(
+                            text = song.title,
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            ),
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                            maxLines = 2,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                        )
 
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        // 2. Lyrics Section
-                        Surface(
+                        // 2. Metadata Section (FlowRow)
+                        androidx.compose.foundation.layout.FlowRow(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(0.dp)
+                        ) {
+                            if (!song.artistName.isNullOrBlank() && 
+                                !song.artistName.contains("Unknown", ignoreCase = true)) {
+                                AssistChip(
+                                    onClick = { song.artistSlug?.let { onArtistClick(it) } },
+                                    label = { Text(song.artistName) },
+                                    leadingIcon = { Icon(Icons.Outlined.Mic, contentDescription = null, Modifier.size(18.dp)) },
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            }
+                            
+                            if (!song.composerName.isNullOrBlank() && 
+                                !song.composerName.contains("Unknown", ignoreCase = true)) {
+                                AssistChip(
+                                    onClick = { song.composerSlug?.let { onComposerClick(it) } },
+                                    label = { Text(song.composerName) },
+                                    leadingIcon = { Icon(Icons.Outlined.MusicNote, contentDescription = null, Modifier.size(18.dp)) },
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            }
+
+                            if (song.category.isNotBlank()) {
+                                AssistChip(
+                                    onClick = { onCategoryClick(song.category) },
+                                    label = { 
+                                        val displayName = when (song.category) {
+                                            "Gospel" -> stringResource(R.string.cat_gospel)
+                                            "Love" -> stringResource(R.string.cat_love)
+                                            "Patriotic" -> stringResource(R.string.cat_patriotic)
+                                            "Traditional" -> stringResource(R.string.cat_traditional)
+                                            "Uncategorized" -> stringResource(R.string.cat_uncategorized)
+                                            else -> song.category
+                                        }
+                                        Text(displayName) 
+                                    },
+                                    leadingIcon = { Icon(Icons.Outlined.LocalOffer, contentDescription = null, Modifier.size(18.dp)) },
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // 3. Lyrics Section
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
                             color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                             shape = RoundedCornerShape(16.dp)
                         ) {
-                            Text(
-                                text = song.lyrics,
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    fontSize = fontSize.sp,
-                                    lineHeight = (fontSize * lineSpacing).sp,
-                                    letterSpacing = 0.5.sp
-                                ),
-                                modifier = Modifier.padding(24.dp)
-                            )
+                            Column {
+                                Text(
+                                    text = song.lyrics,
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontSize = fontSize.sp,
+                                        lineHeight = (fontSize * lineSpacing).sp,
+                                        letterSpacing = 0.5.sp
+                                    ),
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+                                )
+
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(horizontal = 24.dp),
+                                    thickness = 0.5.dp,
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
+
+                                // Footer integrated inside the surface for better connection
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    if (!song.copyrightOwnerName.isNullOrBlank()) {
+                                        Text(
+                                            text = stringResource(R.string.copyright_format, song.copyrightOwnerName),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            textAlign = TextAlign.Center
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+
+                                    TextButton(
+                                        onClick = { showFeedbackDialog = true },
+                                        colors = ButtonDefaults.textButtonColors(
+                                            contentColor = MaterialTheme.colorScheme.primary
+                                        )
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Feedback,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(Modifier.width(8.dp))
+                                        Text(
+                                            text = stringResource(R.string.report_issue),
+                                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                        )
+                                    }
+                                }
+                            }
                         }
                         
-                        Spacer(modifier = Modifier.height(48.dp))
-                        
-                        // 3. Footer Section
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(bottom = 24.dp),
-                                thickness = 0.5.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant
-                            )
-                            
-                            if (!song.copyrightOwnerName.isNullOrBlank()) {
-                                Text(
-                                    text = stringResource(R.string.copyright_format, song.copyrightOwnerName),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textAlign = TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(12.dp))
-                            }
-                            
-                            TextButton(
-                                onClick = { showFeedbackDialog = true },
-                                colors = ButtonDefaults.textButtonColors(
-                                    contentColor = MaterialTheme.colorScheme.primary
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Feedback,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = stringResource(R.string.report_issue),
-                                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                                )
-                            }
-                            
-                            Spacer(modifier = Modifier.height(32.dp))
-                        }
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
             }

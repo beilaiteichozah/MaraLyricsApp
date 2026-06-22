@@ -8,16 +8,16 @@ import javax.inject.Inject
 class SearchSongsUseCase @Inject constructor(
     private val songRepository: SongRepository
 ) {
-    operator fun invoke(query: String, category: String?): Flow<List<Song>> {
-        return songRepository.searchSongs(query, category)
+    operator fun invoke(query: String, categories: List<String>?): Flow<List<Song>> {
+        return songRepository.searchSongs(query, categories)
     }
 }
 
 class SearchSongsWithFuzzyUseCase @Inject constructor(
     private val songRepository: SongRepository
 ) {
-    operator fun invoke(query: String, category: String?): Flow<SearchResponse> {
-        return songRepository.searchSongsWithFuzzy(query, category)
+    operator fun invoke(query: String, categories: List<String>?): Flow<SearchResponse> {
+        return songRepository.searchSongsWithFuzzy(query, categories)
     }
 }
 
@@ -25,6 +25,46 @@ class GetAvailableCategoriesUseCase @Inject constructor(
     private val songRepository: SongRepository
 ) {
     operator fun invoke(): Flow<List<SongCategory>> = songRepository.getAvailableCategories()
+}
+
+class GetFavoriteSongsUseCase @Inject constructor(
+    private val songRepository: SongRepository
+) {
+    operator fun invoke(): Flow<List<Song>> = songRepository.getFavoriteSongs()
+}
+
+class GetFavoriteStatsUseCase @Inject constructor(
+    private val songRepository: SongRepository
+) {
+    operator fun invoke(): Flow<FavoriteStats> = songRepository.getFavoriteStats()
+}
+
+class GetFavoriteCategoriesUseCase @Inject constructor(
+    private val songRepository: SongRepository
+) {
+    operator fun invoke(): Flow<List<String>> = songRepository.getFavoriteCategories()
+}
+
+class GetSurpriseSongUseCase @Inject constructor(
+    private val songRepository: SongRepository,
+    private val settingsRepository: SettingsRepository
+) {
+    suspend operator fun invoke(): Song? {
+        val favorites = songRepository.getFavoriteSongs().first()
+        if (favorites.isEmpty()) return null
+        
+        val lastId = settingsRepository.getLastSurpriseSongId().first()
+        val candidates = if (favorites.size > 1) {
+            favorites.filter { it.id != lastId }
+        } else {
+            favorites
+        }
+        
+        val selected = candidates.random()
+        settingsRepository.setLastSurpriseSongId(selected.id)
+        settingsRepository.incrementSurpriseMeUses()
+        return selected
+    }
 }
 
 class ToggleFavoriteUseCase @Inject constructor(
@@ -154,10 +194,13 @@ class UpdateSettingsUseCase @Inject constructor(
 ) {
     suspend fun updateLanguage(language: AppLanguage) = settingsRepository.updateLanguage(language)
     suspend fun updateTheme(theme: AppTheme) = settingsRepository.updateTheme(theme)
-    suspend fun updateCategory(category: String) = settingsRepository.updateDefaultCategory(category)
+    suspend fun updateCategories(categories: List<String>) = settingsRepository.updateDefaultCategories(categories)
     suspend fun markSetupComplete() = settingsRepository.markSetupComplete()
+    suspend fun markOnboardingComplete() = settingsRepository.markOnboardingComplete()
+    suspend fun resetOnboarding() = settingsRepository.resetOnboarding()
     suspend fun updateAutoSync(enabled: Boolean) = settingsRepository.updateAutoSync(enabled)
     suspend fun updateWifiOnly(enabled: Boolean) = settingsRepository.updateWifiOnly(enabled)
+    suspend fun updateResumeSession(enabled: Boolean) = settingsRepository.updateResumeSession(enabled)
     suspend fun updateDefaultFontSize(size: Int) = settingsRepository.updateDefaultFontSize(size)
     suspend fun updateLineSpacing(spacing: Float) = settingsRepository.updateLineSpacing(spacing)
     suspend fun updateColorTheme(theme: AppColorTheme) = settingsRepository.updateColorTheme(theme)

@@ -41,9 +41,23 @@ class SetupViewModel @Inject constructor(
     }
 
     fun setCategory(category: String) {
+        val currentCategories = _uiState.value.selectedCategories.toMutableList()
+        if (category == "All") {
+            currentCategories.clear()
+            currentCategories.add("All")
+        } else {
+            currentCategories.remove("All")
+            if (currentCategories.contains(category)) {
+                currentCategories.remove(category)
+                if (currentCategories.isEmpty()) currentCategories.add("All")
+            } else {
+                currentCategories.add(category)
+            }
+        }
+        
         viewModelScope.launch {
-            updateSettingsUseCase.updateCategory(category)
-            _uiState.update { it.copy(selectedCategory = category) }
+            updateSettingsUseCase.updateCategories(currentCategories)
+            _uiState.update { it.copy(selectedCategories = currentCategories) }
         }
     }
 
@@ -77,7 +91,7 @@ class SetupViewModel @Inject constructor(
         viewModelScope.launch {
             notificationManager.showNotification(
                 com.maralyrics.presentation.common.notification.NotificationData(
-                    message = "Downloading Mara Lyrics database...",
+                    message = "sync_downloading_db",
                     type = com.maralyrics.presentation.common.notification.NotificationType.SYNCING,
                     showProgress = true
                 )
@@ -89,7 +103,7 @@ class SetupViewModel @Inject constructor(
                 _uiState.update { it.copy(isDownloadComplete = true) }
                 notificationManager.showNotification(
                     com.maralyrics.presentation.common.notification.NotificationData(
-                        message = "Songs downloaded successfully.",
+                        message = "sync_download_success",
                         type = com.maralyrics.presentation.common.notification.NotificationType.DOWNLOAD_COMPLETE
                     )
                 )
@@ -97,7 +111,7 @@ class SetupViewModel @Inject constructor(
                 _uiState.update { it.copy(error = exception.message) }
                 notificationManager.showNotification(
                     com.maralyrics.presentation.common.notification.NotificationData(
-                        message = "Failed to download songs.",
+                        message = "sync_download_failed",
                         type = com.maralyrics.presentation.common.notification.NotificationType.ERROR
                     )
                 )
@@ -109,7 +123,7 @@ class SetupViewModel @Inject constructor(
 data class SetupUiState(
     val currentStep: Int = 0, // 0: Language, 1: Category, 2: Download
     val selectedLanguage: AppLanguage = AppLanguage.MARA,
-    val selectedCategory: String = "Gospel",
+    val selectedCategories: List<String> = listOf("Gospel"),
     val downloadProgress: DownloadProgress? = null,
     val isDownloadComplete: Boolean = false,
     val isOnline: Boolean = true,

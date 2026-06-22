@@ -19,9 +19,10 @@ object SearchUtils {
         val lower = text.lowercase(Locale.US)
         val normalized = Normalizer.normalize(lower, Normalizer.Form.NFD)
         val stripped = normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
-        return stripped.replace(Regex("[^a-z0-9\\s]"), " ")
+        val result = stripped.replace(Regex("[^a-z0-9\\s]"), " ")
             .replace(Regex("\\s+"), " ")
             .trim()
+        return result
     }
 
     /**

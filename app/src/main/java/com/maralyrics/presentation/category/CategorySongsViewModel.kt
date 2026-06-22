@@ -32,7 +32,7 @@ class CategorySongsViewModel @Inject constructor(
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     val songs: StateFlow<List<Song>> = _sortOrder
         .flatMapLatest { sort ->
-            getAllSongsUseCase(categoryKey, sort)
+            getAllSongsUseCase(listOf(categoryKey), sort)
         }
         .stateIn(
             scope = viewModelScope,

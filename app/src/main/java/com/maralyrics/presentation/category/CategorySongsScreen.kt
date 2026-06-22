@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.maralyrics.R
 import com.maralyrics.domain.model.SongLayoutType
 import com.maralyrics.presentation.common.components.SongListContent
 
@@ -30,10 +32,19 @@ fun CategorySongsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(category.replaceFirstChar { it.uppercase() }) },
+                title = { 
+                    val displayCategory = when (category.lowercase()) {
+                        "gospel" -> stringResource(R.string.cat_gospel)
+                        "love" -> stringResource(R.string.cat_love)
+                        "patriotic" -> stringResource(R.string.cat_patriotic)
+                        "traditional" -> stringResource(R.string.cat_traditional)
+                        else -> category.replaceFirstChar { it.uppercase() }
+                    }
+                    Text(displayCategory) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.btn_back))
                     }
                 },
                 actions = {
@@ -43,7 +54,7 @@ fun CategorySongsScreen(
                     }) {
                         Icon(
                             imageVector = if (layoutType == SongLayoutType.NUMBER_TITLE) Icons.Default.FormatListNumbered else Icons.Default.Label,
-                            contentDescription = "Toggle Layout"
+                            contentDescription = stringResource(R.string.toggle_layout)
                         )
                     }
                 }

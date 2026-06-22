@@ -80,7 +80,7 @@ fun ReportBottomSheet(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text(stringResource(R.string.feedback_email) + " (Optional)") },
+                label = { Text(stringResource(R.string.feedback_email) + " " + stringResource(R.string.optional_suffix)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 enabled = !isSubmitting

@@ -10,16 +10,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.maralyrics.R
 import com.maralyrics.domain.model.SearchResponse
 import com.maralyrics.domain.model.SearchSuggestion
 import com.maralyrics.domain.model.Song
@@ -42,6 +46,8 @@ fun SongListContent(
     onSongClick: (Long) -> Unit,
     onFavoriteClick: (Long) -> Unit,
     searchResponse: SearchResponse = SearchResponse.Empty,
+    listState: LazyListState = rememberLazyListState(),
+    showAddedSort: Boolean = false,
     onSuggestionClick: (SearchSuggestion) -> Unit = {},
     emptyState: @Composable () -> Unit = {
         if (searchResponse is SearchResponse.Suggestions) {
@@ -52,18 +58,17 @@ fun SongListContent(
         } else {
             EmptyState(
                 icon = Icons.Default.Search,
-                message = "No Results Found",
-                description = "Try searching for something else."
+                message = stringResource(R.string.empty_no_results),
+                description = stringResource(R.string.empty_search_desc)
             )
         }
     }
 ) {
-    val listState = rememberLazyListState()
-
     Column(modifier = Modifier.fillMaxSize()) {
         SortToggleRow(
             currentOrder = sortOrder,
-            onOrderChange = onSortOrderChange
+            onOrderChange = onSortOrderChange,
+            showAddedSort = showAddedSort
         )
 
         Box(modifier = Modifier.weight(1f)) {
@@ -99,7 +104,8 @@ fun SongListContent(
 @Composable
 fun SortToggleRow(
     currentOrder: SongSortOrder,
-    onOrderChange: (SongSortOrder) -> Unit
+    onOrderChange: (SongSortOrder) -> Unit,
+    showAddedSort: Boolean = false
 ) {
     Row(
         modifier = Modifier
@@ -108,26 +114,35 @@ fun SortToggleRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SortChip(
-            label = if (currentOrder == SongSortOrder.NUMBER_DESC) "No. (9-1)" else "No. (1-9)",
+            label = if (currentOrder == SongSortOrder.NUMBER_DESC) stringResource(R.string.sort_number_desc) else stringResource(R.string.sort_number_asc),
             selected = currentOrder == SongSortOrder.NUMBER_ASC || currentOrder == SongSortOrder.NUMBER_DESC,
             onClick = {
                 onOrderChange(if (currentOrder == SongSortOrder.NUMBER_ASC) SongSortOrder.NUMBER_DESC else SongSortOrder.NUMBER_ASC)
             }
         )
         SortChip(
-            label = if (currentOrder == SongSortOrder.Z_A) "Z-A" else "A-Z",
+            label = if (currentOrder == SongSortOrder.Z_A) stringResource(R.string.sort_za) else stringResource(R.string.sort_az),
             selected = currentOrder == SongSortOrder.A_Z || currentOrder == SongSortOrder.Z_A,
             onClick = {
                 onOrderChange(if (currentOrder == SongSortOrder.A_Z) SongSortOrder.Z_A else SongSortOrder.A_Z)
             }
         )
         SortChip(
-            label = if (currentOrder == SongSortOrder.OLDEST) "Old-New" else "New-Old",
+            label = if (currentOrder == SongSortOrder.OLDEST) stringResource(R.string.sort_old_new) else stringResource(R.string.sort_new_old),
             selected = currentOrder == SongSortOrder.NEWEST || currentOrder == SongSortOrder.OLDEST,
             onClick = {
                 onOrderChange(if (currentOrder == SongSortOrder.NEWEST) SongSortOrder.OLDEST else SongSortOrder.NEWEST)
             }
         )
+        if (showAddedSort) {
+            SortChip(
+                label = stringResource(R.string.sort_added),
+                selected = currentOrder == SongSortOrder.RECENTLY_ADDED,
+                onClick = {
+                    onOrderChange(SongSortOrder.RECENTLY_ADDED)
+                }
+            )
+        }
     }
 }
 
@@ -149,7 +164,7 @@ fun SortChip(
     )
 }
 
-@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SongLazyList(
     songs: List<Song>,
@@ -157,7 +172,8 @@ fun SongLazyList(
     layoutType: SongLayoutType,
     onSongClick: (Long) -> Unit,
     onFavoriteClick: (Long) -> Unit,
-    listState: LazyListState
+    listState: LazyListState,
+    enableSwipeToRemove: Boolean = false
 ) {
     LazyColumn(
         state = listState,
@@ -172,21 +188,74 @@ fun SongLazyList(
                     ListHeader(initial)
                 }
                 items(sectionSongs, key = { it.id }) { song ->
-                    SongRow(
+                    SongRowWrapper(
                         song = song,
                         layoutType = layoutType,
                         onSongClick = onSongClick,
-                        onFavoriteClick = onFavoriteClick
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        thickness = 0.5.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant
+                        onFavoriteClick = onFavoriteClick,
+                        enableSwipeToRemove = enableSwipeToRemove
                     )
                 }
             }
         } else {
             items(songs, key = { it.id }) { song ->
+                SongRowWrapper(
+                    song = song,
+                    layoutType = layoutType,
+                    onSongClick = onSongClick,
+                    onFavoriteClick = onFavoriteClick,
+                    enableSwipeToRemove = enableSwipeToRemove
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SongRowWrapper(
+    song: Song,
+    layoutType: SongLayoutType,
+    onSongClick: (Long) -> Unit,
+    onFavoriteClick: (Long) -> Unit,
+    enableSwipeToRemove: Boolean
+) {
+    if (enableSwipeToRemove) {
+        val dismissState = rememberSwipeToDismissBoxState(
+            confirmValueChange = {
+                if (it == SwipeToDismissBoxValue.EndToStart) {
+                    onFavoriteClick(song.id)
+                    true
+                } else false
+            }
+        )
+
+        SwipeToDismissBox(
+            state = dismissState,
+            backgroundContent = {
+                val color = when (dismissState.dismissDirection) {
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+                    else -> Color.Transparent
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color)
+                        .padding(horizontal = 24.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete),
+                            tint = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+            },
+            enableDismissFromStartToEnd = false
+        ) {
+            Column {
                 SongRow(
                     song = song,
                     layoutType = layoutType,
@@ -199,6 +268,20 @@ fun SongLazyList(
                     color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
+        }
+    } else {
+        Column {
+            SongRow(
+                song = song,
+                layoutType = layoutType,
+                onSongClick = onSongClick,
+                onFavoriteClick = onFavoriteClick
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                thickness = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
         }
     }
 }
@@ -251,7 +334,9 @@ fun SongRow(
                 text = song.title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
             val artist = song.artistName ?: song.composerName
             if (!artist.isNullOrBlank()) {
@@ -284,7 +369,7 @@ fun SongRow(
         ) {
             Icon(
                 imageVector = if (song.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
-                contentDescription = "Favorite",
+                contentDescription = stringResource(R.string.favorites_label),
                 tint = if (song.isFavorite) Color(0xFFFFD700) else MaterialTheme.colorScheme.outline,
                 modifier = Modifier.size(24.dp)
             )

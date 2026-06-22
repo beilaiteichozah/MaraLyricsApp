@@ -1,14 +1,289 @@
 <resources>
-    <string name="app_name">Mara Lyrics</string>
+    <string name="app_name">Mara Hlabie</string>
 
     <!-- Setup -->
-    <string name="setup_welcome">Mara Lyrics lâ na vaw tlô na</string>
-    <string name="setup_description">Mara reih ta thlahpahliana hla bu.</string>
-    <string name="setup_language_title">Reih tlyhna</string>
-    <string name="setup_category_title">Hla phu tlyhna</string>
-    <string name="setup_download_title">Hla download liahmaoh</string>
-    <string name="btn_get_started">Pathao ah</string>
-    <string name="unknown_artist">Artist pahno liah</string>
-    <string name="unknown_composer">Composer pahno liah</string>
-    <!-- Add more translations here as needed -->
+    <string name="setup_welcome">Mara Hlabie tawhta eima chaw dy</string>
+    <string name="setup_description">Mara Hla photo â paphaohna su!</string>
+    <string name="setup_language_title">Reih atlyh</string>
+    <string name="setup_category_title">Hla phu atlyna</string>
+    <string name="setup_download_title">Database âdao hai</string>
+    <string name="setup_download_desc">Offline hmâ awpa ta hlazy â dao hai. He he Mini sâ kha a rao thei.</string>
+    <string name="setup_category_desc">Na hla kho viapa tlyh mah. He he settings lâ chhâpa ta thliepa thei a châ.</string>
+    <string name="btn_next">Hmiah</string>
+    <string name="btn_back">Kua</string>
+    <string name="btn_get_started">Pathao</string>
+    <string name="btn_finish">Chhâna</string>
+
+    <!-- Home -->
+    <string name="home_title">Mara Hlabie</string>
+    <string name="search_hint">Chôtlâhpi, hlabie, chvk nuhby...</string>
+    <string name="recently_viewed">Reilei liata mopazy</string>
+    <string name="favorite_songs">Paphasapa Hlazy</string>
+    <string name="popular_songs">Hla Alualâh viapazy</string>
+    <string name="random_suggestions">Vialapa Khokheipazy</string>
+    <string name="no_recent_songs">Reileipa liata na mopa hla y vei. Tlua pathao teh!</string>
+    <string name="no_favorites">Na paphasapa hla y mâh vei!</string>
+    <string name="view_all">Azydua Chaluah</string>
+    <string name="categories">Hla phuzy</string>
+    <string name="surprise_me">Eino napaâh</string>
+    <string name="stats_favorites">Paphasapazy</string>
+    <string name="stats_artists">Hlasatuhpa</string>
+    <string name="stats_composers">Phituhpazy</string>
+    <string name="search_favorites">Paphasapazy Tlua...</string>
+    <string name="no_matching_favorites">Paphasapa nah alyupa y ei</string>
+    <string name="adjust_search_filters">Na tluana chvk athlinazy paryh teh.</string>
+    <string name="browse_songs">Hla zy moh mah</string>
+    <string name="discover_random">Hla random ta tlua mah</string>
+
+    <!-- Categories -->
+    <string name="cat_all">Azydua</string>
+    <string name="cat_gospel">Khazoh</string>
+    <string name="cat_love">Hlâsa</string>
+    <string name="cat_patriotic">Râh</string>
+    <string name="cat_traditional">Phoryhpa</string>
+    <string name="cat_uncategorized">Phupachhaih leipa</string>
+
+    <!-- Song Detail -->
+    <string name="song_number">Hla #%1$d</string>
+    <string name="lyrics_copied">Hla patly hawpa a châ</string>
+    <string name="share_lyrics">Hlabie Hlâ</string>
+    <string name="font_size">Font Laichyhna</string>
+    <string name="views_suffix">Mohpazy</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Paraihnazy</string>
+    <string name="set_language">App Reih</string>
+    <string name="set_theme">App Theme</string>
+    <string name="set_theme_light">Pahvâ</string>
+    <string name="set_theme_dark">Zoh</string>
+    <string name="set_theme_system">Khaw Hneipa</string>
+    <string name="set_default_cat">Hla phu tlyhpa</string>
+    <string name="set_offline_data">Offline Data</string>
+    <string name="total_songs">Hla zydua ypa</string>
+    <string name="db_size">Database Size</string>
+    <string name="last_sync">Sync pachiena</string>
+    <string name="app_version">App Version</string>
+    <string name="sync_now">Tahmâ Sync</string>
+    <string name="redownload_db">Hla zy download heih mah</string>
+    <string name="clear_data">Offline Data Thy</string>
+    <string name="clear_data_confirm">Offline Hlabie zydua na thy khai tlai aw ma? Nâ dao heih thei nawpa ta internet â byuh heih aw.</string>
+    <string name="cancel">Châvei</string>
+    <string name="delete">Thy</string>
+
+    <!-- Sync -->
+    <string name="sync_available_title">Updates Âhmô</string>
+    <string name="sync_available_msg">Hla thiehpa zy ypa a châ. Offline ta hmâ n\'awpa ta download na kho mah?</string>
+    <string name="sync_later">Chhâpa ta</string>
+    <string name="sync_download">Download</string>
+    <string name="sync_complete">Sync patlô hawpa a châ!</string>
+    <string name="sync_failed">Sync hlaotoh vei. Na azaona pasia teh.</string>
+    <string name="sync_progress">Hla %1$d download hawpa a châ</string>
+    <string name="sync_remaining">Estimated: %1$d seconds ypa a châ</string>
+    <string name="no_songs">Hla a y leih</string>
+    <string name="no_results">Tluapa hla y vei</string>
+    <string name="offline_no_data">Hla zy download n\'awpa ta internet connection a hiah.</string>
+
+    <!-- Artist & Composer -->
+    <string name="artist">Hlasatuhpa</string>
+    <string name="unknown_artist">Hlasatuh Pahnoleipa</string>
+    <string name="composer">Phituhpa</string>
+    <string name="unknown_composer">Phituh Pahnoleipa</string>
+    <string name="category">Hla phu</string>
+    <string name="songs">Hlazy</string>
+    <string name="songs_by_format">%1$s hlazy</string>
+    <string name="song_count_format">Hla %1$d</string>
+
+    <!-- Feedback -->
+    <string name="feedback">Pachâpiena</string>
+    <string name="report_issue">Pâna Chho</string>
+    <string name="feedback_title">Pachâpiepa Paphao</string>
+    <string name="feedback_name">Moh</string>
+    <string name="feedback_email">Email</string>
+    <string name="feedback_message">Mesei</string>
+    <string name="btn_submit">Paphao</string>
+    <string name="feedback_success">Pachâna miah na pie vâta eima châ ly kaw!</string>
+    <string name="feedback_saved">Offline. Na pachâna piepa cha pachô hawpa châ ta, line a y ti anotata â paphao aw.</string>
+
+    <!-- New Settings -->
+    <string name="about_app">App kyh</string>
+    <string name="about_app_desc">Mara Lyrics he na thlahpahliana hla bu châ ta, Mara reih ta hla hluhpi hmi n\'awpa ta eimâ chhihpa a châ. Siahliana, worshipper zy nata Mara hla kho viapa zy châ ta eimâ chhihpa a châ.</string>
+    <string name="credits">Credits</string>
+    <string name="credits_desc">Mara Hlazy he chhâ kha nata chhâ kha vaw khâsia laihpa ta, pakha hnoh pakha a vaw hlâ laihpa Hla Phituhpazy, Hlabie Rohtuhpazy, Reihpaleituhpazy, nata eima vaihtlâh zydua hnohta alyna bie eima hlâ.</string>
+    <string name="licenses">Licenses</string>
+    <string name="mit_license_title">MIT License</string>
+    <string name="mit_license_text">Copyright (c) 2026 Maralyrics\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+    <string name="preview_text">He he na screen liata hlabie â luahna dâh pamosapa a châ. Font laichyhna nata châtlâh â hniahlana kha na khodâh ta na tao pathi thei.</string>
+    <string name="support_feedback">Deichhy &amp; Pachâpie</string>
+    <string name="help_faq">Baona / HHH</string>
+    <string name="contact_us">Azaona</string>
+    <string name="send_feedback">Pachâpiepa Paphao</string>
+    <string name="rate_app">App he thie teh</string>
+    <string name="share_app">App he hlâ teh</string>
+    <string name="share_app_text">Mara Hlabie photo zydua châta Mara Hlabie App he moh chhi teh.</string>
+    <string name="data_sync">Data &amp; Sync</string>
+    <string name="auto_sync">Anotata-Sync</string>
+    <string name="auto_sync_desc">Updatezy anotata moh</string>
+    <string name="wifi_only">Wi-Fi Deita</string>
+    <string name="wifi_only_desc">Wi-Fi nâ pazao no deita sync â tao aw</string>
+    <string name="backup_restore_favorites">Paphasapazy Pachô/Lapakhua</string>
+    <string name="backup_favorites">Paphapsapazy Pachô</string>
+    <string name="restore_favorites">Paphasapazy Lapakhua</string>
+    <string name="clear_cache">Apua Pathaisa</string>
+    <string name="clear_cache_desc">A puapazy pathaisana chôta na fô paruasa teh</string>
+    <string name="accessibility_display">Hmâtheina &amp; Palâsapa</string>
+    <string name="default_font_size">Ypâpa font laichyhna</string>
+    <string name="line_spacing">Châtlâh Ahniahla</string>
+    <string name="legal">Ryh Lâchhâh</string>
+    <string name="privacy_policy">Pôhkha Thlalôhna</string>
+    <string name="terms_of_use">Hmâna Ryhpa</string>
+    <string name="build_date">Taona Târi</string>
+    <string name="copyright_format">Biehneituhpa © %1$s</string>
+
+    <!-- Credits -->
+    <string name="credits_title">Alyna Bie</string>
+    <string name="credits_description">Mara Hlabie hmaohphienapa ta na hria pachiepazy, reihpaleituhpazy, deichhytuhpazy, nata eima vaihtlâh zydua hnohta alyna bie eima hlâ.</string>
+    <string name="credits_song_contributors">Hla Baichhâtuhpazy</string>
+    <string name="credits_translators">Reihpaleituhpazy</string>
+    <string name="credits_supporters">Deichhytuhpazy</string>
+    <string name="credits_special_thanks">Alyna Bie Thiehpa</string>
+    <string name="credits_unavailable">Credits kyh thawna a y leih.</string>
+
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Khôsai</string>
+    <string name="onboarding_next">Hmia</string>
+    <string name="onboarding_back">Hnôh</string>
+    <string name="onboarding_get_started">Pathao</string>
+
+    <string name="onboarding_title_1">Mara Hlabie tawh samaw eima cha hlâ</string>
+    <string name="onboarding_desc_1">Mara Hlabiezy kha daihti to, su to liata tlua, reih mah y.</string>
+    <string name="onboarding_feature_1_1">Offline hmiapasahpa</string>
+    <string name="onboarding_feature_1_2">Hla sâhluhpi</string>
+    <string name="onboarding_feature_1_3">Tluana chatleipa</string>
+
+    <string name="onboarding_title_2">Tluana Thatlôpa</string>
+    <string name="onboarding_desc_2">Chôtlâhpi, Hlabie, Hla nuhby, Hlasatuhpa, chvk Phituhpa ta tlua theipa.</string>
+    <string name="onboarding_feature_2_1">Thlai ta Tluana</string>
+    <string name="onboarding_feature_2_2">Offline tluana</string>
+    <string name="onboarding_feature_2_3">Samâ khokheipazy</string>
+
+    <string name="onboarding_title_3">Na Paphasapazy lâ Pachô la</string>
+    <string name="onboarding_desc_3">Na khoh chaipa hlazy kha a pha kawpa ta pahmaoh la, anao kawpa ta moh mah y.</string>
+    <string name="onboarding_feature_3_1">Paphasapa Hlazy</string>
+    <string name="onboarding_feature_3_2">Paphasapazy Tlua</string>
+    <string name="onboarding_feature_3_3">Paphasapazy Athli</string>
+    <string name="onboarding_feature_3_4">🎲 Eino na paâh teh</string>
+
+    <string name="onboarding_title_4">Na Hlabie, Na Tlôpahnopa</string>
+    <string name="onboarding_desc_4">Na khohpa nah âhmiepa ta Mara Hlabie he paraih teh.</string>
+    <string name="onboarding_feature_4_1">App Reih</string>
+    <string name="onboarding_feature_4_2">Hnôhbai Atlyna</string>
+    <string name="onboarding_feature_4_3">Hla font laichyhna</string>
+    <string name="onboarding_feature_4_4">Hria Pachiepazy Pazao</string>
+
+    <string name="view_tutorial_again">Pachuna Moh Heih</string>
+
+    <!-- UI Components & Progress -->
+    <string name="search_init_idle">Tluana khaw â thao hai...</string>
+    <string name="search_init_loading">Hlabie database patohpatiah hai...</string>
+    <string name="search_init_building">Tluana paziahpa patyh hai...</string>
+    <string name="search_init_ready">Âmâ thlah ha</string>
+    <string name="search_optimizing">Offline hmâ n\'awpa ta pahniasa hai</string>
+
+    <string name="empty_no_results">Tluapa y vei</string>
+    <string name="empty_search_desc">Sâ kha kha tlua chhi.</string>
+
+    <!-- Sort Orders -->
+    <string name="sort_number_asc">No. (1-9)</string>
+    <string name="sort_number_desc">No. (9-1)</string>
+    <string name="sort_az">A-Z</string>
+    <string name="sort_za">Z-A</string>
+    <string name="sort_new_old">Thieh-Paroh</string>
+    <string name="sort_old_new">Paroh-Thieh</string>
+    <string name="sort_added">Khô hawpa</string>
+
+    <!-- Settings Labels -->
+    <string name="color_palette">Rôh Phia</string>
+    <string name="resume_session">Hria Pachiepazy Pazao</string>
+    <string name="resume_session_desc">Hria pachiena tawh pathao</string>
+    <string name="preview_label">Hmôchhilina</string>
+    <string name="connection_required">Internet â byuh</string>
+    <string name="connection_required_desc">Mara Lyrics he hla zy download n\'awpa ta internet connection a hiah n\'aw.</string>
+    <string name="btn_check_internet">Internet Paraihnazy Pasia</string>
+    <string name="btn_continue_offline">Offline  Hmiatôh (Demo dâh)</string>
+    <string name="setup_complete_title">Patyhpa Patlô</string>
+    <string name="sync_downloading_db">Mara Hlabie data â dao hai...</string>
+    <string name="sync_download_success">Hlazy cha hlaotoh kawpa ta â dao khai haw.</string>
+    <string name="sync_download_failed">Hlazy a dao thei vei.</string>
+    <string name="sync_redownloading">Database â dao pathai hai...</string>
+
+    <!-- General UI -->
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Châvei</string>
+    <string name="btn_clear">Pathai</string>
+    <string name="btn_copy">Patly</string>
+    <string name="btn_share">Hlâ</string>
+    <string name="optional_suffix">(Na khoh khiah)</string>
+    <string name="open_source_libs">Source Libraryzy Pahy</string>
+    <string name="favorites_label">Paphasapazy</string>
+    <string name="toggle_layout">Layout hmiena</string>
+    <string name="exit_press_back">Kuana kha hmie via teh.</string>
+    <string name="star_favorite">Awhsi</string>
+    <string name="star_border_favorite">Awhsilei</string>
+    <string name="no_favorites_desc">Hlazy kha❤️ icon he hmiepa ta na paphasapa lâ soh mah y.</string>
+    <string name="social_platform">Social Platform</string>
+    <string name="platform_facebook">Facebook</string>
+    <string name="platform_youtube">YouTube</string>
+    <string name="platform_instagram">Instagram</string>
+    <string name="platform_tiktok">TikTok</string>
+    <string name="platform_spotify">Spotify</string>
+    <string name="platform_soundcloud">SoundCloud</string>
+    <string name="platform_telegram">Telegram</string>
+    <string name="platform_whatsapp">WhatsApp</string>
+    <string name="platform_twitter">X</string>
+    <string name="platform_website">Website</string>
+    <string name="platform_link">Link</string>
+
+    <!-- Search Suggestions -->
+    <string name="suggest_songs">🎵 Hla khokheipazy</string>
+    <string name="suggest_artists">👤 Hlasatuh khokheipazy</string>
+    <string name="suggest_composers">✍️ Phituh khokheipazy</string>
+
+
+    <!-- Notifications -->
+    <string name="notif_offline">Line y vei.</string>
+    <string name="notif_online">Oline a pha haw heih.</string>
+    <string name="notif_fav_added">Kho viapa lâ baichhâ hawpa a châ.</string>
+    <string name="notif_fav_removed">Paphasapa tawh thy hawpa.</string>
+    <string name="notif_lang_changed">App reih %1$s lâ â pathlai haw.</string>
+    <string name="notif_theme_enabled">%1$s pahy hawpa.</string>
+    <string name="notif_copied">Hlabie â patly haw.</string>
+    <string name="notif_sync_started">Data zydua â sync hai...</string>
+    <string name="notif_sync_success">Database syncpa a patlô haw!</string>
+    <string name="notif_sync_failed">Sync hlaotloh vei.</string>
+    <string name="btn_try_again">Pia Pathai mah</string>
+    <string name="error_prefix">Bohveina: %1$s</string>
+    <string name="no_exact_results">Tluapa a y leih.</string>
+    <string name="closest_matches">Âlyu viapazy:</string>
+    <string name="lang_mara">Mara</string>
+    <string name="lang_english">English</string>
+    <string name="lang_native">Native</string>
+    <string name="theme_light">Pahvâ</string>
+    <string name="theme_dark">Zoh</string>
+    <string name="theme_system">System</string>
+    <string name="notif_mode_light">Light mode</string>
+    <string name="notif_mode_dark">Dark mode</string>
+    <string name="notif_mode_system">System theme</string>
+    <string name="notif_default_cat_updated">Hla phu tlyhpa cha %1$s lâ â pathlai haw</string>
+    <string name="notif_color_theme_updated">Color theme cha %1$s lâ â pathlai haw</string>
+    <string name="notif_cache_cleared">Cache pathaisa hawpa a châ</string>
+    <string name="notif_fav_backup_success">Paphasapazy pachô hawpa a châ</string>
+    <string name="notif_fav_backup_failed">Pachôna a hlaotoh vei: %1$s</string>
+    <string name="notif_fav_restore_success">Paphasapa %1$d lapakhua hawpa a châ</string>
+    <string name="notif_fav_restore_no_file">Pachôpa y vei</string>
+    <string name="notif_fav_restore_failed">Lapakhuana a hlaotoh vei: %1$s</string>
+    <string name="sync_downloading_prefix">%1$s â dao hai…</string>
+    <string name="never">Mâh vei</string>
+    <string name="kb">KB</string>
+    <string name="db_version">Database Version</string>
 </resources>

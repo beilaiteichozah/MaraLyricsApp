@@ -28,7 +28,8 @@ object DatabaseModule {
             MaraLyricsDatabase.MIGRATION_2_3,
             MaraLyricsDatabase.MIGRATION_3_4,
             MaraLyricsDatabase.MIGRATION_4_5,
-            MaraLyricsDatabase.MIGRATION_5_6
+            MaraLyricsDatabase.MIGRATION_5_6,
+            MaraLyricsDatabase.MIGRATION_6_7
         )
         .fallbackToDestructiveMigration()
         .build()

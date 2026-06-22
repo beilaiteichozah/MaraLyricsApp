@@ -91,7 +91,7 @@ data class ComposerEntity(
 data class FavoriteEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "song_id") val songId: Long,
-    @ColumnInfo(name = "added_at") val addedAt: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "favorited_at") val favoritedAt: Long = System.currentTimeMillis()
 )
 
 @Entity(

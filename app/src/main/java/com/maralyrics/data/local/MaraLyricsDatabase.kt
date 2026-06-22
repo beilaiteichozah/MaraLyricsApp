@@ -19,7 +19,7 @@ import com.maralyrics.data.local.entity.*
         SyncMetadataEntity::class,
         SongFtsEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 abstract class MaraLyricsDatabase : RoomDatabase() {
@@ -34,6 +34,27 @@ abstract class MaraLyricsDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_NAME = "mara_lyrics.db"
+
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Rename added_at to favorited_at in favorites table
+                // Room migrations for column renames usually involve recreating the table if it's not SQLite 3.25.0+ 
+                // but let's see if ALTER TABLE RENAME COLUMN works or use traditional way
+                
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `favorites_new` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                        `song_id` INTEGER NOT NULL, 
+                        `favorited_at` INTEGER NOT NULL,
+                        FOREIGN KEY(`song_id`) REFERENCES `songs`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE 
+                    )
+                """)
+                db.execSQL("INSERT INTO favorites_new (id, song_id, favorited_at) SELECT id, song_id, added_at FROM favorites")
+                db.execSQL("DROP TABLE favorites")
+                db.execSQL("ALTER TABLE favorites_new RENAME TO favorites")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_favorites_song_id` ON `favorites` (`song_id`)")
+            }
+        }
 
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
