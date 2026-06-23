@@ -256,7 +256,7 @@ fun SettingsScreen(
                     SettingsItem(
                         title = stringResource(R.string.help_faq),
                         icon = Icons.Default.Help,
-                        onClick = { uriHandler.openUri("https://app.maralyrics.com/faq") }
+                        onClick = { uriHandler.openUri("https://maralyrics.com/faq") }
                     )
                     SettingsItem(
                         title = stringResource(R.string.contact_us),
