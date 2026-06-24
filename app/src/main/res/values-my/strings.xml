@@ -125,7 +125,7 @@
     <string name="auto_sync_desc">အပ်ဒိတ်များကို အလိုအလျောက် စစ်ဆေးမည်</string>
     <string name="wifi_only">Wi-Fi သာ</string>
     <string name="wifi_only_desc">Wi-Fi ချိတ်ဆက်ထားမှသာ အပ်ဒိတ်လုပ်မည်</string>
-    <string name="backup_restore_favorites">အကြိုက်ဆုံးများ သိမ်းဆည်း/ပြန်ယူမည်</string>
+    <string name="backup_restore_favorites">အကြိုက်ဆုံးများ သိည်းဆည်း/ပြန်ယူမည်</string>
     <string name="backup_favorites">အကြိုက်ဆုံးများ သိမ်းဆည်းမည်</string>
     <string name="restore_favorites">အကြိုက်ဆုံးများ ပြန်ယူမည်</string>
     <string name="clear_cache">Cache ဖြတ်မည်</string>
@@ -138,6 +138,15 @@
     <string name="terms_of_use">အသုံးပြုမှု စည်းကမ်းချက်များ</string>
     <string name="build_date">တည်ဆောက်သည့်ရက်</string>
     <string name="copyright_format">မူပိုင်ခွင့် © %1$s</string>
+
+    <!-- Credits -->
+    <string name="credits_title">ဂုဏ်ပြုလွှာ</string>
+    <string name="credits_description">မာရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
+    <string name="credits_song_contributors">သီချင်း ပါဝင်သူများ</string>
+    <string name="credits_translators">ဘာသာပြန်သူများ</string>
+    <string name="credits_supporters">ပံ့ပိုးကူညီသူများ</string>
+    <string name="credits_special_thanks">အထူးကျေးဇူးတင်ရှိသူများ</string>
+    <string name="credits_unavailable">ဂုဏ်ပြုလွှာ အချက်အလက်များ မရှိသေးပါ။</string>
 
     <!-- Onboarding -->
     <string name="onboarding_skip">ကျော်မည်</string>
@@ -172,6 +181,16 @@
     <string name="onboarding_feature_4_4">အရင်ကြည့်လက်စမှ ပြန်စမည်</string>
 
     <string name="view_tutorial_again">လမ်းညွှန်ကို ထပ်ကြည့်မည်</string>
+
+    <!-- UI Components & Progress -->
+    <string name="search_init_idle">ရှာဖွေရေး အင်ဂျင်ကို စတင်နေသည်...</string>
+    <string name="search_init_loading">ဒေတာဘေ့စ်ကို ပြင်ဆင်နေသည်...</string>
+    <string name="search_init_building">ရှာဖွေမှု အညွှန်းကို တည်ဆောက်နေသည်...</string>
+    <string name="search_init_ready">အဆင်သင့်ဖြစ်ပါပြီ</string>
+    <string name="search_optimizing">အော့ဖ်လိုင်းအသုံးပြုရန် ကောင်းမွန်အောင် ပြုလုပ်နေသည်</string>
+
+    <string name="empty_no_results">ရှာဖွေမှုရလဒ် မတွေ့ပါ</string>
+    <string name="empty_search_desc">အခြားစကားလုံးဖြင့် ထပ်မံရှာဖွေကြည့်ပါ။</string>
 
     <!-- Sort Orders -->
     <string name="sort_number_asc">နံပါတ်စဉ် (၁-၉)</string>
@@ -211,11 +230,30 @@
     <string name="btn_copy">ကူးယူမည်</string>
     <string name="btn_share">မျှဝေမည်</string>
     <string name="optional_suffix">(မထည့်လည်းရသည်)</string>
+    <string name="open_source_libs">Open Source စာကြည့်တိုက်များ</string>
     <string name="favorites_label">အကြိုက်ဆုံးများ</string>
+    <string name="toggle_layout">အပြင်အဆင် ပြောင်းမည်</string>
     <string name="exit_press_back">ထွက်ရန် နောက်တစ်ကြိမ် နှိပ်ပါ။</string>
     <string name="star_favorite">သိမ်းမည်</string>
     <string name="star_border_favorite">မသိမ်းတော့ပါ</string>
     <string name="no_favorites_desc">သီချင်းများကို ❤️ ပုံလေးနှိပ်ပြီး အကြိုက်ဆုံးများထဲ ထည့်ထားပါ။</string>
+    <string name="social_platform">လူမှုကွန်ရက်</string>
+    <string name="platform_facebook">Facebook</string>
+    <string name="platform_youtube">YouTube</string>
+    <string name="platform_instagram">Instagram</string>
+    <string name="platform_tiktok">TikTok</string>
+    <string name="platform_spotify">Spotify</string>
+    <string name="platform_soundcloud">SoundCloud</string>
+    <string name="platform_telegram">Telegram</string>
+    <string name="platform_whatsapp">WhatsApp</string>
+    <string name="platform_twitter">X</string>
+    <string name="platform_website">ဝဘ်ဆိုဒ်</string>
+    <string name="platform_link">လင့်ခ်</string>
+
+    <!-- Search Suggestions -->
+    <string name="suggest_songs">🎵 သီချင်း အကြံပြုချက်များ</string>
+    <string name="suggest_artists">👤 အဆိုတော် အကြံပြုချက်များ</string>
+    <string name="suggest_composers">✍️ တေးရေးဆရာ အကြံပြုချက်များ</string>
 
     <!-- Notifications -->
     <string name="notif_offline">အော့ဖ်လိုင်း ဖြစ်နေသည်။</string>
@@ -254,7 +292,4 @@
     <string name="never">တစ်ခါမှမလုပ်ရသေးပါ</string>
     <string name="kb">KB</string>
     <string name="db_version">ဒေတာဘေ့စ် ဗားရှင်း</string>
-    <string name="suggest_songs">🎵 သီချင်း အကြံပြုချက်များ</string>
-    <string name="suggest_artists">👤 အဆိုတော် အကြံပြုချက်များ</string>
-    <string name="suggest_composers">✍️ တေးရေးဆရာ အကြံပြုချက်များ</string>
 </resources>
