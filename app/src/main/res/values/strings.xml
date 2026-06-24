@@ -106,7 +106,7 @@
 
     <!-- New Settings -->
     <string name="about_app">About App</string>
-    <string name="about_app_desc">Mara Lyrics is your spiritual companion, providing access to a vast collection of lyrics in the Mara language. Designed for worshippers, church groups, and anyone who loves Mara hymns and songs.</string>
+    <string name="about_app_desc">Mara Lyrics is a free and open-source application created by the Mara Lyrics Team for the Mara community. It provides easy access to a large collection of Mara songs and lyrics, preserving and promoting Mara language and culture.\n\nThe app includes various categories of songs, including Gospel, Love, Patriotic, and Traditional songs. Users can browse, search, and read lyrics offline, making it useful for daily use, gatherings, cultural events, and personal enjoyment.\n\nMara Lyrics is developed for Mara people worldwide and is available free of charge. The project is community-driven and dedicated to supporting the growth and preservation of Mara language and heritage.</string>
     <string name="credits">Credits</string>
     <string name="credits_desc">Honoring the songwriters, composers, contributors, translators, and community members whose dedication has preserved and shared Mara songs across generations.</string>
     <string name="licenses">Licenses</string>
