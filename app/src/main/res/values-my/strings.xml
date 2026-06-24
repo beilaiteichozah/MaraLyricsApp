@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">မရာ</string>
+    <string name="app_name">မရာ သီချင်းစာသား</string>
 
     <!-- Setup -->
-    <string name="setup_welcome">Mara Lyrics မှ ကြိုဆိုပါတယ်</string>
+    <string name="setup_welcome">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
     <string name="setup_description">မာရာသီချင်းစာသားများ စုစည်းမှု!</string>
     <string name="setup_language_title">ဘာသာစကား ရွေးချယ်ပါ</string>
     <string name="setup_category_title">အမျိုးအစား ရွေးချယ်ပါ</string>
@@ -15,7 +15,7 @@
     <string name="btn_finish">ပြီးပြီ</string>
 
     <!-- Home -->
-    <string name="home_title">Mara Lyrics</string>
+    <string name="home_title">မရာ သီချင်းစာသား</string>
     <string name="search_hint">ခေါင်းစဉ်၊ စာသား (သို့) နံပါတ်ဖြင့် ရှာပါ…</string>
     <string name="recently_viewed">လတ်တလော ကြည့်ရှုမှုများ</string>
     <string name="favorite_songs">အကြိုက်ဆုံး သီချင်းများ</string>
@@ -106,7 +106,7 @@
 
     <!-- New Settings -->
     <string name="about_app">အက်ပ်အကြောင်း</string>
-    <string name="about_app_desc">Mara Lyrics သည် မာရာဘာသာစကား သီချင်းစာသားများကို စုစည်းပေးထားသည့် ဝိညာဉ်ရေးရာ အဖော်မွန် ဖြစ်ပါသည်။</string>
+    <string name="about_app_desc">မရာ သီချင်းစာသား သည် မာရာဘာသာစကား သီချင်းစာသားများကို စုစည်းပေးထားသည့် ဝိညာဉ်ရေးရာ အဖော်မွန် ဖြစ်ပါသည်။</string>
     <string name="credits">ဂုဏ်ပြုလွှာ</string>
     <string name="credits_desc">မာရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
     <string name="licenses">လိုင်စင်များ</string>
@@ -119,7 +119,7 @@
     <string name="send_feedback">အကြံပြုချက် ပေးပို့ရန်</string>
     <string name="rate_app">အက်ပ်ကို အဆင့်သတ်မှတ်ပါ</string>
     <string name="share_app">အက်ပ်ကို မျှဝေပါ</string>
-    <string name="share_app_text">Mara Lyrics အက်ပ်ကို ကြည့်ရှုလိုက်ပါ။</string>
+    <string name="share_app_text">မရာ သီချင်းစာသား အက်ပ်ကို ကြည့်ရှုလိုက်ပါ။</string>
     <string name="data_sync">ဒေတာနှင့် အပ်ဒိတ်</string>
     <string name="auto_sync">အလိုအလျောက် အပ်ဒိတ်လုပ်မည်</string>
     <string name="auto_sync_desc">အပ်ဒိတ်များကို အလိုအလျောက် စစ်ဆေးမည်</string>
@@ -145,7 +145,7 @@
     <string name="onboarding_back">နောက်သို့</string>
     <string name="onboarding_get_started">စတင်မည်</string>
 
-    <string name="onboarding_title_1">Mara Lyrics မှ ကြိုဆိုပါတယ်</string>
+    <string name="onboarding_title_1">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
     <string name="onboarding_desc_1">မာရာသီချင်းများကို အချိန်မရွေး၊ နေရာမရွေး ရှာဖွေဖတ်ရှုနိုင်ပါပြီ။</string>
     <string name="onboarding_feature_1_1">အော့ဖ်လိုင်းသုံးနိုင်ခြင်း</string>
     <string name="onboarding_feature_1_2">သီချင်းပေါင်း ထောင်ချီ</string>
