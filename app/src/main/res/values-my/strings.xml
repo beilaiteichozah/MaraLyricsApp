@@ -254,8 +254,7 @@
     <string name="never">တစ်ခါမှမလုပ်ရသေးပါ</string>
     <string name="kb">KB</string>
     <string name="db_version">ဒေတာဘေ့စ် ဗားရှင်း</string>
+    <string name="suggest_songs">🎵 သီချင်း အကြံပြုချက်များ</string>
     <string name="suggest_artists">👤 အဆိုတော် အကြံပြုချက်များ</string>
-    <string name="suggest_songs">🎲 ကျပန်းရွေးပါ</string>
-    <string name="suggest_artists">🎲 ကျပန်းရွေးပါ</string>
-    <string name="suggest_songs">🎲 ကျပန်းရွေးပါ</string>
+    <string name="suggest_composers">✍️ တေးရေးဆရာ အကြံပြုချက်များ</string>
 </resources>
