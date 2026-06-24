@@ -3,7 +3,7 @@
 
     <!-- Setup -->
     <string name="setup_welcome">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
-    <string name="setup_description">မာရာသီချင်းစာသားများ စုစည်းမှု!</string>
+    <string name="setup_description">မရာသီချင်းစာသားများ စုစည်းမှု!</string>
     <string name="setup_language_title">ဘာသာစကား ရွေးချယ်ပါ</string>
     <string name="setup_category_title">အမျိုးအစား ရွေးချယ်ပါ</string>
     <string name="setup_download_title">ဒေတာဘေ့စ် ဒေါင်းလုဒ်လုပ်နေသည်</string>
@@ -106,9 +106,9 @@
 
     <!-- New Settings -->
     <string name="about_app">အက်ပ်အကြောင်း</string>
-    <string name="about_app_desc">မရာ သီချင်းစာသား သည် မာရာဘာသာစကား သီချင်းစာသားများကို စုစည်းပေးထားသည့် ဝိညာဉ်ရေးရာ အဖော်မွန် ဖြစ်ပါသည်။</string>
+    <string name="about_app_desc">မရာ သီချင်းစာသား သည် မရာဘာသာစကား သီချင်းစာသားများကို စုစည်းပေးထားသည့် ဝိညာဉ်ရေးရာ အဖော်မွန် ဖြစ်ပါသည်။</string>
     <string name="credits">ဂုဏ်ပြုလွှာ</string>
-    <string name="credits_desc">မာရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
+    <string name="credits_desc">မရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
     <string name="licenses">လိုင်စင်များ</string>
     <string name="mit_license_title">MIT လိုင်စင်</string>
     <string name="mit_license_text">Copyright (c) 2026 Maralyrics...</string>
@@ -146,7 +146,7 @@
     <string name="onboarding_get_started">စတင်မည်</string>
 
     <string name="onboarding_title_1">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
-    <string name="onboarding_desc_1">မာရာသီချင်းများကို အချိန်မရွေး၊ နေရာမရွေး ရှာဖွေဖတ်ရှုနိုင်ပါပြီ။</string>
+    <string name="onboarding_desc_1">မရာသီချင်းများကို အချိန်မရွေး၊ နေရာမရွေး ရှာဖွေဖတ်ရှုနိုင်ပါပြီ။</string>
     <string name="onboarding_feature_1_1">အော့ဖ်လိုင်းသုံးနိုင်ခြင်း</string>
     <string name="onboarding_feature_1_2">သီချင်းပေါင်း ထောင်ချီ</string>
     <string name="onboarding_feature_1_3">မြန်ဆန်သော ရှာဖွေမှု</string>
@@ -184,7 +184,7 @@
 
     <!-- Settings Labels -->
     <string name="color_palette">အရောင်အသွေး</string>
-    <string name="color_mara">မာရာ</string>
+    <string name="color_mara">မရာ</string>
     <string name="color_ocean">သမုဒ္ဒရာ</string>
     <string name="color_emerald">မြစိမ်း</string>
     <string name="color_sunset">နေဝင်ချိန်</string>
@@ -199,7 +199,7 @@
     <string name="btn_check_internet">အင်တာနက် စစ်ဆေးမည်</string>
     <string name="btn_continue_offline">အော့ဖ်လိုင်း ဆက်သုံးမည် (Demo)</string>
     <string name="setup_complete_title">ပြင်ဆင်မှု ပြီးပါပြီ</string>
-    <string name="sync_downloading_db">မာရာသီချင်းများ ဒေါင်းလုဒ်လုပ်နေသည်...</string>
+    <string name="sync_downloading_db">မရာသီချင်းများ ဒေါင်းလုဒ်လုပ်နေသည်...</string>
     <string name="sync_download_success">ဒေါင်းလုဒ်လုပ်ခြင်း အောင်မြင်ပါသည်။</string>
     <string name="sync_download_failed">ဒေါင်းလုဒ်လုပ်ခြင်း မအောင်မြင်ပါ။</string>
     <string name="sync_redownloading">ဒေတာဘေ့စ် ပြန်ဒေါင်းနေသည်...</string>
