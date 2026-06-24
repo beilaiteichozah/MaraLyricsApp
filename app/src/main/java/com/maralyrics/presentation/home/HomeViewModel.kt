@@ -137,7 +137,12 @@ class HomeViewModel @Inject constructor(
 
     fun toggleFavorite(songId: Long) {
         viewModelScope.launch {
-            toggleFavoriteUseCase(songId)
+            val isFavorite = toggleFavoriteUseCase(songId)
+            if (isFavorite) {
+                notificationManager.showFavoriteAdded()
+            } else {
+                notificationManager.showFavoriteRemoved()
+            }
         }
     }
 

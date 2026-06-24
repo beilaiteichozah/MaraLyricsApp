@@ -44,4 +44,7 @@ class NotificationManager @Inject constructor() {
     suspend fun showSyncStarted() = showNotification(NotificationData(message = "notif_sync_started", type = NotificationType.SYNCING))
     suspend fun showSyncSuccess() = showNotification(NotificationData(message = "notif_sync_success", type = NotificationType.SUCCESS))
     suspend fun showSyncFailed() = showNotification(NotificationData(message = "notif_sync_failed", type = NotificationType.ERROR))
+
+    suspend fun showFeedbackSuccess() = showNotification(NotificationData(message = "feedback_success", type = NotificationType.SUCCESS))
+    suspend fun showFeedbackSaved() = showNotification(NotificationData(message = "feedback_saved", type = NotificationType.INFO))
 }

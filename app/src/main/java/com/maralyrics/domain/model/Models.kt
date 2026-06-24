@@ -88,7 +88,8 @@ data class AppSettings(
 
 enum class AppLanguage(val code: String) {
     ENGLISH("en"),
-    MARA("mrh");
+    MARA("mrh"),
+    BURMESE("my");
 
     companion object {
         fun fromCode(code: String): AppLanguage =

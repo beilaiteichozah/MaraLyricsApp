@@ -204,6 +204,13 @@
 
     <!-- Settings Labels -->
     <string name="color_palette">Color Palette</string>
+    <string name="color_mara">Mara</string>
+    <string name="color_ocean">Ocean</string>
+    <string name="color_emerald">Emerald</string>
+    <string name="color_sunset">Sunset</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_rose">Rose</string>
+    <string name="color_slate">Slate</string>
     <string name="resume_session">Resume Previous Session</string>
     <string name="resume_session_desc">Start exactly where you left off</string>
     <string name="preview_label">Preview</string>
@@ -267,6 +274,7 @@
     <string name="closest_matches">Closest matches:</string>
     <string name="lang_mara">Mara</string>
     <string name="lang_english">English</string>
+    <string name="lang_burmese">မြန်မာ</string>
     <string name="lang_native">Native</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>

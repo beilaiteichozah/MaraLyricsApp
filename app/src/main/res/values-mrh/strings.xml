@@ -8,11 +8,11 @@
     <string name="setup_category_title">Hla phu atlyna</string>
     <string name="setup_download_title">Database âdao hai</string>
     <string name="setup_download_desc">Offline hmâ awpa ta hlazy â dao hai. He he Mini sâ kha a rao thei.</string>
-    <string name="setup_category_desc">Na hla kho viapa tlyh mah. He he settings lâ chhâpa ta thliepa thei a châ.</string>
+    <string name="setup_category_desc">Na khohpa hla phu a tlyh teh. He he paraihna liata na soh pathi thei aw.</string>
     <string name="btn_next">Hmiah</string>
     <string name="btn_back">Kua</string>
     <string name="btn_get_started">Pathao</string>
-    <string name="btn_finish">Chhâna</string>
+    <string name="btn_finish">Pathlô</string>
 
     <!-- Home -->
     <string name="home_title">Mara Hlabie</string>
@@ -32,8 +32,8 @@
     <string name="search_favorites">Paphasapazy Tlua...</string>
     <string name="no_matching_favorites">Paphasapa nah alyupa y ei</string>
     <string name="adjust_search_filters">Na tluana chvk athlinazy paryh teh.</string>
-    <string name="browse_songs">Hla zy moh mah</string>
-    <string name="discover_random">Hla random ta tlua mah</string>
+    <string name="browse_songs">Hlazy tlua teh</string>
+    <string name="discover_random">Hlazy a vialapa ta tlua teh</string>
 
     <!-- Categories -->
     <string name="cat_all">Azydua</string>
@@ -72,7 +72,7 @@
 
     <!-- Sync -->
     <string name="sync_available_title">Updates Âhmô</string>
-    <string name="sync_available_msg">Hla thiehpa zy ypa a châ. Offline ta hmâ n\'awpa ta download na kho mah?</string>
+    <string name="sync_available_msg">Hla thiehpazy a y. Offline ta hmâ n\'awpa ta nâ dao khoh ma?</string>
     <string name="sync_later">Chhâpa ta</string>
     <string name="sync_download">Download</string>
     <string name="sync_complete">Sync patlô hawpa a châ!</string>
@@ -107,9 +107,9 @@
     <!-- New Settings -->
     <string name="about_app">App kyh</string>
     <string name="about_app_desc">Mara Lyrics he na thlahpahliana hla bu châ ta, Mara reih ta hla hluhpi hmi n\'awpa ta eimâ chhihpa a châ. Siahliana, worshipper zy nata Mara hla kho viapa zy châ ta eimâ chhihpa a châ.</string>
-    <string name="credits">Credits</string>
+    <string name="credits">Alyna Bie</string>
     <string name="credits_desc">Mara Hlazy he chhâ kha nata chhâ kha vaw khâsia laihpa ta, pakha hnoh pakha a vaw hlâ laihpa Hla Phituhpazy, Hlabie Rohtuhpazy, Reihpaleituhpazy, nata eima vaihtlâh zydua hnohta alyna bie eima hlâ.</string>
-    <string name="licenses">Licenses</string>
+    <string name="licenses">Laisiezy</string>
     <string name="mit_license_title">MIT License</string>
     <string name="mit_license_text">Copyright (c) 2026 Maralyrics\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="preview_text">He he na screen liata hlabie â luahna dâh pamosapa a châ. Font laichyhna nata châtlâh â hniahlana kha na khodâh ta na tao pathi thei.</string>
@@ -117,7 +117,7 @@
     <string name="help_faq">Baona / HHH</string>
     <string name="contact_us">Azaona</string>
     <string name="send_feedback">Pachâpiepa Paphao</string>
-    <string name="rate_app">App he thie teh</string>
+    <string name="rate_app">App he thlie teh</string>
     <string name="share_app">App he hlâ teh</string>
     <string name="share_app_text">Mara Hlabie photo zydua châta Mara Hlabie App he moh chhi teh.</string>
     <string name="data_sync">Data &amp; Sync</string>
@@ -167,7 +167,7 @@
     <string name="onboarding_feature_2_2">Offline tluana</string>
     <string name="onboarding_feature_2_3">Samâ khokheipazy</string>
 
-    <string name="onboarding_title_3">Na Paphasapazy lâ Pachô la</string>
+    <string name="onboarding_title_3">Na Khohchaipazy Pachô</string>
     <string name="onboarding_desc_3">Na khoh chaipa hlazy kha a pha kawpa ta pahmaoh la, anao kawpa ta moh mah y.</string>
     <string name="onboarding_feature_3_1">Paphasapa Hlazy</string>
     <string name="onboarding_feature_3_2">Paphasapazy Tlua</string>
@@ -175,7 +175,7 @@
     <string name="onboarding_feature_3_4">🎲 Eino na paâh teh</string>
 
     <string name="onboarding_title_4">Na Hlabie, Na Tlôpahnopa</string>
-    <string name="onboarding_desc_4">Na khohpa nah âhmiepa ta Mara Hlabie he paraih teh.</string>
+    <string name="onboarding_desc_4">Na khohpa nah â hmiepa ta Mara Hlabie he paraih teh.</string>
     <string name="onboarding_feature_4_1">App Reih</string>
     <string name="onboarding_feature_4_2">Hnôhbai Atlyna</string>
     <string name="onboarding_feature_4_3">Hla font laichyhna</string>
@@ -204,6 +204,13 @@
 
     <!-- Settings Labels -->
     <string name="color_palette">Rôh Phia</string>
+    <string name="color_mara">Mara</string>
+    <string name="color_ocean">Ralihpi</string>
+    <string name="color_emerald">Anohpa</string>
+    <string name="color_sunset">Nohtla</string>
+    <string name="color_purple">Saihdôhpa</string>
+    <string name="color_rose">Rôs</string>
+    <string name="color_slate">Lôphia</string>
     <string name="resume_session">Hria Pachiepazy Pazao</string>
     <string name="resume_session_desc">Hria pachiena tawh pathao</string>
     <string name="preview_label">Hmôchhilina</string>
@@ -213,7 +220,7 @@
     <string name="btn_continue_offline">Offline  Hmiatôh (Demo dâh)</string>
     <string name="setup_complete_title">Patyhpa Patlô</string>
     <string name="sync_downloading_db">Mara Hlabie data â dao hai...</string>
-    <string name="sync_download_success">Hlazy cha hlaotoh kawpa ta â dao khai haw.</string>
+    <string name="sync_download_success">Hlazy hlaotoh kawpa ta â dao khai haw.</string>
     <string name="sync_download_failed">Hlazy a dao thei vei.</string>
     <string name="sync_redownloading">Database â dao pathai hai...</string>
 
@@ -230,7 +237,7 @@
     <string name="exit_press_back">Kuana kha hmie via teh.</string>
     <string name="star_favorite">Awhsi</string>
     <string name="star_border_favorite">Awhsilei</string>
-    <string name="no_favorites_desc">Hlazy kha❤️ icon he hmiepa ta na paphasapa lâ soh mah y.</string>
+    <string name="no_favorites_desc">Hlazy kha ❤️ icon he hmiepa ta na paphasapa lâ soh mah y.</string>
     <string name="social_platform">Social Platform</string>
     <string name="platform_facebook">Facebook</string>
     <string name="platform_youtube">YouTube</string>
@@ -267,23 +274,24 @@
     <string name="closest_matches">Âlyu viapazy:</string>
     <string name="lang_mara">Mara</string>
     <string name="lang_english">English</string>
+    <string name="lang_burmese">မြန်မာ</string>
     <string name="lang_native">Native</string>
     <string name="theme_light">Pahvâ</string>
     <string name="theme_dark">Zoh</string>
-    <string name="theme_system">System</string>
-    <string name="notif_mode_light">Light mode</string>
-    <string name="notif_mode_dark">Dark mode</string>
-    <string name="notif_mode_system">System theme</string>
+    <string name="theme_system">Khaw</string>
+    <string name="notif_mode_light">Pahvâ</string>
+    <string name="notif_mode_dark">Zoh</string>
+    <string name="notif_mode_system">Khaw Hneipa</string>
     <string name="notif_default_cat_updated">Hla phu tlyhpa cha %1$s lâ â pathlai haw</string>
-    <string name="notif_color_theme_updated">Color theme cha %1$s lâ â pathlai haw</string>
-    <string name="notif_cache_cleared">Cache pathaisa hawpa a châ</string>
+    <string name="notif_color_theme_updated">Hnôh rôh cha cha %1$s lâ â pathlai haw</string>
+    <string name="notif_cache_cleared">A puapa pathaisa hawpa a châ</string>
     <string name="notif_fav_backup_success">Paphasapazy pachô hawpa a châ</string>
     <string name="notif_fav_backup_failed">Pachôna a hlaotoh vei: %1$s</string>
     <string name="notif_fav_restore_success">Paphasapa %1$d lapakhua hawpa a châ</string>
     <string name="notif_fav_restore_no_file">Pachôpa y vei</string>
     <string name="notif_fav_restore_failed">Lapakhuana a hlaotoh vei: %1$s</string>
     <string name="sync_downloading_prefix">%1$s â dao hai…</string>
-    <string name="never">Mâh vei</string>
+    <string name="never">Khatihmâh</string>
     <string name="kb">KB</string>
     <string name="db_version">Database Version</string>
 </resources>

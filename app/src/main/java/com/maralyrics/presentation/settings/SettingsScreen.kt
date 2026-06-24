@@ -424,8 +424,15 @@ fun ColorThemeSelector(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = theme.name.lowercase(java.util.Locale.ROOT)
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.ROOT) else it.toString() },
+                    text = stringResource(when(theme) {
+                        AppColorTheme.MARA -> R.string.color_mara
+                        AppColorTheme.OCEAN -> R.string.color_ocean
+                        AppColorTheme.EMERALD -> R.string.color_emerald
+                        AppColorTheme.SUNSET -> R.string.color_sunset
+                        AppColorTheme.PURPLE -> R.string.color_purple
+                        AppColorTheme.ROSE -> R.string.color_rose
+                        AppColorTheme.SLATE -> R.string.color_slate
+                    }),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -522,7 +529,15 @@ fun LanguageSelector(selected: AppLanguage, onSelected: (AppLanguage) -> Unit) {
             FilterChip(
                 selected = language == selected,
                 onClick = { onSelected(language) },
-                label = { Text(if (language == AppLanguage.MARA) stringResource(R.string.lang_mara) else stringResource(R.string.lang_english)) },
+                label = { 
+                    Text(
+                        when(language) {
+                            AppLanguage.MARA -> stringResource(R.string.lang_mara)
+                            AppLanguage.BURMESE -> stringResource(R.string.lang_burmese)
+                            else -> stringResource(R.string.lang_english)
+                        }
+                    ) 
+                },
                 shape = RoundedCornerShape(12.dp)
             )
         }

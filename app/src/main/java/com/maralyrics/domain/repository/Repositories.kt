@@ -13,7 +13,7 @@ interface SongRepository {
     suspend fun getSongBySlug(slug: String): Song?
     fun searchSongs(query: String, categories: List<String>?): Flow<List<Song>>
     fun searchSongsWithFuzzy(query: String, categories: List<String>?): Flow<SearchResponse>
-    suspend fun toggleFavorite(songId: Long)
+    suspend fun toggleFavorite(songId: Long): Boolean
     suspend fun markAsViewed(songId: Long)
     suspend fun saveSongs(songs: List<Song>)
     suspend fun getLocalSongCount(): Int

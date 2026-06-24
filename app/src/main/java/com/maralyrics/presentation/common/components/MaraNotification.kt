@@ -19,8 +19,18 @@ import com.maralyrics.presentation.common.notification.NotificationData
 fun MaraNotification(data: NotificationData) {
     val translatedMessage = if (data.message.contains("|")) {
         val parts = data.message.split("|")
-        val resId = getResId(parts[0])
-        if (resId != 0) stringResource(resId, parts[1]) else data.message
+        val templateResId = getResId(parts[0])
+        if (templateResId != 0) {
+            val argParts = parts[1].split(", ")
+            val resolvedArgs = mutableListOf<String>()
+            for (part in argParts) {
+                val argResId = getResId(part)
+                resolvedArgs.add(if (argResId != 0) stringResource(argResId) else part)
+            }
+            stringResource(templateResId, resolvedArgs.joinToString(", "))
+        } else {
+            data.message
+        }
     } else {
         val resId = getResId(data.message)
         if (resId != 0) stringResource(resId) else data.message
@@ -79,7 +89,6 @@ fun MaraNotification(data: NotificationData) {
     }
 }
 
-@Composable
 fun getResId(key: String): Int {
     return when (key) {
         "notif_offline" -> R.string.notif_offline
@@ -108,6 +117,24 @@ fun getResId(key: String): Int {
         "sync_download_failed" -> R.string.sync_download_failed
         "sync_redownloading" -> R.string.sync_redownloading
         "exit_press_back" -> R.string.exit_press_back
+        "feedback_success" -> R.string.feedback_success
+        "feedback_saved" -> R.string.feedback_saved
+        "lang_mara" -> R.string.lang_mara
+        "lang_english" -> R.string.lang_english
+        "lang_burmese" -> R.string.lang_burmese
+        "color_mara" -> R.string.color_mara
+        "color_ocean" -> R.string.color_ocean
+        "color_emerald" -> R.string.color_emerald
+        "color_sunset" -> R.string.color_sunset
+        "color_purple" -> R.string.color_purple
+        "color_rose" -> R.string.color_rose
+        "color_slate" -> R.string.color_slate
+        "cat_all" -> R.string.cat_all
+        "cat_gospel" -> R.string.cat_gospel
+        "cat_love" -> R.string.cat_love
+        "cat_patriotic" -> R.string.cat_patriotic
+        "cat_traditional" -> R.string.cat_traditional
+        "cat_uncategorized" -> R.string.cat_uncategorized
         else -> 0
     }
 }

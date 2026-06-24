@@ -2,4 +2,7 @@
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
     <locale android:name="en" />
     <locale android:name="mrh" />
+    <locale android:name="my" />
+    <locale android:name="my-rMM" />
+    <locale android:name="my-MM" />
 </locale-config>

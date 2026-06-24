@@ -8,6 +8,7 @@ import com.maralyrics.domain.model.SongLayoutType
 import com.maralyrics.domain.model.SongSortOrder
 import com.maralyrics.domain.repository.SettingsRepository
 import com.maralyrics.domain.usecase.*
+import com.maralyrics.presentation.common.notification.NotificationManager
 import com.maralyrics.utils.SearchUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -22,7 +23,8 @@ class FavoriteSongsViewModel @Inject constructor(
     private val getSurpriseSongUseCase: GetSurpriseSongUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val getSettingsUseCase: GetSettingsUseCase,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val notificationManager: NotificationManager
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -132,9 +134,15 @@ class FavoriteSongsViewModel @Inject constructor(
         }
     }
 
+
     fun toggleFavorite(songId: Long) {
         viewModelScope.launch {
-            toggleFavoriteUseCase(songId)
+            val isFavorite = toggleFavoriteUseCase(songId)
+            if (isFavorite) {
+                notificationManager.showFavoriteAdded()
+            } else {
+                notificationManager.showFavoriteRemoved()
+            }
         }
     }
 

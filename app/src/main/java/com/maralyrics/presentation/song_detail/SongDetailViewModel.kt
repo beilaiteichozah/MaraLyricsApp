@@ -89,9 +89,8 @@ class SongDetailViewModel @Inject constructor(
         val currentState = _uiState.value
         if (currentState is SongDetailUiState.Success) {
             viewModelScope.launch {
-                toggleFavoriteUseCase(songId)
-                val isFav = !currentState.song.isFavorite
-                if (isFav) {
+                val isFavorite = toggleFavoriteUseCase(songId)
+                if (isFavorite) {
                     notificationManager.showFavoriteAdded()
                 } else {
                     notificationManager.showFavoriteRemoved()
@@ -116,9 +115,9 @@ class SongDetailViewModel @Inject constructor(
             )
             val result = submitFeedbackUseCase(feedback)
             if (result.isSuccess) {
-                notificationManager.showSuccess("Report submitted successfully.")
+                notificationManager.showFeedbackSuccess()
             } else {
-                notificationManager.showInfo("Report saved. It will be sent automatically when you're online.")
+                notificationManager.showFeedbackSaved()
             }
         }
     }

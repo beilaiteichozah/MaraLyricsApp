@@ -36,7 +36,12 @@ class SetupViewModel @Inject constructor(
         viewModelScope.launch {
             updateSettingsUseCase.updateLanguage(language)
             _uiState.update { it.copy(selectedLanguage = language) }
-            notificationManager.showLanguageChanged(if (language == AppLanguage.MARA) "Mara" else "English")
+            val langKey = when(language) {
+                AppLanguage.MARA -> "lang_mara"
+                AppLanguage.BURMESE -> "lang_burmese"
+                else -> "lang_english"
+            }
+            notificationManager.showLanguageChanged(langKey)
         }
     }
 

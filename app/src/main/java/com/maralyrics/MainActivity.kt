@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.R
+import com.maralyrics.domain.model.AppLanguage
 import com.maralyrics.presentation.MainViewModel
 import com.maralyrics.presentation.common.notification.NotificationHost
 import com.maralyrics.presentation.common.notification.NotificationManager
@@ -76,7 +77,9 @@ class MainActivity : ComponentActivity() {
             splashScreen.setKeepOnScreenCondition { !isReady }
 
             val context = LocalContext.current
-            val locale = remember(language) { java.util.Locale(language.code) }
+            val locale = remember(language) {
+                java.util.Locale.forLanguageTag(language.code)
+            }
             val configuration = remember(locale) {
                 android.content.res.Configuration(context.resources.configuration).apply {
                     setLocale(locale)

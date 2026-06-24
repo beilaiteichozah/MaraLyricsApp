@@ -51,8 +51,9 @@ fun OnboardingContent(
         topBar = {
             Row(
                 modifier = Modifier
+                    .statusBarsPadding()
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(top = 16.dp, end = 16.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 if (pagerState.currentPage < 3) {
@@ -149,6 +150,7 @@ fun OnboardingContent(
         }
     }
 }
+
 
 @Composable
 fun OnboardingPage(page: Int) {
@@ -281,3 +283,5 @@ fun OnboardingPage(page: Int) {
         }
     }
 }
+
+

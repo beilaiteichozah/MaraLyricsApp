@@ -189,7 +189,11 @@ fun LanguageStep(
                             onClick = null
                         )
                         Text(
-                            text = if (language == AppLanguage.MARA) stringResource(R.string.lang_mara) + " (" + stringResource(R.string.lang_native) + ")" else stringResource(R.string.lang_english),
+                            text = when(language) {
+                                AppLanguage.MARA -> stringResource(R.string.lang_mara) + " (" + stringResource(R.string.lang_native) + ")"
+                                AppLanguage.BURMESE -> stringResource(R.string.lang_burmese)
+                                else -> stringResource(R.string.lang_english)
+                            },
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal),
                             modifier = Modifier.padding(start = 16.dp)
                         )

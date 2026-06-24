@@ -70,7 +70,7 @@ class GetSurpriseSongUseCase @Inject constructor(
 class ToggleFavoriteUseCase @Inject constructor(
     private val songRepository: SongRepository
 ) {
-    suspend operator fun invoke(songId: Long) = songRepository.toggleFavorite(songId)
+    suspend operator fun invoke(songId: Long): Boolean = songRepository.toggleFavorite(songId)
 }
 
 class GetSongDetailUseCase @Inject constructor(

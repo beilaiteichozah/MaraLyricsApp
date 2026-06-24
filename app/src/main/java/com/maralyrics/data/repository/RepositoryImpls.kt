@@ -243,11 +243,13 @@ class SongRepositoryImpl @Inject constructor(
             .trim()
     }
 
-    override suspend fun toggleFavorite(songId: Long) {
-        if (favoriteDao.isFavorite(songId)) {
+    override suspend fun toggleFavorite(songId: Long): Boolean {
+        return if (favoriteDao.isFavorite(songId)) {
             favoriteDao.removeFavorite(songId)
+            false
         } else {
             favoriteDao.addFavorite(FavoriteEntity(songId = songId, favoritedAt = System.currentTimeMillis()))
+            true
         }
     }
 

@@ -56,8 +56,12 @@ class SettingsViewModel @Inject constructor(
     fun updateLanguage(language: AppLanguage) {
         viewModelScope.launch {
             updateSettingsUseCase.updateLanguage(language)
-            val langStr = if (language == AppLanguage.MARA) "Mara" else "English"
-            notificationManager.showLanguageChanged(langStr)
+            val langKey = when(language) {
+                AppLanguage.MARA -> "lang_mara"
+                AppLanguage.BURMESE -> "lang_burmese"
+                else -> "lang_english"
+            }
+            notificationManager.showLanguageChanged(langKey)
         }
     }
 
@@ -93,7 +97,20 @@ class SettingsViewModel @Inject constructor(
             
             updateSettingsUseCase.updateCategories(currentCategories)
             
-            val message = if (currentCategories.contains("All")) "All" else currentCategories.joinToString(", ")
+            val message = if (currentCategories.contains("All")) {
+                "cat_all"
+            } else {
+                currentCategories.joinToString(", ") { cat ->
+                    when (cat) {
+                        "Gospel" -> "cat_gospel"
+                        "Love" -> "cat_love"
+                        "Patriotic" -> "cat_patriotic"
+                        "Traditional" -> "cat_traditional"
+                        "Uncategorized" -> "cat_uncategorized"
+                        else -> cat
+                    }
+                }
+            }
             notificationManager.showNotification(
                 com.maralyrics.presentation.common.notification.NotificationData(
                     message = "notif_default_cat_updated|$message",
@@ -136,11 +153,18 @@ class SettingsViewModel @Inject constructor(
     fun updateColorTheme(theme: AppColorTheme) {
         viewModelScope.launch {
             updateSettingsUseCase.updateColorTheme(theme)
-            val themeName = theme.name.lowercase(java.util.Locale.ROOT)
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.ROOT) else it.toString() }
+            val themeKey = when(theme) {
+                AppColorTheme.MARA -> "color_mara"
+                AppColorTheme.OCEAN -> "color_ocean"
+                AppColorTheme.EMERALD -> "color_emerald"
+                AppColorTheme.SUNSET -> "color_sunset"
+                AppColorTheme.PURPLE -> "color_purple"
+                AppColorTheme.ROSE -> "color_rose"
+                AppColorTheme.SLATE -> "color_slate"
+            }
             notificationManager.showNotification(
                 com.maralyrics.presentation.common.notification.NotificationData(
-                    message = "notif_color_theme_updated|$themeName",
+                    message = "notif_color_theme_updated|$themeKey",
                     type = com.maralyrics.presentation.common.notification.NotificationType.SUCCESS
                 )
             )

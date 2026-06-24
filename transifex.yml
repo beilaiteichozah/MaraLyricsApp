@@ -1,0 +1,13 @@
+# Transifex GitHub Integration configuration
+# Documentation: https://help.transifex.com/en/articles/2140021-github-integration
+
+# Map Transifex projects to the GitHub repository
+projects:
+  - name: maralyrics
+    # The pull type defines how translations are pulled from Transifex to GitHub
+    pull:
+      # Use 'file' if you want a 1:1 mapping with .tx/config
+      mapping_type: file
+    # The push type defines how source strings are pushed from GitHub to Transifex
+    push:
+      mapping_type: file

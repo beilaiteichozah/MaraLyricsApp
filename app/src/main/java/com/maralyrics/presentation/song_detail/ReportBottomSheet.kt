@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,12 +28,18 @@ fun ReportBottomSheet(
     var message by remember { mutableStateOf("") }
     var isSubmitting by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
-        CompositionLocalProvider(LocalContext provides LocalContext.current) {
+        CompositionLocalProvider(
+            LocalContext provides context,
+            LocalConfiguration provides configuration
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

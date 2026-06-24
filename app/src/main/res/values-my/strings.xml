@@ -1,0 +1,261 @@
+<resources>
+    <string name="app_name">မရာ</string>
+
+    <!-- Setup -->
+    <string name="setup_welcome">Mara Lyrics မှ ကြိုဆိုပါတယ်</string>
+    <string name="setup_description">မာရာသီချင်းစာသားများ စုစည်းမှု!</string>
+    <string name="setup_language_title">ဘာသာစကား ရွေးချယ်ပါ</string>
+    <string name="setup_category_title">အမျိုးအစား ရွေးချယ်ပါ</string>
+    <string name="setup_download_title">ဒေတာဘေ့စ် ဒေါင်းလုဒ်လုပ်နေသည်</string>
+    <string name="setup_download_desc">အော့ဖ်လိုင်းသုံးရန် သီချင်းများ ဒေါင်းလုဒ်လုပ်နေပါသည်။ ခဏစောင့်ပါ။</string>
+    <string name="setup_category_desc">စိတ်ကြိုက်အမျိုးအစားကို ရွေးချယ်ပါ။ နောက်မှလည်း ပြောင်းလဲနိုင်ပါသည်။</string>
+    <string name="btn_next">ရှေ့သို့</string>
+    <string name="btn_back">နောက်သို့</string>
+    <string name="btn_get_started">စတင်မည်</string>
+    <string name="btn_finish">ပြီးပြီ</string>
+
+    <!-- Home -->
+    <string name="home_title">Mara Lyrics</string>
+    <string name="search_hint">ခေါင်းစဉ်၊ စာသား (သို့) နံပါတ်ဖြင့် ရှာပါ…</string>
+    <string name="recently_viewed">လတ်တလော ကြည့်ရှုမှုများ</string>
+    <string name="favorite_songs">အကြိုက်ဆုံး သီချင်းများ</string>
+    <string name="popular_songs">လူကြိုက်များသော သီချင်းများ</string>
+    <string name="random_suggestions">အကြံပြုချက်များ</string>
+    <string name="no_recent_songs">လတ်တလော သီချင်းများ မရှိသေးပါ။</string>
+    <string name="no_favorites">အကြိုက်ဆုံး သီချင်းများ မရှိသေးပါ။</string>
+    <string name="view_all">အားလုံးကြည့်မည်</string>
+    <string name="categories">အမျိုးအစားများ</string>
+    <string name="surprise_me">အံ့သြသွားစေရမယ်</string>
+    <string name="stats_favorites">အကြိုက်ဆုံးများ</string>
+    <string name="stats_artists">အဆိုတော်များ</string>
+    <string name="stats_composers">တေးရေးဆရာများ</string>
+    <string name="search_favorites">အကြိုက်ဆုံးများထဲမှ ရှာပါ...</string>
+    <string name="no_matching_favorites">ကိုက်ညီသော သီချင်းမရှိပါ</string>
+    <string name="adjust_search_filters">ရှာဖွေမှုစစ်ထုတ်ခြင်းကို ပြောင်းကြည့်ပါ။</string>
+    <string name="browse_songs">သီချင်းများ ရှာဖွေမည်</string>
+    <string name="discover_random">ကျပန်းသီချင်း ရှာမည်</string>
+
+    <!-- Categories -->
+    <string name="cat_all">အားလုံး</string>
+    <string name="cat_gospel">ဓမ္မတေး</string>
+    <string name="cat_love">အချစ်</string>
+    <string name="cat_patriotic">မျိုးချစ်</string>
+    <string name="cat_traditional">ရိုးရာ</string>
+    <string name="cat_uncategorized">အမျိုးအစားမသတ်မှတ်ရသေး</string>
+
+    <!-- Song Detail -->
+    <string name="song_number">သီချင်းနံပါတ် #%1$d</string>
+    <string name="lyrics_copied">စာသားများကို ကူးယူပြီးပါပြီ</string>
+    <string name="share_lyrics">သီချင်းစာသား မျှဝေမည်</string>
+    <string name="font_size">စာလုံးအရွယ်အစား</string>
+    <string name="views_suffix">ကြည့်ရှုမှုများ</string>
+
+    <!-- Settings -->
+    <string name="settings_title">ဆက်တင်များ</string>
+    <string name="set_language">ဘာသာစကား</string>
+    <string name="set_theme">အက်ပ်အပြင်အဆင်</string>
+    <string name="set_theme_light">အလင်း</string>
+    <string name="set_theme_dark">အမှောင်</string>
+    <string name="set_theme_system">စနစ်အတိုင်း</string>
+    <string name="set_default_cat">မူလအမျိုးအစား</string>
+    <string name="set_offline_data">အော့ဖ်လိုင်းဒေတာ</string>
+    <string name="total_songs">သီချင်းစုစုပေါင်း</string>
+    <string name="db_size">ဒေတာဘေ့စ်အရွယ်အစား</string>
+    <string name="last_sync">နောက်ဆုံး အပ်ဒိတ်လုပ်သည့်ရက်</string>
+    <string name="app_version">အက်ပ်ဗားရှင်း</string>
+    <string name="sync_now">အခု အပ်ဒိတ်လုပ်မယ်</string>
+    <string name="redownload_db">ဒေတာဘေ့စ် ပြန်ဒေါင်းမည်</string>
+    <string name="clear_data">အော့ဖ်လိုင်းဒေတာ ဖြတ်မည်</string>
+    <string name="clear_data_confirm">အော့ဖ်လိုင်းဒေတာအားလုံးကို ဖြတ်ပစ်မှာ သေချာပါသလား? ပြန်ဒေါင်းဖို့ အင်တာနက် လိုအပ်ပါလိမ့်မယ်။</string>
+    <string name="cancel">ပယ်ဖျက်</string>
+    <string name="delete">ဖြတ်မည်</string>
+
+    <!-- Sync -->
+    <string name="sync_available_title">အပ်ဒိတ်အသစ် ရှိသည်</string>
+    <string name="sync_available_msg">သီချင်းအသစ်များ ရှိနေပါသည်။ အော့ဖ်လိုင်းသုံးရန် ဒေါင်းလုဒ်လုပ်မလား?</string>
+    <string name="sync_later">နောက်မှ</string>
+    <string name="sync_download">ဒေါင်းလုဒ်လုပ်မည်</string>
+    <string name="sync_complete">အပ်ဒိတ် အောင်မြင်ပါသည်!</string>
+    <string name="sync_failed">အပ်ဒိတ် မအောင်မြင်ပါ။ အင်တာနက် ချိတ်ဆက်မှုကို စစ်ဆေးပါ။</string>
+    <string name="sync_progress">သီချင်း %1$d ဒေါင်းလုဒ်လုပ်ပြီးပါပြီ</string>
+    <string name="sync_remaining">ကျန်ရှိချိန်: ခန့်မှန်းခြေ %1$d စက္ကန့်</string>
+    <string name="no_songs">သီချင်းမရှိပါ</string>
+    <string name="no_results">ကိုက်ညီသော သီချင်းမရှိပါ</string>
+    <string name="offline_no_data">သီချင်းများ ဒေါင်းလုဒ်လုပ်ရန် အင်တာနက် ချိတ်ဆက်ပါ။</string>
+
+    <!-- Artist & Composer -->
+    <string name="artist">အဆိုတော်</string>
+    <string name="unknown_artist">အမည်မသိ အဆိုတော်</string>
+    <string name="composer">တေးရေး</string>
+    <string name="unknown_composer">အမည်မသိ တေးရေး</string>
+    <string name="category">အမျိုးအစား</string>
+    <string name="songs">သီချင်းများ</string>
+    <string name="songs_by_format">%1$s ၏ သီချင်းများ</string>
+    <string name="song_count_format">သီချင်း %1$d ပုဒ်</string>
+
+    <!-- Feedback -->
+    <string name="feedback">အကြံပြုချက်</string>
+    <string name="report_issue">အမှားတင်ပြရန်</string>
+    <string name="feedback_title">အကြံပြုချက် ပေးပို့ရန်</string>
+    <string name="feedback_name">အမည်</string>
+    <string name="feedback_email">အီးမေးလ်</string>
+    <string name="feedback_message">သတင်းစကား</string>
+    <string name="btn_submit">ပေးပို့မည်</string>
+    <string name="feedback_success">အကြံပြုချက် ပေးပို့မှုအတွက် ကျေးဇူးတင်ပါသည်!</string>
+    <string name="feedback_saved">အော့ဖ်လိုင်း ဖြစ်နေသည်။ အင်တာနက်ရလျှင် အလိုအလျောက် ပေးပို့သွားပါမည်။</string>
+
+    <!-- New Settings -->
+    <string name="about_app">အက်ပ်အကြောင်း</string>
+    <string name="about_app_desc">Mara Lyrics သည် မာရာဘာသာစကား သီချင်းစာသားများကို စုစည်းပေးထားသည့် ဝိညာဉ်ရေးရာ အဖော်မွန် ဖြစ်ပါသည်။</string>
+    <string name="credits">ဂုဏ်ပြုလွှာ</string>
+    <string name="credits_desc">မာရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
+    <string name="licenses">လိုင်စင်များ</string>
+    <string name="mit_license_title">MIT လိုင်စင်</string>
+    <string name="mit_license_text">Copyright (c) 2026 Maralyrics...</string>
+    <string name="preview_text">ဒါကတော့ သီချင်းစာသားတွေ မြင်ရမယ့် ပုံစံဖြစ်ပါတယ်။</string>
+    <string name="support_feedback">အကူအညီနှင့် အကြံပြုချက်</string>
+    <string name="help_faq">အမေးအဖြေများ</string>
+    <string name="contact_us">ဆက်သွယ်ရန်</string>
+    <string name="send_feedback">အကြံပြုချက် ပေးပို့ရန်</string>
+    <string name="rate_app">အက်ပ်ကို အဆင့်သတ်မှတ်ပါ</string>
+    <string name="share_app">အက်ပ်ကို မျှဝေပါ</string>
+    <string name="share_app_text">Mara Lyrics အက်ပ်ကို ကြည့်ရှုလိုက်ပါ။</string>
+    <string name="data_sync">ဒေတာနှင့် အပ်ဒိတ်</string>
+    <string name="auto_sync">အလိုအလျောက် အပ်ဒိတ်လုပ်မည်</string>
+    <string name="auto_sync_desc">အပ်ဒိတ်များကို အလိုအလျောက် စစ်ဆေးမည်</string>
+    <string name="wifi_only">Wi-Fi သာ</string>
+    <string name="wifi_only_desc">Wi-Fi ချိတ်ဆက်ထားမှသာ အပ်ဒိတ်လုပ်မည်</string>
+    <string name="backup_restore_favorites">အကြိုက်ဆုံးများ သိမ်းဆည်း/ပြန်ယူမည်</string>
+    <string name="backup_favorites">အကြိုက်ဆုံးများ သိမ်းဆည်းမည်</string>
+    <string name="restore_favorites">အကြိုက်ဆုံးများ ပြန်ယူမည်</string>
+    <string name="clear_cache">Cache ဖြတ်မည်</string>
+    <string name="clear_cache_desc">နေရာလွတ်ရစေရန် Cache များကို ဖြတ်ထုတ်ပါ</string>
+    <string name="accessibility_display">ပြသမှု ဆက်တင်များ</string>
+    <string name="default_font_size">မူလ စာလုံးအရွယ်အစား</string>
+    <string name="line_spacing">စာကြောင်းအကွာအဝေး</string>
+    <string name="legal">ဥပဒေရေးရာ</string>
+    <string name="privacy_policy">ကိုယ်ရေးအချက်အလက် မူဝါဒ</string>
+    <string name="terms_of_use">အသုံးပြုမှု စည်းကမ်းချက်များ</string>
+    <string name="build_date">တည်ဆောက်သည့်ရက်</string>
+    <string name="copyright_format">မူပိုင်ခွင့် © %1$s</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">ကျော်မည်</string>
+    <string name="onboarding_next">ရှေ့သို့</string>
+    <string name="onboarding_back">နောက်သို့</string>
+    <string name="onboarding_get_started">စတင်မည်</string>
+
+    <string name="onboarding_title_1">Mara Lyrics မှ ကြိုဆိုပါတယ်</string>
+    <string name="onboarding_desc_1">မာရာသီချင်းများကို အချိန်မရွေး၊ နေရာမရွေး ရှာဖွေဖတ်ရှုနိုင်ပါပြီ။</string>
+    <string name="onboarding_feature_1_1">အော့ဖ်လိုင်းသုံးနိုင်ခြင်း</string>
+    <string name="onboarding_feature_1_2">သီချင်းပေါင်း ထောင်ချီ</string>
+    <string name="onboarding_feature_1_3">မြန်ဆန်သော ရှာဖွေမှု</string>
+
+    <string name="onboarding_title_2">အစွမ်းထက်သော ရှာဖွေမှု</string>
+    <string name="onboarding_desc_2">ခေါင်းစဉ်၊ စာသား၊ နံပါတ်၊ အဆိုတော် သို့မဟုတ် တေးရေးဖြင့် ရှာဖွေပါ။</string>
+    <string name="onboarding_feature_2_1">ချက်ချင်းရှာဖွေနိုင်ခြင်း</string>
+    <string name="onboarding_feature_2_2">အော့ဖ်လိုင်း ရှာဖွေနိုင်ခြင်း</string>
+    <string name="onboarding_feature_2_3">စမတ်ကျသော အကြံပြုချက်များ</string>
+
+    <string name="onboarding_title_3">အကြိုက်ဆုံးများ သိမ်းဆည်းပါ</string>
+    <string name="onboarding_desc_3">သင်နှစ်သက်သော သီချင်းများကို အလွယ်တကူ သိမ်းဆည်းထားပါ။</string>
+    <string name="onboarding_feature_3_1">အကြိုက်ဆုံး သီချင်းများ</string>
+    <string name="onboarding_feature_3_2">အကြိုက်ဆုံးများထဲမှ ရှာပါ</string>
+    <string name="onboarding_feature_3_3">အမျိုးအစားအလိုက် စစ်ထုတ်ပါ</string>
+    <string name="onboarding_feature_3_4">🎲 ကျပန်းရွေးပါ</string>
+
+    <string name="onboarding_title_4">စိတ်ကြိုက် အတွေ့အကြုံ</string>
+    <string name="onboarding_desc_4">သင့်စိတ်ကြိုက် ဆက်တင်များကို ပြောင်းလဲပါ။</string>
+    <string name="onboarding_feature_4_1">ဘာသာစကား</string>
+    <string name="onboarding_feature_4_2">အပြင်အဆင် ရွေးချယ်မှု</string>
+    <string name="onboarding_feature_4_3">စာလုံးအရွယ်အစား</string>
+    <string name="onboarding_feature_4_4">အရင်ကြည့်လက်စမှ ပြန်စမည်</string>
+
+    <string name="view_tutorial_again">လမ်းညွှန်ကို ထပ်ကြည့်မည်</string>
+
+    <!-- Sort Orders -->
+    <string name="sort_number_asc">နံပါတ်စဉ် (၁-၉)</string>
+    <string name="sort_number_desc">နံပါတ်စဉ် (၉-၁)</string>
+    <string name="sort_az">က-အ</string>
+    <string name="sort_za">အ-က</string>
+    <string name="sort_new_old">အသစ်မှ အဟောင်း</string>
+    <string name="sort_old_new">အဟောင်းမှ အသစ်</string>
+    <string name="sort_added">သိမ်းဆည်းချိန်</string>
+
+    <!-- Settings Labels -->
+    <string name="color_palette">အရောင်အသွေး</string>
+    <string name="color_mara">မာရာ</string>
+    <string name="color_ocean">သမုဒ္ဒရာ</string>
+    <string name="color_emerald">မြစိမ်း</string>
+    <string name="color_sunset">နေဝင်ချိန်</string>
+    <string name="color_purple">ခရမ်း</string>
+    <string name="color_rose">နှင်းဆီ</string>
+    <string name="color_slate">ကျောက်ပြား</string>
+    <string name="resume_session">အရင်ကြည့်လက်စမှ ပြန်စမည်</string>
+    <string name="resume_session_desc">နောက်ဆုံးထားခဲ့သည့်နေရာမှ စတင်မည်</string>
+    <string name="preview_label">နမူနာ</string>
+    <string name="connection_required">အင်တာနက် လိုအပ်သည်</string>
+    <string name="connection_required_desc">ပထမဆုံးအကြိမ် သီချင်းများ ဒေါင်းလုဒ်လုပ်ရန် အင်တာနက် လိုအပ်ပါသည်။</string>
+    <string name="btn_check_internet">အင်တာနက် စစ်ဆေးမည်</string>
+    <string name="btn_continue_offline">အော့ဖ်လိုင်း ဆက်သုံးမည် (Demo)</string>
+    <string name="setup_complete_title">ပြင်ဆင်မှု ပြီးပါပြီ</string>
+    <string name="sync_downloading_db">မာရာသီချင်းများ ဒေါင်းလုဒ်လုပ်နေသည်...</string>
+    <string name="sync_download_success">ဒေါင်းလုဒ်လုပ်ခြင်း အောင်မြင်ပါသည်။</string>
+    <string name="sync_download_failed">ဒေါင်းလုဒ်လုပ်ခြင်း မအောင်မြင်ပါ။</string>
+    <string name="sync_redownloading">ဒေတာဘေ့စ် ပြန်ဒေါင်းနေသည်...</string>
+
+    <!-- General UI -->
+    <string name="btn_ok">အိုကေ</string>
+    <string name="btn_cancel">ပယ်ဖျက်</string>
+    <string name="btn_clear">ဖျက်မည်</string>
+    <string name="btn_copy">ကူးယူမည်</string>
+    <string name="btn_share">မျှဝေမည်</string>
+    <string name="optional_suffix">(မထည့်လည်းရသည်)</string>
+    <string name="favorites_label">အကြိုက်ဆုံးများ</string>
+    <string name="exit_press_back">ထွက်ရန် နောက်တစ်ကြိမ် နှိပ်ပါ။</string>
+    <string name="star_favorite">သိမ်းမည်</string>
+    <string name="star_border_favorite">မသိမ်းတော့ပါ</string>
+    <string name="no_favorites_desc">သီချင်းများကို ❤️ ပုံလေးနှိပ်ပြီး အကြိုက်ဆုံးများထဲ ထည့်ထားပါ။</string>
+
+    <!-- Notifications -->
+    <string name="notif_offline">အော့ဖ်လိုင်း ဖြစ်နေသည်။</string>
+    <string name="notif_online">အွန်လိုင်း ပြန်ဖြစ်သွားပါပြီ။</string>
+    <string name="notif_fav_added">အကြိုက်ဆုံးထဲ ထည့်ပြီးပါပြီ။</string>
+    <string name="notif_fav_removed">အကြိုက်ဆုံးထဲမှ ဖယ်ပြီးပါပြီ။</string>
+    <string name="notif_lang_changed">ဘာသာစကားကို %1$s သို့ ပြောင်းလိုက်ပါပြီ။</string>
+    <string name="notif_theme_enabled">%1$s ကို သုံးထားပါသည်။</string>
+    <string name="notif_copied">ကူးယူပြီးပါပြီ။</string>
+    <string name="notif_sync_started">ဒေတာများ အပ်ဒိတ်လုပ်နေသည်...</string>
+    <string name="notif_sync_success">အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။</string>
+    <string name="notif_sync_failed">အပ်ဒိတ်လုပ်ခြင်း မအောင်မြင်ပါ။</string>
+    <string name="btn_try_again">ပြန်ကြိုးစားမည်</string>
+    <string name="error_prefix">အမှား: %1$s</string>
+    <string name="no_exact_results">ကိုက်ညီသော သီချင်းမရှိပါ။</string>
+    <string name="closest_matches">အနီးစပ်ဆုံး သီချင်းများ:</string>
+    <string name="lang_mara">Mara</string>
+    <string name="lang_english">English</string>
+    <string name="lang_burmese">မြန်မာ</string>
+    <string name="lang_native">မူရင်း</string>
+    <string name="theme_light">အလင်း</string>
+    <string name="theme_dark">အမှောင်</string>
+    <string name="theme_system">စနစ်အတိုင်း</string>
+    <string name="notif_mode_light">အလင်းအပြင်အဆင်</string>
+    <string name="notif_mode_dark">အမှောင်အပြင်အဆင်</string>
+    <string name="notif_mode_system">စနစ်အပြင်အဆင်</string>
+    <string name="notif_default_cat_updated">မူလအမျိုးအစားကို %1$s သို့ ပြောင်းလိုက်ပါပြီ</string>
+    <string name="notif_color_theme_updated">အရောင်ကို %1$s သို့ ပြောင်းလိုက်ပါပြီ</string>
+    <string name="notif_cache_cleared">Cache များကို ဖျက်လိုက်ပါပြီ</string>
+    <string name="notif_fav_backup_success">အကြိုက်ဆုံးများကို သိမ်းဆည်းပြီးပါပြီ</string>
+    <string name="notif_fav_backup_failed">သိမ်းဆည်းခြင်း မအောင်မြင်ပါ: %1$s</string>
+    <string name="notif_fav_restore_success">အကြိုက်ဆုံး %1$d ခုကို ပြန်ယူပြီးပါပြီ</string>
+    <string name="notif_fav_restore_no_file">သိမ်းထားသည့်ဖိုင် မရှိပါ။</string>
+    <string name="notif_fav_restore_failed">ပြန်ယူခြင်း မအောင်မြင်ပါ: %1$s</string>
+    <string name="sync_downloading_prefix">%1$s ကို ဒေါင်းလုဒ်လုပ်နေသည်…</string>
+    <string name="never">တစ်ခါမှမလုပ်ရသေးပါ</string>
+    <string name="kb">KB</string>
+    <string name="db_version">ဒေတာဘေ့စ် ဗားရှင်း</string>
+    <string name="suggest_artists">👤 အဆိုတော် အကြံပြုချက်များ</string>
+    <string name="suggest_songs">🎲 ကျပန်းရွေးပါ</string>
+    <string name="suggest_artists">🎲 ကျပန်းရွေးပါ</string>
+    <string name="suggest_songs">🎲 ကျပန်းရွေးပါ</string>
+</resources>
