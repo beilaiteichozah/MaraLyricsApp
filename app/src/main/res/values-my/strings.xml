@@ -3,11 +3,11 @@
 
     <!-- Setup -->
     <string name="setup_welcome">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
-    <string name="setup_description">မရာသီချင်းစာသားများ စုစည်းမှု!</string>
+    <string name="setup_description">မရာသီချင်းစာသားများ စုစည်းမှုရာနေရာ။</string>
     <string name="setup_language_title">ဘာသာစကား ရွေးချယ်ပါ</string>
     <string name="setup_category_title">အမျိုးအစား ရွေးချယ်ပါ</string>
     <string name="setup_download_title">ဒေတာဘေ့စ် ဒေါင်းလုဒ်လုပ်နေသည်</string>
-    <string name="setup_download_desc">အော့ဖ်လိုင်းသုံးရန် သီချင်းများ ဒေါင်းလုဒ်လုပ်နေပါသည်။ ခဏစောင့်ပါ။</string>
+    <string name="setup_download_desc">အော့ဖ်လိုင်းသုံးရန် သီချင်းများ ဒေါင်းလုဒ်လုပ်နေပါသည်။ တစ်မိနစ်ခန့် ကြာနိုင်ပါသည်။</string>
     <string name="setup_category_desc">စိတ်ကြိုက်အမျိုးအစားကို ရွေးချယ်ပါ။ နောက်မှလည်း ပြောင်းလဲနိုင်ပါသည်။</string>
     <string name="btn_next">ရှေ့သို့</string>
     <string name="btn_back">နောက်သို့</string>
@@ -51,6 +51,7 @@
     <string name="views_suffix">ကြည့်ရှုမှုများ</string>
 
     <!-- Settings -->
+    <string name="song_not_found">သီချင်းရှာ မတွေ့ပါ</string>
     <string name="settings_title">ဆက်တင်များ</string>
     <string name="set_language">ဘာသာစကား</string>
     <string name="set_theme">အက်ပ်အပြင်အဆင်</string>
@@ -59,10 +60,10 @@
     <string name="set_theme_system">စနစ်အတိုင်း</string>
     <string name="set_default_cat">မူလအမျိုးအစား</string>
     <string name="set_offline_data">အော့ဖ်လိုင်းဒေတာ</string>
-    <string name="total_songs">သီချင်းစုစုပေါင်း</string>
-    <string name="total_artists">အဆိုတော်စုစုပေါင်း</string>
-    <string name="total_composers">တေးရေးစုစုပေါင်း</string>
-    <string name="total_copyright_owners">မူပိုင်ခွင့်ပိုင်ရှင်များ စုစုပေါင်း</string>
+    <string name="total_songs">သိမ်းဆည်းထားသည့် သီချင်းအားလုံး</string>
+    <string name="total_artists">သိမ်းဆည်းထားသည့် အဆိုတော်အားလုံး</string>
+    <string name="total_composers">သိမ်းဆည်းထားသည့်  တေးရေးအားလုံး</string>
+    <string name="total_copyright_owners">သိမ်းဆည်းထားသည့်  မူပိုင်ခွင့်ပိုင်ရှင် အားလုံး</string>
     <string name="db_size">ဒေတာဘေ့စ်အရွယ်အစား</string>
     <string name="last_sync">နောက်ဆုံး အပ်ဒိတ်လုပ်သည့်ရက်</string>
     <string name="app_version">အက်ပ်ဗားရှင်း</string>
@@ -70,10 +71,10 @@
     <string name="check_new_data">ဒေတာအသစ် စစ်ဆေးမည်</string>
     <string name="no_new_data_title">ဒေတာအသစ် မရှိပါ</string>
     <string name="no_new_data_msg">သင့်အက်ပ်ရှိ ဒေတာများသည် နောက်ဆုံးပေါ် ဖြစ်နေပါပြီ။</string>
-    <string name="clear_data">အော့ဖ်လိုင်းဒေတာ ဖြတ်မည်</string>
+    <string name="clear_data">အော့ဖ်လိုင်းဒေတာ ရှင်းမည်</string>
     <string name="clear_data_confirm">အော့ဖ်လိုင်းဒေတာအားလုံးကို ဖြတ်ပစ်မှာ သေချာပါသလား? ပြန်ဒေါင်းဖို့ အင်တာနက် လိုအပ်ပါလိမ့်မယ်။</string>
     <string name="cancel">ပယ်ဖျက်</string>
-    <string name="delete">ဖြတ်မည်</string>
+    <string name="delete">ရှင်းမယ်</string>
 
     <!-- Sync -->
     <string name="sync_available_title">အပ်ဒိတ်အသစ် ရှိသည်</string>
@@ -99,6 +100,7 @@
     <string name="song_count_format">သီချင်း %1$d ပုဒ်</string>
 
     <!-- Feedback -->
+    <string name="profile_not_found">%1$s မတွေ့ပါ</string>
     <string name="feedback">အကြံပြုချက်</string>
     <string name="report_issue">အမှားတင်ပြရန်</string>
     <string name="feedback_title">အကြံပြုချက် ပေးပို့ရန်</string>
@@ -116,25 +118,25 @@
     <string name="credits_desc">မရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
     <string name="licenses">လိုင်စင်များ</string>
     <string name="mit_license_title">MIT လိုင်စင်</string>
-    <string name="mit_license_text">Copyright (c) 2026 Maralyrics...</string>
-    <string name="preview_text">ဒါကတော့ သီချင်းစာသားတွေ မြင်ရမယ့် ပုံစံဖြစ်ပါတယ်။</string>
-    <string name="support_feedback">အကူအညီနှင့် အကြံပြုချက်</string>
-    <string name="help_faq">အမေးအဖြေများ</string>
+    <string name="mit_license_text">Copyright (c) 2026 Maralyrics  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+    <string name="preview_text">ဒါက သီချင်းစာသားတွေ စခရင်မ်ပေါ်မှာ ဘယ်လိုပေါ်မလဲဆိုတဲ့ နမူနာပါ။ စာလုံးအရွယ်အစားနဲ့ စာကြောင်းအကွာအဝေးကို ကိုယ်ကြိုက်သလို ချိန်လို့ရပါတယ်။</string>
+    <string name="support_feedback">ပံ့ပိုးမှု နှင့် အကြံပြုချက်</string>
+    <string name="help_faq">အကူအညီ / အမေးအဖြေများ</string>
     <string name="contact_us">ဆက်သွယ်ရန်</string>
     <string name="send_feedback">အကြံပြုချက် ပေးပို့ရန်</string>
     <string name="rate_app">အက်ပ်ကို အဆင့်သတ်မှတ်ပါ</string>
     <string name="share_app">အက်ပ်ကို မျှဝေပါ</string>
-    <string name="share_app_text">မရာ သီချင်းစာသား အက်ပ်ကို ကြည့်ရှုလိုက်ပါ။</string>
+    <string name="share_app_text">မရာ သီချင်းစာသား အက်ပ် နှင့်အတူ မရာ သီချင်းစာသား ကြည့်ရှုလိုက်ပါ။</string>
     <string name="data_sync">ဒေတာနှင့် အပ်ဒိတ်</string>
     <string name="auto_sync">အလိုအလျောက် အပ်ဒိတ်လုပ်မည်</string>
     <string name="auto_sync_desc">အပ်ဒိတ်များကို အလိုအလျောက် စစ်ဆေးမည်</string>
-    <string name="wifi_only">Wi-Fi သာ</string>
-    <string name="wifi_only_desc">Wi-Fi ချိတ်ဆက်ထားမှသာ အပ်ဒိတ်လုပ်မည်</string>
+    <string name="wifi_only">ဝိုင်ဖိုင် သာ</string>
+    <string name="wifi_only_desc">ဝိုင်ဖိုင် ချိတ်ဆက်ထားမှသာ အပ်ဒိတ်လုပ်မည်</string>
     <string name="backup_restore_favorites">အကြိုက်ဆုံးများ သိည်းဆည်း/ပြန်ယူမည်</string>
     <string name="backup_favorites">အကြိုက်ဆုံးများ သိမ်းဆည်းမည်</string>
     <string name="restore_favorites">အကြိုက်ဆုံးများ ပြန်ယူမည်</string>
-    <string name="clear_cache">Cache ဖြတ်မည်</string>
-    <string name="clear_cache_desc">နေရာလွတ်ရစေရန် Cache များကို ဖြတ်ထုတ်ပါ</string>
+    <string name="clear_cache">အမှိုက် ရှင်းမည်</string>
+    <string name="clear_cache_desc">နေရာလွတ်ရစေရန် အမှိုက် ရှင်းပါ။</string>
     <string name="accessibility_display">ပြသမှု ဆက်တင်များ</string>
     <string name="default_font_size">မူလ စာလုံးအရွယ်အစား</string>
     <string name="line_spacing">စာကြောင်းအကွာအဝေး</string>
@@ -198,10 +200,10 @@
     <string name="empty_search_desc">အခြားစကားလုံးဖြင့် ထပ်မံရှာဖွေကြည့်ပါ။</string>
 
     <!-- Sort Orders -->
-    <string name="sort_number_asc">နံပါတ်စဉ် (၁-၉)</string>
-    <string name="sort_number_desc">နံပါတ်စဉ် (၉-၁)</string>
-    <string name="sort_az">က-အ</string>
-    <string name="sort_za">အ-က</string>
+    <string name="sort_number_asc">နံပါတ်စဉ် (1-9)</string>
+    <string name="sort_number_desc">နံပါတ်စဉ် (9-1)</string>
+    <string name="sort_az">A-Z</string>
+    <string name="sort_za">Z-A</string>
     <string name="sort_new_old">အသစ်မှ အဟောင်း</string>
     <string name="sort_old_new">အဟောင်းမှ အသစ်</string>
     <string name="sort_added">သိမ်းဆည်းချိန်</string>
@@ -221,7 +223,7 @@
     <string name="connection_required">အင်တာနက် လိုအပ်သည်</string>
     <string name="connection_required_desc">ပထမဆုံးအကြိမ် သီချင်းများ ဒေါင်းလုဒ်လုပ်ရန် အင်တာနက် လိုအပ်ပါသည်။</string>
     <string name="btn_check_internet">အင်တာနက် စစ်ဆေးမည်</string>
-    <string name="btn_continue_offline">အော့ဖ်လိုင်း ဆက်သုံးမည် (Demo)</string>
+    <string name="btn_continue_offline">အော့ဖ်လိုင်း ဆက်သုံးမည်</string>
     <string name="setup_complete_title">ပြင်ဆင်မှု ပြီးပါပြီ</string>
     <string name="sync_downloading_db">မရာသီချင်းများ ဒေါင်းလုဒ်လုပ်နေသည်...</string>
     <string name="sync_download_success">ဒေါင်းလုဒ်လုပ်ခြင်း အောင်မြင်ပါသည်။</string>
@@ -234,7 +236,7 @@
     <string name="btn_clear">ဖျက်မည်</string>
     <string name="btn_copy">ကူးယူမည်</string>
     <string name="btn_share">မျှဝေမည်</string>
-    <string name="optional_suffix">(မထည့်လည်းရသည်)</string>
+    <string name="optional_suffix">(စိတ်ကြိုက်)</string>
     <string name="open_source_libs">Open Source စာကြည့်တိုက်များ</string>
     <string name="favorites_label">အကြိုက်ဆုံးများ</string>
     <string name="toggle_layout">အပြင်အဆင် ပြောင်းမည်</string>
@@ -267,12 +269,12 @@
     <string name="notif_fav_removed">အကြိုက်ဆုံးထဲမှ ဖယ်ပြီးပါပြီ။</string>
     <string name="notif_lang_changed">ဘာသာစကားကို %1$s သို့ ပြောင်းလိုက်ပါပြီ။</string>
     <string name="notif_theme_enabled">%1$s ကို သုံးထားပါသည်။</string>
-    <string name="notif_copied">ကူးယူပြီးပါပြီ။</string>
+    <string name="notif_copied">စာသားကူးယူပြီးပါပြီ။</string>
     <string name="notif_sync_started">ဒေတာများ အပ်ဒိတ်လုပ်နေသည်...</string>
     <string name="notif_sync_success">အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။</string>
     <string name="notif_sync_failed">အပ်ဒိတ်လုပ်ခြင်း မအောင်မြင်ပါ။</string>
     <string name="btn_try_again">ပြန်ကြိုးစားမည်</string>
-    <string name="error_prefix">အမှား: %1$s</string>
+    <string name="error_prefix">အမှား- %1$s</string>
     <string name="no_exact_results">ကိုက်ညီသော သီချင်းမရှိပါ။</string>
     <string name="closest_matches">အနီးစပ်ဆုံး သီချင်းများ:</string>
     <string name="lang_mara">Mara</string>
@@ -327,15 +329,17 @@
     <string name="update_msg_combined">%1$s အသစ် ရရှိနိုင်ပါသည်။</string>
     <string name="update_conjunction_and"> နှင့် </string>
     <string name="update_conjunction_comma">၊ </string>
-    <string name="update_ask_download">ယခုပင် ဒေါင်းလုဒ်လုပ်လိုပါသလား?</string>
+    <string name="update_ask_download">ယခု ဒေါင်းလုဒ်လုပ်လိုပါသလား?</string>
     <string name="update_only_new">အကြောင်းအရာအသစ်များကိုသာ ဒေါင်းလုဒ်လုပ်မည်ဖြစ်သည်။</string>
     <string name="btn_download_now">ဒေါင်းလုဒ်လုပ်မည်</string>
     <string name="btn_later">နောက်မှ</string>
     <string name="sync_status_prefix">%1$s ဒေါင်းလုဒ်လုပ်နေသည်...</string>
     <string name="low_storage_error">ဖုန်းအတွင်းရှိ နေရာလွတ် အလွန်နည်းနေပါသည် (%1$d%%)။ ဒေတာများကို ဒေါင်းလုဒ်လုပ်ရန်အတွက် နေရာလွတ်အချို့ အရင်ရှင်းလင်းပေးပါ။</string>
-    <string name="storage_insufficient_title">Insufficient Storage</string>
-    <string name="storage_insufficient_msg">Database download cannot continue.\n\nRequired: %1$s\nAvailable: %2$s\nAdditional space needed: %3$s\n\nPlease free some storage and try again.</string>
-    <string name="storage_low_warning_msg">Your device storage is almost full (%1$d%% used). The download can continue because sufficient free space is available, but freeing additional storage is recommended.</string>
-    <string name="btn_manage_storage">Manage Storage</string>
-    <string name="btn_continue">Continue</string>
+    <string name="storage_insufficient_title">သိုလှောင်ခန်း မလုံလောက်ပါ</string>
+    <string name="storage_insufficient_msg">ဒေတာဘေ့စ် ဒေါင်းလုဒ်ကို ဆက်လက်လုပ်ဆောင်၍ မရပါ။\n\nလိုအပ်သော ပမာဏ - %1$s\nရရှိနိုင်သော ပမာဏ - %2$s\nထပ်မံလိုအပ်သော နေရာလွတ် - %3$s\n\nကျေးဇူးပြု၍ သိုလှောင်ခန်း နေရာလွတ်အချို့ကို ရှင်းလင်းပြီး ထပ်မံကြိုးစားပါ။</string>
+    <string name="storage_low_warning_msg">သင့်စက်၏ သိုလှောင်ခန်း နေရာလွတ်မှာ ပြည့်လုနီးပါး ဖြစ်နေပါသည် (%1$d%% အသုံးပြုပြီး)။ လုံလောက်သော နေရာလွတ် ရှိနေသေးသည့်အတွက် ဒေါင်းလုဒ်ကို ဆက်လက်လုပ်ဆောင်နိုင်သော်လည်း၊ သိုလှောင်ခန်း နေရာလွတ်ကို ထပ်မံရှင်းလင်းထားရန် အကြံပြုအပ်ပါသည်။</string>
+    <string name="btn_manage_storage">သိုလှောင်ခန်း စီမံရန်</string>
+    <string name="btn_continue">ရှေ့ဆက်ရန်</string>
+    <string name="various_artists">အနုပညာရှင်များစွာ</string>
+    <string name="various_composers">တေးရေးများစွာ</string>
 </resources>

@@ -80,7 +80,7 @@ class MainViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val privacyAccepted: StateFlow<Boolean> = settings
-        .map { it?.privacyPolicyAccepted ?: false && it.privacyPolicyVersion == CURRENT_PRIVACY_VERSION }
+        .map { (it?.privacyPolicyAccepted ?: false) && it?.privacyPolicyVersion == CURRENT_PRIVACY_VERSION }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {

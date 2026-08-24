@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,7 @@ fun OnboardingScreen(
         selectedLanguage = selectedLanguage,
         privacyAccepted = privacyAccepted,
         onLanguageSelected = viewModel::setLanguage,
+        awaitLanguagePersisted = viewModel::awaitLanguagePersisted,
         onPrivacyAccepted = viewModel::acceptPrivacyPolicy,
         onFinish = {
             viewModel.completeOnboarding(onFinish)
@@ -58,6 +61,7 @@ fun OnboardingContent(
     selectedLanguage: AppLanguage,
     privacyAccepted: Boolean,
     onLanguageSelected: (AppLanguage) -> Unit,
+    awaitLanguagePersisted: suspend () -> Unit,
     onPrivacyAccepted: () -> Unit,
     onFinish: () -> Unit
 ) {
@@ -137,7 +141,10 @@ fun OnboardingContent(
                         Button(
                             onClick = {
                                 if (pagerState.currentPage == 0 && !privacyAccepted) {
-                                    showPrivacyDialog = true
+                                    scope.launch {
+                                        awaitLanguagePersisted()
+                                        showPrivacyDialog = true
+                                    }
                                 } else {
                                     scope.launch {
                                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -208,6 +215,10 @@ fun PrivacyPolicyDialog(
             scrollState.value >= (scrollState.maxValue - 50).coerceAtLeast(0)
         }
     }
+    // Captured here (outside Dialog's own window boundary) and re-provided below,
+    // since Dialog can otherwise lose the app's in-app locale override for its content.
+    val localizedContext = LocalContext.current
+    val localizedConfiguration = LocalConfiguration.current
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -217,6 +228,10 @@ fun PrivacyPolicyDialog(
             dismissOnClickOutside = false
         )
     ) {
+      CompositionLocalProvider(
+        LocalContext provides localizedContext,
+        LocalConfiguration provides localizedConfiguration
+      ) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -308,6 +323,7 @@ fun PrivacyPolicyDialog(
                 }
             }
         }
+      }
     }
 }
 

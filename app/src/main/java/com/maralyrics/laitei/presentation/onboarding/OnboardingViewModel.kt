@@ -37,6 +37,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     fun setLanguage(language: AppLanguage) {
+        _selectedLanguage.value = language
         viewModelScope.launch {
             updateSettingsUseCase.updateLanguage(language)
             val langKey = when(language) {
@@ -46,6 +47,13 @@ class OnboardingViewModel @Inject constructor(
             }
             notificationManager.showLanguageChanged(langKey)
         }
+    }
+
+    // Waits until the persisted settings reflect the currently selected language, so
+    // screens that read locale-dependent resources (e.g. the Privacy Policy dialog)
+    // don't render under the stale locale while the DataStore write is still in flight.
+    suspend fun awaitLanguagePersisted() {
+        getSettingsUseCase().first { it.language == _selectedLanguage.value }
     }
 
     fun acceptPrivacyPolicy() {
