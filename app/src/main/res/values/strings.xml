@@ -3,7 +3,7 @@
 
     <!-- Setup -->
     <string name="setup_welcome">Welcome to Mara Lyrics</string>
-    <string name="setup_description">The Hub of Mara song lyrics!</string>
+    <string name="setup_description">A hub for Mara song lyrics.</string>
     <string name="setup_language_title">Select Language</string>
     <string name="setup_category_title">Select Default Category</string>
     <string name="setup_download_title">Downloading Database</string>
@@ -21,7 +21,7 @@
     <string name="favorite_songs">Favorite Songs</string>
     <string name="popular_songs">Popular Songs</string>
     <string name="random_suggestions">Random Suggestions</string>
-    <string name="no_recent_songs">No recent songs. Start exploring!</string>
+    <string name="no_recent_songs">No recently viewed songs.</string>
     <string name="no_favorites">You haven\'t added any favorites yet.</string>
     <string name="view_all">View All</string>
     <string name="categories">Categories</string>
@@ -49,6 +49,9 @@
     <string name="share_lyrics">Share Lyrics</string>
     <string name="font_size">Font Size</string>
     <string name="views_suffix">Views</string>
+    <string name="various_artists">Various Artists</string>
+    <string name="various_composers">Various Composers</string>
+    <string name="song_not_found">Song not found</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
@@ -60,11 +63,16 @@
     <string name="set_default_cat">Default Category</string>
     <string name="set_offline_data">Offline Data</string>
     <string name="total_songs">Total Stored Songs</string>
+    <string name="total_artists">Total Stored Artists</string>
+    <string name="total_composers">Total Stored Composers</string>
+    <string name="total_copyright_owners">Total Copyright Owners</string>
     <string name="db_size">Database Size</string>
     <string name="last_sync">Last Sync Date</string>
     <string name="app_version">App Version</string>
     <string name="sync_now">Sync Now</string>
-    <string name="redownload_db">Re-download Database</string>
+    <string name="check_new_data">Check new data</string>
+    <string name="no_new_data_title">No New Data</string>
+    <string name="no_new_data_msg">Your database is already up to date.</string>
     <string name="clear_data">Clear Offline Data</string>
     <string name="clear_data_confirm">Are you sure you want to clear all offline data? You will need an internet connection to download it again.</string>
     <string name="cancel">Cancel</string>
@@ -75,7 +83,7 @@
     <string name="sync_available_msg">New song updates are available. Download for offline use?</string>
     <string name="sync_later">Later</string>
     <string name="sync_download">Download</string>
-    <string name="sync_complete">Sync completed successfully!</string>
+    <string name="sync_complete">Sync completed successfully.</string>
     <string name="sync_failed">Sync failed. Please check your connection.</string>
     <string name="sync_progress">%1$d songs downloaded</string>
     <string name="sync_remaining">Estimated: %1$d seconds remaining</string>
@@ -92,6 +100,7 @@
     <string name="songs">Songs</string>
     <string name="songs_by_format">Songs by %1$s</string>
     <string name="song_count_format">%1$d Songs</string>
+    <string name="profile_not_found">%1$s not found</string>
 
     <!-- Feedback -->
     <string name="feedback">Feedback</string>
@@ -110,6 +119,13 @@
     <string name="credits">Credits</string>
     <string name="credits_desc">Honoring the songwriters, composers, contributors, translators, and community members whose dedication has preserved and shared Mara songs across generations.</string>
     <string name="licenses">Licenses</string>
+    <string name="license_jetpack_compose">Jetpack Compose</string>
+    <string name="license_kotlin_coroutines">Kotlin Coroutines</string>
+    <string name="license_retrofit_okhttp">Retrofit &amp; OkHttp</string>
+    <string name="license_room_database">Room Database</string>
+    <string name="license_hilt_di">Hilt DI</string>
+    <string name="license_coil_image_loading">Coil Image Loading</string>
+    <string name="tagline_made_in_maraland">Proudly Made in Maraland</string>
     <string name="mit_license_title">MIT License</string>
     <string name="mit_license_text">Copyright (c) 2026 Maralyrics\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="preview_text">This is a sample of how the lyrics will look on your screen. You can adjust the font size and line spacing to your liking.</string>
@@ -119,7 +135,7 @@
     <string name="send_feedback">Send Feedback</string>
     <string name="rate_app">Rate this App</string>
     <string name="share_app">Share App</string>
-    <string name="share_app_text">Check out the Mara Lyrics app for all kinds of Mara song lyrics!</string>
+    <string name="share_app_text">Discover Mara song lyrics with the Mara Lyrics app.</string>
     <string name="data_sync">Data &amp; Sync</string>
     <string name="auto_sync">Auto-Sync</string>
     <string name="auto_sync_desc">Automatically check for updates</string>
@@ -172,7 +188,7 @@
     <string name="onboarding_feature_3_1">Favorite Songs</string>
     <string name="onboarding_feature_3_2">Search Favorites</string>
     <string name="onboarding_feature_3_3">Filter Favorites</string>
-    <string name="onboarding_feature_3_4">🎲 Surprise Me</string>
+    <string name="onboarding_feature_3_4">Surprise Me</string>
 
     <string name="onboarding_title_4">Your Lyrics, Your Experience</string>
     <string name="onboarding_desc_4">Customize Mara Lyrics to fit your preferences.</string>
@@ -217,7 +233,7 @@
     <string name="connection_required">Connection Required</string>
     <string name="connection_required_desc">Mara Lyrics needs an internet connection for the initial download of the song database.</string>
     <string name="btn_check_internet">Check Internet Settings</string>
-    <string name="btn_continue_offline">Continue Offline (Demo mode)</string>
+    <string name="btn_continue_offline">Continue Offline</string>
     <string name="setup_complete_title">Setup Complete</string>
     <string name="sync_downloading_db">Downloading Mara Lyrics database...</string>
     <string name="sync_download_success">Songs downloaded successfully.</string>
@@ -237,7 +253,7 @@
     <string name="exit_press_back">Press back again to exit.</string>
     <string name="star_favorite">Star</string>
     <string name="star_border_favorite">Unstar</string>
-    <string name="no_favorites_desc">Add songs to favorites by tapping the ❤️ icon while browsing.</string>
+    <string name="no_favorites_desc">Add songs to your favorites by tapping the heart icon while browsing.</string>
     <string name="social_platform">Social Platform</string>
     <string name="platform_facebook">Facebook</string>
     <string name="platform_youtube">YouTube</string>
@@ -252,9 +268,9 @@
     <string name="platform_link">Link</string>
 
     <!-- Search Suggestions -->
-    <string name="suggest_songs">🎵 Song Suggestions</string>
-    <string name="suggest_artists">👤 Artist Suggestions</string>
-    <string name="suggest_composers">✍️ Composer Suggestions</string>
+    <string name="suggest_songs">Song Suggestions</string>
+    <string name="suggest_artists">Artist Suggestions</string>
+    <string name="suggest_composers">Composer Suggestions</string>
 
 
     <!-- Notifications -->
@@ -294,4 +310,48 @@
     <string name="never">Never</string>
     <string name="kb">KB</string>
     <string name="db_version">Database Version</string>
+    <!-- Privacy Policy UI -->
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="privacy_intro_title">Introduction</string>
+    <string name="privacy_intro_content">Mara Lyrics respects your privacy. This policy explains how we handle your data when you use our application.</string>
+    <string name="privacy_data_title">Data Collection</string>
+    <string name="privacy_data_content">We do not collect personal information that identifies you. The app functions primarily offline and stores your preferences (language, theme, favorites) locally on your device.</string>
+    <string name="privacy_permissions_title">Permissions</string>
+    <string name="privacy_permissions_content">The app requires internet access for the initial download of the song database and for checking updates. No other invasive permissions are required.</string>
+    <string name="privacy_contact_title">Contact Us</string>
+    <string name="privacy_contact_content">If you have any questions about our privacy practices, please contact the Mara Lyrics Team through the feedback section in the app settings.</string>
+    <string name="privacy_scroll_to_read">Please scroll to the bottom to accept the Privacy Policy.</string>
+    <string name="btn_agree">I Agree</string>
+    <string name="btn_decline">Decline</string>
+    <string name="btn_exit">Exit App</string>
+    <string name="btn_read_again">Read Again</string>
+    <string name="privacy_decline_msg">Acceptance of the Privacy Policy is required to use Mara Lyrics. Without your agreement, we cannot provide access to the application.</string>
+    <!-- Update Dialog -->
+    <string name="update_title">Update Available</string>
+    <plurals name="update_item_songs">
+        <item quantity="one">%1$d song</item>
+        <item quantity="other">%1$d songs</item>
+    </plurals>
+    <plurals name="update_item_artists">
+        <item quantity="one">%1$d artist</item>
+        <item quantity="other">%1$d artists</item>
+    </plurals>
+    <plurals name="update_item_composers">
+        <item quantity="one">%1$d composer</item>
+        <item quantity="other">%1$d composers</item>
+    </plurals>
+    <string name="update_msg_combined">%1$s available.</string>
+    <string name="update_conjunction_and"> and </string>
+    <string name="update_conjunction_comma">, </string>
+    <string name="update_ask_download">Would you like to download them now?</string>
+    <string name="update_only_new">Only new content will be downloaded.</string>
+    <string name="btn_download_now">Download Now</string>
+    <string name="btn_later">Later</string>
+    <string name="sync_status_prefix">Downloading %1$s...</string>
+    <string name="low_storage_error">Storage is almost full (%1$d%%). Please free up space to download data.</string>
+    <string name="storage_insufficient_title">Insufficient Storage</string>
+    <string name="storage_insufficient_msg">Database download cannot continue.\n\nRequired: %1$s\nAvailable: %2$s\nAdditional space needed: %3$s\n\nPlease free some storage and try again.</string>
+    <string name="storage_low_warning_msg">Your device storage is almost full (%1$d%% used). The download can continue because sufficient free space is available, but freeing additional storage is recommended.</string>
+    <string name="btn_manage_storage">Manage Storage</string>
+    <string name="btn_continue">Continue</string>
 </resources>

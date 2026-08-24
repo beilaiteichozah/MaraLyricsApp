@@ -16,7 +16,7 @@
 
     <!-- Home -->
     <string name="home_title">မရာ သီချင်းစာသား</string>
-    <string name="search_hint">ခေါင်းစဉ်၊ စာသား (သို့) နံပါတ်ဖြင့် ရှာပါ…</string>
+    <string name="search_hint">ခေါင်းစဉ်၊ စာသား (သို့) နံပါတ်…</string>
     <string name="recently_viewed">လတ်တလော ကြည့်ရှုမှုများ</string>
     <string name="favorite_songs">အကြိုက်ဆုံး သီချင်းများ</string>
     <string name="popular_songs">လူကြိုက်များသော သီချင်းများ</string>
@@ -60,11 +60,16 @@
     <string name="set_default_cat">မူလအမျိုးအစား</string>
     <string name="set_offline_data">အော့ဖ်လိုင်းဒေတာ</string>
     <string name="total_songs">သီချင်းစုစုပေါင်း</string>
+    <string name="total_artists">အဆိုတော်စုစုပေါင်း</string>
+    <string name="total_composers">တေးရေးစုစုပေါင်း</string>
+    <string name="total_copyright_owners">မူပိုင်ခွင့်ပိုင်ရှင်များ စုစုပေါင်း</string>
     <string name="db_size">ဒေတာဘေ့စ်အရွယ်အစား</string>
     <string name="last_sync">နောက်ဆုံး အပ်ဒိတ်လုပ်သည့်ရက်</string>
     <string name="app_version">အက်ပ်ဗားရှင်း</string>
     <string name="sync_now">အခု အပ်ဒိတ်လုပ်မယ်</string>
-    <string name="redownload_db">ဒေတာဘေ့စ် ပြန်ဒေါင်းမည်</string>
+    <string name="check_new_data">ဒေတာအသစ် စစ်ဆေးမည်</string>
+    <string name="no_new_data_title">ဒေတာအသစ် မရှိပါ</string>
+    <string name="no_new_data_msg">သင့်အက်ပ်ရှိ ဒေတာများသည် နောက်ဆုံးပေါ် ဖြစ်နေပါပြီ။</string>
     <string name="clear_data">အော့ဖ်လိုင်းဒေတာ ဖြတ်မည်</string>
     <string name="clear_data_confirm">အော့ဖ်လိုင်းဒေတာအားလုံးကို ဖြတ်ပစ်မှာ သေချာပါသလား? ပြန်ဒေါင်းဖို့ အင်တာနက် လိုအပ်ပါလိမ့်မယ်။</string>
     <string name="cancel">ပယ်ဖျက်</string>
@@ -292,4 +297,45 @@
     <string name="never">တစ်ခါမှမလုပ်ရသေးပါ</string>
     <string name="kb">KB</string>
     <string name="db_version">ဒေတာဘေ့စ် ဗားရှင်း</string>
+    <!-- Privacy Policy UI -->
+    <string name="privacy_title">ကိုယ်ရေးအချက်အလက် မူဝါဒ</string>
+    <string name="privacy_intro_title">နိဒါန်း</string>
+    <string name="privacy_intro_content">မရာ သီချင်းစာသား သည် သင်၏ ကိုယ်ရေးကိုယ်တာကို လေးစားပါသည်။ ဤမူဝါဒသည် အက်ပ်ကို အသုံးပြုသည့်အခါ သင့်ဒေတာကို ကျွန်ုပ်တို့ မည်သို့ ကိုင်တွယ်ပုံကို ရှင်းပြထားသည်။</string>
+    <string name="privacy_data_title">ဒေတာ စုဆောင်းမှု</string>
+    <string name="privacy_data_content">သင့်ကို ခွဲခြားသိမြင်စေနိုင်သော ကိုယ်ရေးကိုယ်တာ အချက်အလက်များကို ကျွန်ုပ်တို့ စုဆောင်းခြင်း မပြုပါ။ အက်ပ်သည် အော့ဖ်လိုင်းတွင် အဓိက အလုပ်လုပ်ပြီး သင့်စိတ်ကြိုက် ဆက်တင်များ (ဘာသာစကား၊ အပြင်အဆင်၊ အကြိုက်ဆုံးများ) ကို သင့်စက်တွင်သာ သိမ်းဆည်းထားသည်။</string>
+    <string name="privacy_permissions_title">ခွင့်ပြုချက်များ</string>
+    <string name="privacy_permissions_content">အက်ပ်သည် သီချင်းဒေတာဘေ့စ်ကို ပထမဆုံးအကြိမ် ဒေါင်းလုဒ်လုပ်ရန်နှင့် အပ်ဒိတ်များ စစ်ဆေးရန်အတွက် အင်တာနက် အသုံးပြုခွင့် လိုအပ်သည်။ အခြား အနှောင့်အယှက်ဖြစ်စေသော ခွင့်ပြုချက်များ မလိုအပ်ပါ။</string>
+    <string name="privacy_contact_title">ဆက်သွယ်ရန်</string>
+    <string name="privacy_contact_content">ကျွန်ုပ်တို့၏ ကိုယ်ရေးအချက်အလက် မူဝါဒနှင့် ပတ်သက်၍ မေးမြန်းလိုပါက အက်ပ်ဆက်တင်ရှိ အကြံပြုချက် ကဏ္ဍမှတစ်ဆင့် မရာ သီချင်းစာသား အဖွဲ့ကို ဆက်သွယ်နိုင်ပါသည်။</string>
+    <string name="privacy_scroll_to_read">မူဝါဒကို လက်ခံရန် အဆုံးထိ ဆွဲဖတ်ပေးပါ။</string>
+    <string name="btn_agree">လက်ခံပါသည်</string>
+    <string name="btn_decline">ငြင်းပယ်သည်</string>
+    <string name="btn_exit">အက်ပ်မှ ထွက်မည်</string>
+    <string name="btn_read_again">ပြန်ဖတ်မည်</string>
+    <string name="privacy_decline_msg">မရာ သီချင်းစာသား ကို အသုံးပြုရန် ကိုယ်ရေးအချက်အလက် မူဝါဒကို လက်ခံရန် လိုအပ်ပါသည်။ သင်၏ သဘောတူညီချက်မရှိဘဲ အက်ပ်ကို အသုံးပြုခွင့် ပေးနိုင်မည် မဟုတ်ပါ။</string>
+    <!-- Update Dialog -->
+    <string name="update_title">အပ်ဒိတ်အသစ် ရှိသည်</string>
+    <plurals name="update_item_songs">
+        <item quantity="other">သီချင်း %1$d ပုဒ်</item>
+    </plurals>
+    <plurals name="update_item_artists">
+        <item quantity="other">အဆိုတော် %1$d ဦး</item>
+    </plurals>
+    <plurals name="update_item_composers">
+        <item quantity="other">တေးရေးဆရာ %1$d ဦး</item>
+    </plurals>
+    <string name="update_msg_combined">%1$s အသစ် ရရှိနိုင်ပါသည်။</string>
+    <string name="update_conjunction_and"> နှင့် </string>
+    <string name="update_conjunction_comma">၊ </string>
+    <string name="update_ask_download">ယခုပင် ဒေါင်းလုဒ်လုပ်လိုပါသလား?</string>
+    <string name="update_only_new">အကြောင်းအရာအသစ်များကိုသာ ဒေါင်းလုဒ်လုပ်မည်ဖြစ်သည်။</string>
+    <string name="btn_download_now">ဒေါင်းလုဒ်လုပ်မည်</string>
+    <string name="btn_later">နောက်မှ</string>
+    <string name="sync_status_prefix">%1$s ဒေါင်းလုဒ်လုပ်နေသည်...</string>
+    <string name="low_storage_error">ဖုန်းအတွင်းရှိ နေရာလွတ် အလွန်နည်းနေပါသည် (%1$d%%)။ ဒေတာများကို ဒေါင်းလုဒ်လုပ်ရန်အတွက် နေရာလွတ်အချို့ အရင်ရှင်းလင်းပေးပါ။</string>
+    <string name="storage_insufficient_title">Insufficient Storage</string>
+    <string name="storage_insufficient_msg">Database download cannot continue.\n\nRequired: %1$s\nAvailable: %2$s\nAdditional space needed: %3$s\n\nPlease free some storage and try again.</string>
+    <string name="storage_low_warning_msg">Your device storage is almost full (%1$d%% used). The download can continue because sufficient free space is available, but freeing additional storage is recommended.</string>
+    <string name="btn_manage_storage">Manage Storage</string>
+    <string name="btn_continue">Continue</string>
 </resources>

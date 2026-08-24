@@ -38,9 +38,9 @@ class StorageUtilsTest {
     fun `calculateRequiredSpace with very large sizes`() {
         // base = 4GB + 4GB = 8GB
         // 25% of 8GB = 2GB
-        // expected = 8GB + 2GB + 500MB = 10.5GB
+        // expected = 8GB + 2GB + 500MB
         val result = StorageUtils.calculateRequiredSpace(4 * GB, 4 * GB)
-        val expected = (10 * GB) + (512 * MB) // 10.5 GB
+        val expected = (10 * GB) + (500 * MB)
         assertEquals(expected, result)
     }
 }

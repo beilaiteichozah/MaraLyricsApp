@@ -12,15 +12,15 @@ plugins {
 }
 
 android {
-    namespace = "com.maralyrics"
-    compileSdk = 35
+    namespace = "com.maralyrics.laitei"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.maralyrics"
+        applicationId = "com.maralyrics.laitei"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        targetSdk = 36
+        versionCode = 3
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -57,6 +57,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 }
 

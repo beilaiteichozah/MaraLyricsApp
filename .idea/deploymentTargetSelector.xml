@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="Mara Lyrics">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-20T07:27:25.105400900Z">
+        <DropdownSelection timestamp="2026-07-09T10:32:40.332241Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=R5CY827SVTP" />
