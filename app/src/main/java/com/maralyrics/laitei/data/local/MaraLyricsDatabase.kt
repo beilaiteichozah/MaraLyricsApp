@@ -37,6 +37,11 @@ abstract class MaraLyricsDatabase : RoomDatabase() {
     companion object {
         const val DATABASE_NAME = "mara_lyrics.db"
 
+        // Must match the @Database(version = ...) above — used to reject an
+        // imported database file from an incompatible app version before it
+        // silently gets wiped by fallbackToDestructiveMigration().
+        const val SCHEMA_VERSION = 10
+
         val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE songs ADD COLUMN copyright_owner_name TEXT")

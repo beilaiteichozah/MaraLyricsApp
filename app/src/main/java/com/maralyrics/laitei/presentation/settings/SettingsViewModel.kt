@@ -9,9 +9,12 @@ import com.maralyrics.laitei.domain.repository.SyncRepository
 import com.maralyrics.laitei.domain.repository.ArtistRepository
 import com.maralyrics.laitei.domain.repository.ComposerRepository
 import com.maralyrics.laitei.domain.usecase.*
+import com.maralyrics.laitei.utils.AppShareUtils
+import com.maralyrics.laitei.utils.ImportDatabaseResult
 import com.maralyrics.laitei.utils.StorageUtils
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -31,6 +34,7 @@ class SettingsViewModel @Inject constructor(
     private val getAvailableCategoriesUseCase: GetAvailableCategoriesUseCase,
     private val creditsRepository: CreditsRepository,
     private val notificationManager: NotificationManager,
+    private val appShareUtils: AppShareUtils,
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
 
@@ -332,6 +336,58 @@ class SettingsViewModel @Inject constructor(
                     )
                 ) }
             refreshInfo()
+        }
+    }
+
+    suspend fun exportApkAndData(): Pair<java.io.File, java.io.File>? {
+        return try {
+            val apk = appShareUtils.exportApk()
+            val db = appShareUtils.exportDatabase()
+            apk to db
+        } catch (e: Exception) {
+            notificationManager.showNotification(
+                com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                    message = "share_export_failed|${e.message}",
+                    type = com.maralyrics.laitei.presentation.common.notification.NotificationType.ERROR
+                )
+            )
+            null
+        }
+    }
+
+    fun uriFor(file: java.io.File): android.net.Uri = appShareUtils.uriFor(file)
+
+    fun importOfflineData(uri: android.net.Uri) {
+        viewModelScope.launch {
+            when (val result = appShareUtils.importDatabase(uri)) {
+                is ImportDatabaseResult.Success -> {
+                    updateSettingsUseCase.markSetupComplete()
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_success_restarting",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.SUCCESS
+                        )
+                    )
+                    delay(1200)
+                    appShareUtils.restartApp()
+                }
+                is ImportDatabaseResult.IncompatibleVersion -> {
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_incompatible_version",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.ERROR
+                        )
+                    )
+                }
+                is ImportDatabaseResult.Failed -> {
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_failed|${result.message}",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 }

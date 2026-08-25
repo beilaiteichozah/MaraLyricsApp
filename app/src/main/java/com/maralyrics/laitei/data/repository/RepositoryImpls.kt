@@ -1,5 +1,7 @@
 package com.maralyrics.laitei.data.repository
 
+import android.content.Context
+import com.maralyrics.laitei.data.local.MaraLyricsDatabase
 import com.maralyrics.laitei.data.local.dao.*
 import com.maralyrics.laitei.data.local.entity.*
 import com.maralyrics.laitei.data.mapper.*
@@ -11,6 +13,7 @@ import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
 import com.maralyrics.laitei.utils.SearchCandidateCache
 import com.maralyrics.laitei.utils.SearchUtils
 import com.maralyrics.laitei.utils.StorageUtils
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,20 +23,25 @@ class SongRepositoryImpl @Inject constructor(
     private val songDao: SongDao,
     private val favoriteDao: FavoriteDao,
     private val recentViewDao: RecentViewDao,
-    private val searchCandidateCache: SearchCandidateCache
+    private val searchCandidateCache: SearchCandidateCache,
+    @ApplicationContext private val context: Context
 ) : SongRepository {
 
     override fun getSongsByCategory(categories: List<String>?): Flow<List<Song>> {
         val isFiltered = !categories.isNullOrEmpty() && !categories.contains("All")
-        return songDao.getSongsByCategories(categories ?: emptyList(), isFiltered).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getSongsByCategories(categories ?: emptyList(), isFiltered),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
 
     override fun getRecentlyViewed(limit: Int): Flow<List<Song>> {
-        return songDao.getRecentlyViewed(limit).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getRecentlyViewed(limit),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
@@ -46,16 +54,20 @@ class SongRepositoryImpl @Inject constructor(
 
     override fun getPopularSongs(categories: List<String>?, limit: Int): Flow<List<Song>> {
         val isFiltered = !categories.isNullOrEmpty() && !categories.contains("All")
-        return songDao.getPopularSongs(categories ?: emptyList(), isFiltered, limit).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getPopularSongs(categories ?: emptyList(), isFiltered, limit),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
 
     override fun getRandomSongs(categories: List<String>?, limit: Int): Flow<List<Song>> {
         val isFiltered = !categories.isNullOrEmpty() && !categories.contains("All")
-        return songDao.getRandomSongs(categories ?: emptyList(), isFiltered, limit).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getRandomSongs(categories ?: emptyList(), isFiltered, limit),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
@@ -74,8 +86,10 @@ class SongRepositoryImpl @Inject constructor(
     override fun searchSongs(query: String, categories: List<String>?): Flow<List<Song>> {
         val isFiltered = !categories.isNullOrEmpty() && !categories.contains("All")
         val ftsQuery = "*$query*"
-        return songDao.searchSongs(query, ftsQuery, categories ?: emptyList(), isFiltered).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.searchSongs(query, ftsQuery, categories ?: emptyList(), isFiltered),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
@@ -89,8 +103,11 @@ class SongRepositoryImpl @Inject constructor(
         val isFiltered = !categories.isNullOrEmpty() && !categories.contains("All")
         val exactMatches = songDao.searchSongsFallback(query, categories ?: emptyList(), isFiltered).first()
         if (exactMatches.isNotEmpty()) {
-            val favorites = favoriteDao.getFavoriteIdsList()
-            emit(SearchResponse.Results(exactMatches.map { it.toDomain(favorites.contains(it.song.id)) }))
+            emitAll(
+                favoriteDao.getAllFavoriteSongIds().map { favorites ->
+                    SearchResponse.Results(exactMatches.map { it.toDomain(favorites.contains(it.song.id)) })
+                }
+            )
             return@flow
         }
 
@@ -140,7 +157,9 @@ class SongRepositoryImpl @Inject constructor(
     override suspend fun getLocalSongCount(): Int = songDao.getSongCount()
 
     override suspend fun getDatabaseSizeBytes(): Long {
-        return 0L // Implement file size check if needed
+        val dbFile = context.getDatabasePath(MaraLyricsDatabase.DATABASE_NAME)
+        return listOf(dbFile.path, "${dbFile.path}-wal", "${dbFile.path}-shm")
+            .sumOf { java.io.File(it).let { file -> if (file.exists()) file.length() else 0L } }
     }
 
     override suspend fun clearAllSongs() {
@@ -148,15 +167,19 @@ class SongRepositoryImpl @Inject constructor(
     }
 
     override fun getSongsByArtist(artistId: Long): Flow<List<Song>> {
-        return songDao.getSongsByArtist(artistId).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getSongsByArtist(artistId),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
 
     override fun getSongsByComposer(composerId: Long): Flow<List<Song>> {
-        return songDao.getSongsByComposer(composerId).map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(
+            songDao.getSongsByComposer(composerId),
+            favoriteDao.getAllFavoriteSongIds()
+        ) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
@@ -197,8 +220,7 @@ class SongRepositoryImpl @Inject constructor(
             SongSortOrder.OLDEST -> songDao.getAllSongsByDateAsc(cats, isFiltered)
             else -> songDao.getAllSongsByNumberAsc(cats, isFiltered)
         }
-        return flow.map { list ->
-            val favorites = favoriteDao.getFavoriteIdsList()
+        return combine(flow, favoriteDao.getAllFavoriteSongIds()) { list, favorites ->
             list.map { it.toDomain(favorites.contains(it.song.id)) }
         }
     }
@@ -235,13 +257,16 @@ class SongRepositoryImpl @Inject constructor(
 
 @Singleton
 class ArtistRepositoryImpl @Inject constructor(
-    private val artistDao: ArtistDao
+    private val artistDao: ArtistDao,
+    private val songDao: SongDao
 ) : ArtistRepository {
-    override fun getArtists(): Flow<List<Artist>> = artistDao.getArtists().map { list -> 
-        list.map { it.toDomain() } 
+    override fun getArtists(): Flow<List<Artist>> = artistDao.getArtists().map { list ->
+        list.map { it.toDomain() }
     }
-    override suspend fun getArtistBySlug(slug: String): Artist? = artistDao.getArtistBySlug(slug)?.toDomain()
-    override suspend fun getArtistById(id: Long): Artist? = artistDao.getArtistById(id)?.toDomain()
+    override suspend fun getArtistBySlug(slug: String): Artist? =
+        artistDao.getArtistBySlug(slug)?.let { it.toDomain(songDao.getSongCountByArtist(it.id)) }
+    override suspend fun getArtistById(id: Long): Artist? =
+        artistDao.getArtistById(id)?.let { it.toDomain(songDao.getSongCountByArtist(it.id)) }
     override suspend fun saveArtists(artists: List<Artist>) {
         artistDao.insertArtists(artists.map { it.toEntity() })
     }
@@ -251,13 +276,16 @@ class ArtistRepositoryImpl @Inject constructor(
 
 @Singleton
 class ComposerRepositoryImpl @Inject constructor(
-    private val composerDao: ComposerDao
+    private val composerDao: ComposerDao,
+    private val songDao: SongDao
 ) : ComposerRepository {
     override fun getComposers(): Flow<List<Composer>> = composerDao.getComposers().map { list ->
         list.map { it.toDomain() }
     }
-    override suspend fun getComposerBySlug(slug: String): Composer? = composerDao.getComposerBySlug(slug)?.toDomain()
-    override suspend fun getComposerById(id: Long): Composer? = composerDao.getComposerById(id)?.toDomain()
+    override suspend fun getComposerBySlug(slug: String): Composer? =
+        composerDao.getComposerBySlug(slug)?.let { it.toDomain(songDao.getSongCountByComposer(it.id)) }
+    override suspend fun getComposerById(id: Long): Composer? =
+        composerDao.getComposerById(id)?.let { it.toDomain(songDao.getSongCountByComposer(it.id)) }
     override suspend fun saveComposers(composers: List<Composer>) {
         composerDao.insertComposers(composers.map { it.toEntity() })
     }

@@ -8,10 +8,13 @@ import com.maralyrics.laitei.domain.usecase.GetSettingsUseCase
 import com.maralyrics.laitei.domain.usecase.SyncDatabaseUseCase
 import com.maralyrics.laitei.domain.usecase.UpdateSettingsUseCase
 import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
+import com.maralyrics.laitei.utils.AppShareUtils
+import com.maralyrics.laitei.utils.ImportDatabaseResult
 import com.maralyrics.laitei.utils.StorageUtils
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
 import com.maralyrics.laitei.utils.ConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +25,8 @@ class SetupViewModel @Inject constructor(
     private val updateSettingsUseCase: UpdateSettingsUseCase,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
-    private val connectivityObserver: ConnectivityObserver
+    private val connectivityObserver: ConnectivityObserver,
+    private val appShareUtils: AppShareUtils
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SetupUiState())
@@ -67,6 +71,40 @@ class SetupViewModel @Inject constructor(
         viewModelScope.launch {
             updateSettingsUseCase.markSetupComplete()
             _uiState.update { it.copy(isDownloadComplete = true) }
+        }
+    }
+
+    fun importOfflineData(uri: android.net.Uri) {
+        viewModelScope.launch {
+            when (val result = appShareUtils.importDatabase(uri)) {
+                is ImportDatabaseResult.Success -> {
+                    updateSettingsUseCase.markSetupComplete()
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_success_restarting",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.SUCCESS
+                        )
+                    )
+                    delay(1200)
+                    appShareUtils.restartApp()
+                }
+                is ImportDatabaseResult.IncompatibleVersion -> {
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_incompatible_version",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.ERROR
+                        )
+                    )
+                }
+                is ImportDatabaseResult.Failed -> {
+                    notificationManager.showNotification(
+                        com.maralyrics.laitei.presentation.common.notification.NotificationData(
+                            message = "import_failed|${result.message}",
+                            type = com.maralyrics.laitei.presentation.common.notification.NotificationType.ERROR
+                        )
+                    )
+                }
+            }
         }
     }
 

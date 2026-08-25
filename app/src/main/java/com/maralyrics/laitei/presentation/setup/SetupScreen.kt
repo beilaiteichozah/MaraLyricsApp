@@ -2,6 +2,8 @@ package com.maralyrics.laitei.presentation.setup
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -106,7 +108,8 @@ fun SetupScreen(
                             onCheckInternet = {
                                 context.startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
                             },
-                            onContinueOffline = viewModel::continueOffline
+                            onContinueOffline = viewModel::continueOffline,
+                            onImportOfflineData = viewModel::importOfflineData
                         )
                     }
                 }
@@ -230,8 +233,13 @@ fun DownloadStep(
     isOnline: Boolean,
     onRetry: () -> Unit,
     onCheckInternet: () -> Unit,
-    onContinueOffline: () -> Unit
+    onContinueOffline: () -> Unit,
+    onImportOfflineData: (android.net.Uri) -> Unit
 ) {
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri -> uri?.let(onImportOfflineData) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -275,6 +283,13 @@ fun DownloadStep(
                 shape = MaterialTheme.shapes.large
             ) {
                 Text(stringResource(R.string.btn_continue_offline))
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            TextButton(
+                onClick = { importLauncher.launch(arrayOf("*/*")) },
+                modifier = Modifier.fillMaxWidth().height(48.dp)
+            ) {
+                Text(stringResource(R.string.import_offline_data))
             }
         } else {
             Text(

@@ -136,6 +136,14 @@
     <string name="rate_app">Rate this App</string>
     <string name="share_app">Share App</string>
     <string name="share_app_text">Discover Mara song lyrics with the Mara Lyrics app.</string>
+    <string name="share_app_title">Share MaraLyrics</string>
+    <string name="share_via_play_store">Play Store Link</string>
+    <string name="share_via_play_store_desc">Online installation</string>
+    <string name="share_via_apk_data">APK + Downloaded Data</string>
+    <string name="share_apk_data_desc">Offline installation</string>
+    <string name="share_apk_data_message">Install this APK (you may need to enable \"install from unknown sources\"), then open MaraLyrics — your song data is already included, no internet needed.</string>
+    <string name="import_offline_data">Import Offline Data</string>
+    <string name="import_offline_data_desc">Load song data from a file shared by another device, no internet needed</string>
     <string name="data_sync">Data &amp; Sync</string>
     <string name="auto_sync">Auto-Sync</string>
     <string name="auto_sync_desc">Automatically check for updates</string>
@@ -306,6 +314,10 @@
     <string name="notif_fav_restore_success">%1$d favorites restored</string>
     <string name="notif_fav_restore_no_file">No backup file found</string>
     <string name="notif_fav_restore_failed">Restore failed: %1$s</string>
+    <string name="share_export_failed">Couldn\'t prepare files to share: %1$s</string>
+    <string name="import_success_restarting">Data imported. Restarting…</string>
+    <string name="import_incompatible_version">This file isn\'t compatible with this app version.</string>
+    <string name="import_failed">Import failed: %1$s</string>
     <string name="sync_downloading_prefix">Downloading %1$s…</string>
     <string name="never">Never</string>
     <string name="kb">KB</string>

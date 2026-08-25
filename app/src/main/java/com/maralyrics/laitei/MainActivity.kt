@@ -160,11 +160,19 @@ class MainActivity : ComponentActivity() {
                             }
 
                             if (showSyncDialog) {
+                                // Re-provided inside each lambda since AlertDialog's own Dialog
+                                // window can otherwise lose the app's in-app locale override.
+                                fun localized(content: @Composable () -> Unit): @Composable () -> Unit = {
+                                    CompositionLocalProvider(
+                                        LocalContext provides wrappedContext,
+                                        LocalConfiguration provides configuration
+                                    ) { content() }
+                                }
                                 AlertDialog(
                                     onDismissRequest = { showSyncDialog = false },
-                                    title = { Text(stringResource(R.string.sync_available_title)) },
-                                    text = { Text(stringResource(R.string.sync_available_msg)) },
-                                    confirmButton = {
+                                    title = localized { Text(stringResource(R.string.sync_available_title)) },
+                                    text = localized { Text(stringResource(R.string.sync_available_msg)) },
+                                    confirmButton = localized {
                                         TextButton(onClick = {
                                             // Trigger sync - in a real app we might show a separate progress UI
                                             showSyncDialog = false
@@ -172,7 +180,7 @@ class MainActivity : ComponentActivity() {
                                             Text(stringResource(R.string.sync_download))
                                         }
                                     },
-                                    dismissButton = {
+                                    dismissButton = localized {
                                         TextButton(onClick = { showSyncDialog = false }) {
                                             Text(stringResource(R.string.sync_later))
                                         }
@@ -195,6 +203,11 @@ fun UpdateNotificationDialog(
     onDownload: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Captured here (outside Dialog's own window boundary) and re-provided below,
+    // since Dialog can otherwise lose the app's in-app locale override for its content.
+    val localizedContext = LocalContext.current
+    val localizedConfiguration = LocalConfiguration.current
+
     Dialog(
         onDismissRequest = { if (!isDownloading) onDismiss() },
         properties = DialogProperties(
@@ -202,6 +215,10 @@ fun UpdateNotificationDialog(
             dismissOnClickOutside = false
         )
     ) {
+      CompositionLocalProvider(
+        LocalContext provides localizedContext,
+        LocalConfiguration provides localizedConfiguration
+      ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -365,6 +382,7 @@ fun UpdateNotificationDialog(
                 }
             }
         }
+      }
     }
 }
 
@@ -375,18 +393,29 @@ fun StorageWarningDialog(
     onCancel: () -> Unit,
     onManageStorage: () -> Unit
 ) {
+    // Captured here (outside AlertDialog's own window boundary) and re-provided below,
+    // since its Dialog can otherwise lose the app's in-app locale override for its content.
+    val localizedContext = LocalContext.current
+    val localizedConfiguration = LocalConfiguration.current
+    fun localized(content: @Composable () -> Unit): @Composable () -> Unit = {
+        CompositionLocalProvider(
+            LocalContext provides localizedContext,
+            LocalConfiguration provides localizedConfiguration
+        ) { content() }
+    }
+
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text(stringResource(R.string.update_title)) },
-        text = {
+        title = localized { Text(stringResource(R.string.update_title)) },
+        text = localized {
             Text(stringResource(R.string.storage_low_warning_msg, info.usedPercentage))
         },
-        confirmButton = {
+        confirmButton = localized {
             Button(onClick = onConfirm) {
                 Text(stringResource(R.string.btn_continue))
             }
         },
-        dismissButton = {
+        dismissButton = localized {
             TextButton(onClick = onManageStorage) {
                 Text(stringResource(R.string.btn_manage_storage))
             }
@@ -400,10 +429,21 @@ fun InsufficientStorageDialog(
     onDismiss: () -> Unit,
     onManageStorage: () -> Unit
 ) {
+    // Captured here (outside AlertDialog's own window boundary) and re-provided below,
+    // since its Dialog can otherwise lose the app's in-app locale override for its content.
+    val localizedContext = LocalContext.current
+    val localizedConfiguration = LocalConfiguration.current
+    fun localized(content: @Composable () -> Unit): @Composable () -> Unit = {
+        CompositionLocalProvider(
+            LocalContext provides localizedContext,
+            LocalConfiguration provides localizedConfiguration
+        ) { content() }
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.storage_insufficient_title)) },
-        text = {
+        title = localized { Text(stringResource(R.string.storage_insufficient_title)) },
+        text = localized {
             Text(
                 stringResource(
                     R.string.storage_insufficient_msg,
@@ -413,12 +453,12 @@ fun InsufficientStorageDialog(
                 )
             )
         },
-        confirmButton = {
+        confirmButton = localized {
             Button(onClick = onManageStorage) {
                 Text(stringResource(R.string.btn_manage_storage))
             }
         },
-        dismissButton = {
+        dismissButton = localized {
             TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.btn_ok))
             }

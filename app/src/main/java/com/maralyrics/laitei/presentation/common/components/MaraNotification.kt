@@ -114,6 +114,10 @@ fun getResId(key: String): Int {
         "notif_fav_restore_success" -> R.string.notif_fav_restore_success
         "notif_fav_restore_no_file" -> R.string.notif_fav_restore_no_file
         "notif_fav_restore_failed" -> R.string.notif_fav_restore_failed
+        "share_export_failed" -> R.string.share_export_failed
+        "import_success_restarting" -> R.string.import_success_restarting
+        "import_incompatible_version" -> R.string.import_incompatible_version
+        "import_failed" -> R.string.import_failed
         "notif_copied" -> R.string.notif_copied
         "notif_sync_started" -> R.string.notif_sync_started
         "notif_sync_success" -> R.string.notif_sync_success

@@ -12,25 +12,25 @@
     <string name="btn_next">Hmiah</string>
     <string name="btn_back">Kua</string>
     <string name="btn_get_started">Pathao</string>
-    <string name="btn_finish">Pathlô</string>
+    <string name="btn_finish">Patlô</string>
 
     <!-- Home -->
     <string name="home_title">Mara Hlabie</string>
     <string name="search_hint">Chôtlâhpi, hlabie, chvk nuhby...</string>
     <string name="recently_viewed">Reilei liata mopazy</string>
-    <string name="favorite_songs">Paphasapa Hlazy</string>
+    <string name="favorite_songs">Khohchaipa Hlazy</string>
     <string name="popular_songs">Hla Alualâh viapazy</string>
     <string name="random_suggestions">Vialapa Khokheipazy</string>
     <string name="no_recent_songs">Reileipa liata na mopa hla y vei. Tlua pathao teh!</string>
-    <string name="no_favorites">Na paphasapa hla y mâh vei!</string>
+    <string name="no_favorites">Na Khohchaipa hla y mâh vei!</string>
     <string name="view_all">Azydua Chaluah</string>
     <string name="categories">Phozy</string>
     <string name="surprise_me">Eino napaâh</string>
-    <string name="stats_favorites">Paphasapazy</string>
+    <string name="stats_favorites">Khohchaipazy</string>
     <string name="stats_artists">Hlasatuhpazy</string>
     <string name="stats_composers">Phituhpazy</string>
-    <string name="search_favorites">Paphasapazy Tlua...</string>
-    <string name="no_matching_favorites">Paphasapa nah alyupa y ei</string>
+    <string name="search_favorites">Khohchaipazy Tlua...</string>
+    <string name="no_matching_favorites">Khohchaipa hla tluapa y ei</string>
     <string name="adjust_search_filters">Na tluana chvk athlinazy paryh teh.</string>
     <string name="browse_songs">Hlazy tlua teh</string>
     <string name="discover_random">Hlazy a vialapa ta tlua teh</string>
@@ -113,7 +113,6 @@
 
     <!-- New Settings -->
     <string name="about_app">App Thâtih</string>
-    <string name="about_app_desc">Mara Hlabie he Mara community châta Mara Lyrics Team ta a taopa, a saipa nata source pahypa app a châ. He he Mara Hlabiezy sâhluhpi he a nao kawpa ta tluana châta miah bao ta, Mara reih nata phoryhpa khâsiana lia tha ta a baokhâ.\n\nHe app lia he Khazoh, Hlâsa, Râh, nata Phoryhpa hlazy â hlao. Offline ta hlazy tlua theipa a châpa vâta nohto hmâna su, apakhyna, chaypi, kyhchhina, nata pôhkha hlasana liata hmâ theipa a châ.\n\nMara Hlabie he khizaw kaoki liata pahrâpa Mara chyhsazy châta taopa châ ta, a saipa ta hmâ theipa a châ. He parawche he Khitlâh ta a siekheipa châ ta, Mara reih nata Ryuzy pasô ta, khâsia awpa ta achhuahpa a châ.</string>
     <string name="credits">Alyna Bie</string>
     <string name="credits_desc">Mara Hlazy he chhâ kha nata chhâ kha vaw khâsia laihpa ta, pakha hnoh pakha a vaw hlâ laihpa Hla Phituhpazy, Hlabie Rohtuhpazy, Reihpaleituhpazy, nata eima vaihtlâh zydua hnohta alyna bie eima hlâ.</string>
     <string name="licenses">Laisiezy</string>
@@ -132,9 +131,9 @@
     <string name="auto_sync_desc">Updatezy anotata moh</string>
     <string name="wifi_only">Wi-Fi Deita</string>
     <string name="wifi_only_desc">Wi-Fi nâ pazao no deita sync â tao aw</string>
-    <string name="backup_restore_favorites">Paphasapazy Pachô/Lapakhua</string>
-    <string name="backup_favorites">Paphapsapazy Pachô</string>
-    <string name="restore_favorites">Paphasapazy Lapakhua</string>
+    <string name="backup_restore_favorites">Khohchaipazy Paso/Lapakhua</string>
+    <string name="backup_favorites">Khohchaipazy Paso</string>
+    <string name="restore_favorites">Khohchaipazy Lapakhua</string>
     <string name="clear_cache">Apua Pathaisa</string>
     <string name="clear_cache_desc">A puapazy pathaisana chôta na fô paruasa teh</string>
     <string name="accessibility_display">Hmâtheina &amp; Palâsapa</string>
@@ -175,14 +174,14 @@
     <string name="onboarding_feature_2_3">Samâ khokheipazy</string>
 
     <string name="onboarding_title_3">Na Khohchaipazy Pachô</string>
-    <string name="onboarding_desc_3">Na khoh chaipa hlazy kha a pha kawpa ta pahmaoh la, anao kawpa ta moh mah y.</string>
+    <string name="onboarding_desc_3">Na khohchaipa hlazy kha a pha kawpa ta pahmaoh la, anaota ta ta moh mah y.</string>
     <string name="onboarding_feature_3_1">Khohchaipa Hlazy</string>
     <string name="onboarding_feature_3_2">Khohchaipa Tlua</string>
     <string name="onboarding_feature_3_3">Khohchaipa Athli</string>
     <string name="onboarding_feature_3_4">🎲 Eino na paâh teh</string>
 
     <string name="onboarding_title_4">Na Hlabie, Na Tlôpahnopa</string>
-    <string name="onboarding_desc_4">Na khohpa nah â hmiepa ta Mara Hlabie he paraih teh.</string>
+    <string name="onboarding_desc_4">Na khohpa nah â hmie thei nawpa ta Mara Hlabie app he na khodâh hawh tao teh.</string>
     <string name="onboarding_feature_4_1">App Reih</string>
     <string name="onboarding_feature_4_2">Hnôhbai Atlyna</string>
     <string name="onboarding_feature_4_3">Hla font laichyhna</string>
@@ -227,7 +226,7 @@
     <string name="btn_continue_offline">Offline  Hmiatôh</string>
     <string name="setup_complete_title">Patyhpa Patlô haw</string>
     <string name="sync_downloading_db">Mara Hlabie data â dao hai...</string>
-    <string name="sync_download_success">Hlazy hlaotoh kawpa ta â dao khai haw.</string>
+    <string name="sync_download_success">Hlazy hlaotloh kawpa ta â dao khai haw.</string>
     <string name="sync_download_failed">Hlazy a dao thei vei.</string>
     <string name="sync_redownloading">Database â dao pathi hai...</string>
 
@@ -239,7 +238,7 @@
     <string name="btn_share">Hlâ</string>
     <string name="optional_suffix">(Na khoh khiah)</string>
     <string name="open_source_libs">Source Library Pahyzy</string>
-    <string name="favorites_label">Paphasapazy</string>
+    <string name="favorites_label">Khohchaipazy</string>
     <string name="toggle_layout">Layout hmiena</string>
     <string name="exit_press_back">Kuana kha hmie via teh.</string>
     <string name="star_favorite">Awhsi</string>
@@ -307,8 +306,8 @@
     <string name="privacy_intro_content">Mara Hlabie he nâma pôhkha thlalôhna a pasô kaw. He ryhpa heta app na hmâ nota na data dâh eima hmâ dâh a chhopasia aw.</string>
     <string name="privacy_data_title">Data Pakhyna</string>
     <string name="privacy_data_content">Na châna palâsa theipa pôhkha chhichhânazy pachô mapi. App he offline ta raihria ta na khotlynazy (reih, hnôhbai, khohchaipazy) kha na device liata a pachô.</string>
-    <string name="privacy_permissions_title">Pahy n\'awpa Biehnazy</string>
-    <string name="privacy_permissions_content">He app heta hla database a dao n\'awpa nata updatezy moh n\'awpa ta internet a hiah aw. He hlâta invasive via pa biehnazy a hiah leipa a châ.</string>
+    <string name="privacy_permissions_title">Pasainazy</string>
+    <string name="privacy_permissions_content">Hla database adao nawpa nata updates mo nawpa châta he apphe internet pasaina a hmâh aw. Pabuabâsa theipa pasaihna hropazy abyh hlei vei.</string>
     <string name="privacy_contact_title">Miah Azao teh</string>
     <string name="privacy_contact_content">Eima pôhkha thlalôhna ryhpa kyh liata hiahria awpa na hnei khiah, app settings liata feedback section tawhta Mara Lyrics Team miah nâ zao thei.</string>
     <string name="privacy_scroll_to_read">Ryhpa he apy awpa ta achhâna taih pasie teh.</string>
@@ -316,7 +315,7 @@
     <string name="btn_decline">Dytha</string>
     <string name="btn_exit">App tawh pua</string>
     <string name="btn_read_again">Reih heih</string>
-    <string name="privacy_decline_msg">Mara Lyrics hmâ thei n\'awpa ta Pôhkha Thlalôhna Ryhpa he nâ py awpa â byuh. Nâ py leipa lepa, he application he hmâ theina cha pie thei awpa mapi.</string>
+    <string name="privacy_decline_msg">Mara Lyrics hmâ thei n\'awpa ta Pôhkha Thlalôhna Ryhpa he nâ py awpa â byuh. Nâ py leipa ta, he application hmâ theina cha pie thei mapi.</string>
     <!-- Update Dialog -->
     <string name="update_title">Update  A y</string>
     <plurals name="update_item_songs">
@@ -344,4 +343,5 @@
     <string name="btn_continue">Hmiatôh</string>
     <string name="various_artists">Hlasatuh Hluhpizy</string>
     <string name="various_composers">Hlaphutih Hluhpizy</string>
+    <string name="license_retrofit_okhttp">No other invasive permissions are required.</string>
 </resources>

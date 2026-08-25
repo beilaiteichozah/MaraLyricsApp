@@ -1,5 +1,6 @@
 package com.maralyrics.laitei.presentation.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,8 @@ import com.maralyrics.laitei.BuildConfig
 import com.maralyrics.laitei.R
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.presentation.theme.MaraColorSchemes
+import com.maralyrics.laitei.utils.StorageUtils
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +59,11 @@ fun SettingsScreen(
     var showAboutDialog by remember { mutableStateOf(false) }
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showLicensesDialog by remember { mutableStateOf(false) }
+    var showShareSheet by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = androidx.activity.result.contract.ActivityResultContracts.OpenDocument()
+    ) { uri -> uri?.let { viewModel.importOfflineData(it) } }
 
     Scaffold(
         topBar = {
@@ -205,7 +213,13 @@ fun SettingsScreen(
                         icon = Icons.Default.DeleteSweep,
                         onClick = viewModel::clearCache
                     )
-                    
+                    SettingsItem(
+                        title = stringResource(R.string.import_offline_data),
+                        description = stringResource(R.string.import_offline_data_desc),
+                        icon = Icons.Default.FileDownload,
+                        onClick = { importLauncher.launch(arrayOf("*/*")) }
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     OfflineDataInfo(
@@ -288,14 +302,7 @@ fun SettingsScreen(
                     SettingsItem(
                         title = stringResource(R.string.share_app),
                         icon = Icons.Default.Share,
-                        onClick = {
-                            val intent = android.content.Intent().apply {
-                                action = android.content.Intent.ACTION_SEND
-                                putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_app_text) + " https://play.google.com/store/apps/details?id=${context.packageName}")
-                                type = "text/plain"
-                            }
-                            context.startActivity(android.content.Intent.createChooser(intent, null))
-                        }
+                        onClick = { showShareSheet = true }
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -492,6 +499,116 @@ fun SettingsScreen(
                 }
             }
         )
+    }
+
+    if (showShareSheet) {
+        val currentContext = LocalContext.current
+        val currentConfiguration = LocalConfiguration.current
+
+        AlertDialog(
+            onDismissRequest = { showShareSheet = false },
+            title = {
+                CompositionLocalProvider(
+                    LocalContext provides currentContext,
+                    LocalConfiguration provides currentConfiguration
+                ) {
+                    Text(stringResource(R.string.share_app_title))
+                }
+            },
+            text = {
+                CompositionLocalProvider(
+                    LocalContext provides currentContext,
+                    LocalConfiguration provides currentConfiguration
+                ) {
+                    Column {
+                        ShareOptionRow(
+                            icon = Icons.Default.Public,
+                            title = stringResource(R.string.share_via_play_store),
+                            description = stringResource(R.string.share_via_play_store_desc),
+                            onClick = {
+                                showShareSheet = false
+                                val intent = android.content.Intent().apply {
+                                    action = android.content.Intent.ACTION_SEND
+                                    putExtra(
+                                        android.content.Intent.EXTRA_TEXT,
+                                        context.getString(R.string.share_app_text) + " https://play.google.com/store/apps/details?id=${context.packageName}"
+                                    )
+                                    type = "text/plain"
+                                }
+                                context.startActivity(android.content.Intent.createChooser(intent, null))
+                            }
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                        ShareOptionRow(
+                            icon = Icons.Default.Inventory2,
+                            title = stringResource(R.string.share_via_apk_data),
+                            description = stringResource(R.string.share_apk_data_desc),
+                            onClick = {
+                                showShareSheet = false
+                                scope.launch {
+                                    val files = viewModel.exportApkAndData()
+                                    if (files != null) {
+                                        val (apk, db) = files
+                                        val intent = android.content.Intent(android.content.Intent.ACTION_SEND_MULTIPLE).apply {
+                                            type = "*/*"
+                                            putParcelableArrayListExtra(
+                                                android.content.Intent.EXTRA_STREAM,
+                                                arrayListOf(viewModel.uriFor(apk), viewModel.uriFor(db))
+                                            )
+                                            putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_apk_data_message))
+                                            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        }
+                                        context.startActivity(android.content.Intent.createChooser(intent, null))
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showShareSheet = false }) {
+                    CompositionLocalProvider(
+                        LocalContext provides currentContext,
+                        LocalConfiguration provides currentConfiguration
+                    ) {
+                        Text(stringResource(R.string.btn_cancel))
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ShareOptionRow(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    description: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(28.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -749,7 +866,7 @@ fun OfflineDataInfo(
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(stringResource(R.string.db_size), style = MaterialTheme.typography.bodySmall)
-                Text("${dbSize / 1024} ${stringResource(R.string.kb)}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                Text(StorageUtils.formatSize(dbSize), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             }
             
             Spacer(modifier = Modifier.height(8.dp))
