@@ -22,8 +22,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -305,17 +303,6 @@ fun SettingsScreen(
                         onClick = { showShareSheet = true }
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = stringResource(R.string.tagline_made_in_maraland),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontFamily = FontFamily(Font(R.font.cmu_serif_slanted)),
-                            fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-                        ),
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }

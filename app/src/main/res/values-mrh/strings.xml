@@ -167,25 +167,28 @@
     <string name="onboarding_feature_1_2">Hla sâhluhpi</string>
     <string name="onboarding_feature_1_3">Tluana chatleipa</string>
 
-    <string name="onboarding_title_2">Tluana Thatlôpa</string>
-    <string name="onboarding_desc_2">Chôtlâhpi, Hlabie, Hla nuhby, Hlasatuhpa, chvk Phituhpa ta tlua mah y.</string>
-    <string name="onboarding_feature_2_1">Thlai ta Tluana</string>
-    <string name="onboarding_feature_2_2">Offline tluana</string>
-    <string name="onboarding_feature_2_3">Samâ khokheipazy</string>
+    <!-- onboarding_title_2 / desc_2 / feature_2_x (offline sharing page) intentionally
+         left untranslated here — falls back to English until translated into Mara. -->
 
-    <string name="onboarding_title_3">Na Khohchaipazy Pachô</string>
-    <string name="onboarding_desc_3">Na khohchaipa hlazy kha a pha kawpa ta pahmaoh la, anaota ta ta moh mah y.</string>
-    <string name="onboarding_feature_3_1">Khohchaipa Hlazy</string>
-    <string name="onboarding_feature_3_2">Khohchaipa Tlua</string>
-    <string name="onboarding_feature_3_3">Khohchaipa Athli</string>
-    <string name="onboarding_feature_3_4">🎲 Eino na paâh teh</string>
+    <string name="onboarding_title_3">Tluana Thatlôpa</string>
+    <string name="onboarding_desc_3">Chôtlâhpi, Hlabie, Hla nuhby, Hlasatuhpa, chvk Phituhpa ta tlua mah y.</string>
+    <string name="onboarding_feature_3_1">Thlai ta Tluana</string>
+    <string name="onboarding_feature_3_2">Offline tluana</string>
+    <string name="onboarding_feature_3_3">Samâ khokheipazy</string>
 
-    <string name="onboarding_title_4">Na Hlabie, Na Tlôpahnopa</string>
-    <string name="onboarding_desc_4">Na khohpa nah â hmie thei nawpa ta Mara Hlabie app he na khodâh hawh tao teh.</string>
-    <string name="onboarding_feature_4_1">App Reih</string>
-    <string name="onboarding_feature_4_2">Hnôhbai Atlyna</string>
-    <string name="onboarding_feature_4_3">Hla font laichyhna</string>
-    <string name="onboarding_feature_4_4">Hria Pachiepazy Pazao</string>
+    <string name="onboarding_title_4">Na Khohchaipazy Pachô</string>
+    <string name="onboarding_desc_4">Na khohchaipa hlazy kha a pha kawpa ta pahmaoh la, anaota ta ta moh mah y.</string>
+    <string name="onboarding_feature_4_1">Khohchaipa Hlazy</string>
+    <string name="onboarding_feature_4_2">Khohchaipa Tlua</string>
+    <string name="onboarding_feature_4_3">Khohchaipa Athli</string>
+    <string name="onboarding_feature_4_4">Eino na paâh teh</string>
+
+    <string name="onboarding_title_5">Na Hlabie, Na Tlôpahnopa</string>
+    <string name="onboarding_desc_5">Na khohpa nah â hmie thei nawpa ta Mara Hlabie app he na khodâh hawh tao teh.</string>
+    <string name="onboarding_feature_5_1">App Reih</string>
+    <string name="onboarding_feature_5_2">Hnôhbai Atlyna</string>
+    <string name="onboarding_feature_5_3">Hla font laichyhna</string>
+    <string name="onboarding_feature_5_4">Hria Pachiepazy Pazao</string>
 
     <string name="view_tutorial_again">Pachuna Moh Heih</string>
 
@@ -328,8 +331,8 @@
         <item quantity="other">Phituhpa %1$d</item>
     </plurals>
     <string name="update_msg_combined">%1$s thieh y.</string>
-    <string name="update_conjunction_and"> nata </string>
-    <string name="update_conjunction_comma">, </string>
+    <string name="update_conjunction_and">" nata "</string>
+    <string name="update_conjunction_comma">", "</string>
     <string name="update_ask_download">Tahmâ nâ dao khoh ma?</string>
     <string name="update_only_new">Hla thiehpazy deita â dao aw.</string>
     <string name="btn_download_now">Tahmâ Adao</string>

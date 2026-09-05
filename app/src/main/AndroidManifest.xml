@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name="com.maralyrics.laitei.MaraLyricsApp"
@@ -18,12 +19,38 @@
         <activity
             android:name="com.maralyrics.laitei.MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.MaraLyrics.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Home screen widgets -->
+        <receiver
+            android:name=".presentation.widget.SearchBarWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_search_bar_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/search_bar_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".presentation.widget.FeaturedLyricsWidgetReceiver"
+            android:exported="false"
+            android:label="@string/widget_featured_lyrics_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/featured_lyrics_widget_info" />
+        </receiver>
 
         <!-- WorkManager initializer -->
         <provider

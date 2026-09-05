@@ -7,9 +7,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudOff
@@ -45,6 +47,8 @@ fun SetupScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -162,7 +166,12 @@ fun CategoryStep(
     onCategorySelected: (String) -> Unit
 ) {
     val categories = listOf("All", "Gospel", "Love", "Patriotic", "Traditional")
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = stringResource(R.string.setup_category_title),
             style = MaterialTheme.typography.titleLarge.copy(
@@ -179,10 +188,12 @@ fun CategoryStep(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp)
         )
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Column(
-            modifier = Modifier.selectableGroup(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             categories.forEach { category ->
                 val isSelected = selectedCategories.contains(category)
@@ -195,7 +206,7 @@ fun CategoryStep(
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(16.dp),
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
@@ -222,6 +233,7 @@ fun CategoryStep(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 

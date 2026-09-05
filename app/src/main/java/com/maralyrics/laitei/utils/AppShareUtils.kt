@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import androidx.core.content.FileProvider
+import com.maralyrics.laitei.R
 import com.maralyrics.laitei.data.local.MaraLyricsDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,14 @@ class AppShareUtils @Inject constructor(
 
     suspend fun exportApk(): File = withContext(Dispatchers.IO) {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        val sourceApk = File(packageInfo.applicationInfo!!.sourceDir)
+        val applicationInfo = packageInfo.applicationInfo!!
+        // A Play-delivered install can consist of this base APK plus separate split APKs
+        // (density/ABI/etc.). Sharing the base alone produces a file that fails to install
+        // on another device since it's missing content the split APKs would have provided.
+        if (!applicationInfo.splitSourceDirs.isNullOrEmpty()) {
+            throw IllegalStateException(context.getString(R.string.share_split_apk_error))
+        }
+        val sourceApk = File(applicationInfo.sourceDir)
         val destApk = File(sharedDir, "MaraLyrics-${packageInfo.versionName}.apk")
         sourceApk.copyTo(destApk, overwrite = true)
         destApk
@@ -40,7 +48,8 @@ class AppShareUtils @Inject constructor(
 
     suspend fun exportDatabase(): File = withContext(Dispatchers.IO) {
         // Flush the WAL into the main file so a single file is a complete, consistent copy.
-        database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").close()
+        // Cursor is lazy — must read from it (moveToFirst) or the PRAGMA never actually runs.
+        database.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").use { it.moveToFirst() }
         val dbFile = context.getDatabasePath(MaraLyricsDatabase.DATABASE_NAME)
         val destDb = File(sharedDir, MaraLyricsDatabase.DATABASE_NAME)
         dbFile.copyTo(destDb, overwrite = true)

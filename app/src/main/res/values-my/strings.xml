@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">မရာ သီချင်းစာသား</string>
 
+    <!-- Home Screen Widgets -->
+    <string name="widget_search_bar_label">Mara Lyrics ရှာဖွေရေး</string>
+    <string name="widget_search_bar_desc">ဟုမ်းစခရင်မှတိုက်ရိုက် Mara Lyrics ကို ရှာဖွေနိုင်သော ဖြတ်လမ်း။</string>
+    <string name="widget_search_hint">Mara Lyrics ရှာဖွေရန်…</string>
+    <string name="widget_featured_lyrics_label">အထူးဖော်ပြသီချင်း</string>
+    <string name="widget_featured_lyrics_desc">သင့်ဟုမ်းစခရင်ပေါ်တွင် ကျပန်းသီချင်းတစ်ပုဒ်ကို ပြသပေးပါသည်။</string>
+    <string name="widget_featured_title">အထူးဖော်ပြသီချင်း</string>
+    <string name="widget_no_songs">သီချင်းများ ဒေါင်းလုဒ်လုပ်ပြီးမှ ဤနေရာတွင် ပြသပါမည်။</string>
+    <string name="widget_refresh">အခြားသီချင်း</string>
+
     <!-- Setup -->
     <string name="setup_welcome">မရာ သီချင်းစာသား မှ ကြိုဆိုပါတယ်</string>
     <string name="setup_description">မရာသီချင်းစာသားများ စုစည်းမှုရာနေရာ။</string>
@@ -113,7 +123,7 @@
 
     <!-- New Settings -->
     <string name="about_app">အက်ပ်အကြောင်း</string>
-    <string name="about_app_desc">မရာ သီချင်းစာသား သည် မရာလူမျိုးများအတွက် မရာ သီချင်းစာသားအဖွဲ့မှ ဖန်တီးထားသော အခမဲ့နှင့် open-source အက်ပ်တစ်ခု ဖြစ်ပါသည်။ ၎င်းသည် မရာသီချင်းများနှင့် စာသားအမြောက်အမြားကို လွယ်ကူစွာ ရှာဖွေနိုင်ရန် ကူညီပေးပြီး၊ မရာဘာသာစကားနှင့် ယဉ်ကျေးမှုကို ထိန်းသိမ်းမြှင့်တင်ပေးပါသည်။\n\nဤအက်ပ်တွင် ဓမ္မတေး၊ အချစ်၊ မျိုးချစ်နှင့် ရိုးရာသီချင်းများအပါအဝင် အမျိုးအစားစုံလင်စွာ ပါဝင်ပါသည်။ အော့ဖ်လိုင်းဖြင့် စာသားများကို ရှာဖွေဖတ်ရှုနိုင်သောကြောင့် နေ့စဉ်အသုံးပြုမှု၊ စုဝေးပွဲများ၊ ယဉ်ကျေးမှုပွဲတော်များနှင့် ကိုယ်ပိုင်အပန်းဖြေမှုများအတွက် အလွန်အသုံးဝင်ပါသည်။\n\nမရာ သီချင်းစာသား ကို ကမ္ဘာတစ်ဝှမ်းရှိ မရာလူမျိုးများအတွက် ဖန်တီးထားပြီး အခမဲ့ ရရှိနိုင်ပါသည်။ ဤပရောဂျက်သည် လူထုအခြေပြုဖြစ်ပြီး မရာဘာသာစကားနှင့် အမွေအနှစ်များကို ထိန်းသိမ်းစောင့်ရှောက်ရန် ရည်ရွယ်ပါသည်။</string>
+    <string name="about_app_desc">မရာ သီချင်းစာသား သည် မရာလူမျိုးများအတွက် မရာ သီချင်းစာသားအဖွဲ့မှ ဖန်တီးထားသော အခမဲ့နှင့် open-source အက်ပ်တစ်ခု ဖြစ်ပါသည်။ ၎င်းသည် မရာသီချင်းများနှင့် စာသားအမြောက်အမြားကို လွယ်ကူစွာ ရှာဖွေနိုင်ရန် ကူညီပေးပြီး၊ မရာဘာသာစကားနှင့် ယဉ်ကျေးမှုကို ထိန်းသိမ်းမြှင့်တင်ပေးပါသည်။\n\nဤအက်ပ်တွင် ဓမ္မတေး၊ အချစ်၊ မျိုးချစ်နှင့် ရိုးရာသီချင်းများအပါအဝင် အမျိုးအစားစုံလင်စွာ ပါဝင်ပါသည်။ အော့ဖ်လိုင်းဖြင့် စာသားများကို ရှာဖွေဖတ်ရှုနိုင်သောကြောင့် နေ့စဉ်အသုံးပြုမှု၊ စုဝေးပွဲများ၊ ယဉ်ကျေးမှုပွဲတော်များနှင့် ကိုယ်ပိုင်အပန်းဖြေမှုများအတွက် အလွန်အသုံးဝင်ပါသည်။\n\nသီချင်းစာသားများ တိကျမှန်ကန်နေစေရန်၊ Mara Lyrics သည် ပြင်ဆင်ထားသော စာသားများ သို့မဟုတ် အသစ်ထည့်သွင်းထားသော သီချင်းများကဲ့သို့သော အပ်ဒိတ်များကို စစ်ဆေးပြီး နောက်ခံတွင် အလိုအလျောက် ဒေါင်းလုဒ်လုပ်ပါသည်။ ဤဒေတာသည် အလွန်သေးငယ်သောကြောင့် အပ်ဒိတ်များကို မေးမြန်းခြင်း သို့မဟုတ် နှောင့်ယှက်ခြင်းမရှိဘဲ တိတ်ဆိတ်စွာ ထည့်သွင်းပြီး၊ ပုံမှန်အားဖြင့် Wi-Fi ချိတ်ဆက်ထားစဉ်တွင်သာ လုပ်ဆောင်ပါသည်။ ဤအပြုအမူကို Settings ရှိ Data &amp; Sync အောက်တွင် အချိန်မရွေး ပြောင်းလဲနိုင်ပါသည်။\n\nမရာ သီချင်းစာသား ကို ကမ္ဘာတစ်ဝှမ်းရှိ မရာလူမျိုးများအတွက် ဖန်တီးထားပြီး အခမဲ့ ရရှိနိုင်ပါသည်။ ဤပရောဂျက်သည် လူထုအခြေပြုဖြစ်ပြီး မရာဘာသာစကားနှင့် အမွေအနှစ်များကို ထိန်းသိမ်းစောင့်ရှောက်ရန် ရည်ရွယ်ပါသည်။</string>
     <string name="credits">ဂုဏ်ပြုလွှာ</string>
     <string name="credits_desc">မရာသီချင်းများကို ထိန်းသိမ်းပေးကြသော တေးရေး၊ အဆိုတော်နှင့် ဝိုင်းဝန်းကူညီသူများအားလုံးကို ဂုဏ်ပြုပါသည်။</string>
     <string name="licenses">လိုင်စင်များ</string>
@@ -127,6 +137,14 @@
     <string name="rate_app">အက်ပ်ကို အဆင့်သတ်မှတ်ပါ</string>
     <string name="share_app">အက်ပ်ကို မျှဝေပါ</string>
     <string name="share_app_text">မရာ သီချင်းစာသား အက်ပ် နှင့်အတူ မရာ သီချင်းစာသား ကြည့်ရှုလိုက်ပါ။</string>
+    <string name="share_app_title">မရာသီချင်းစာသား မျှဝေပါ</string>
+    <string name="share_via_play_store">Play Store လင့်ခ်</string>
+    <string name="share_via_play_store_desc">အွန်လိုင်းဖြင့် ထည့်သွင်းခြင်း</string>
+    <string name="share_via_apk_data">APK + ဒေါင်းလုဒ်ဒေတာ</string>
+    <string name="share_apk_data_desc">အော့ဖ်လိုင်းဖြင့် ထည့်သွင်းခြင်း</string>
+    <string name="share_apk_data_message">ဤ APK ကို ထည့်သွင်းပါ (\"အမည်မသိရင်းမြစ်များမှ ထည့်သွင်းခြင်း\" ကို ဖွင့်ရန် လိုအပ်ကောင်း လိုအပ်ပါမည်)၊ ထို့နောက် မရာသီချင်းစာသားကို ဖွင့်ပါ — သီချင်းဒေတာများ ပါဝင်ပြီးသားဖြစ်၍ အင်တာနက် မလိုအပ်ပါ။</string>
+    <string name="import_offline_data">အော့ဖ်လိုင်းဒေတာ တင်သွင်းရန်</string>
+    <string name="import_offline_data_desc">အင်တာနက်မလိုဘဲ အခြားစက်တစ်ခုမှ မျှဝေထားသော ဖိုင်ကို တင်သွင်းပါ</string>
     <string name="data_sync">ဒေတာနှင့် အပ်ဒိတ်</string>
     <string name="auto_sync">အလိုအလျောက် အပ်ဒိတ်လုပ်မည်</string>
     <string name="auto_sync_desc">အပ်ဒိတ်များကို အလိုအလျောက် စစ်ဆေးမည်</string>
@@ -165,27 +183,33 @@
     <string name="onboarding_desc_1">မရာသီချင်းများကို အချိန်မရွေး၊ နေရာမရွေး ရှာဖွေဖတ်ရှုနိုင်ပါပြီ။</string>
     <string name="onboarding_feature_1_1">အော့ဖ်လိုင်းသုံးနိုင်ခြင်း</string>
     <string name="onboarding_feature_1_2">သီချင်းပေါင်း ထောင်ချီ</string>
-    <string name="onboarding_feature_1_3">မြန်ဆန်သော ရှာဖွေမှု</string>
+    <string name="onboarding_feature_1_3">မြန်ဆန်တိကျသော ရှာဖွေမှု</string>
 
-    <string name="onboarding_title_2">အစွမ်းထက်သော ရှာဖွေမှု</string>
-    <string name="onboarding_desc_2">ခေါင်းစဉ်၊ စာသား၊ နံပါတ်၊ အဆိုတော် သို့မဟုတ် တေးရေးဖြင့် ရှာဖွေပါ။</string>
-    <string name="onboarding_feature_2_1">ချက်ချင်းရှာဖွေနိုင်ခြင်း</string>
-    <string name="onboarding_feature_2_2">အော့ဖ်လိုင်း ရှာဖွေနိုင်ခြင်း</string>
-    <string name="onboarding_feature_2_3">စမတ်ကျသော အကြံပြုချက်များ</string>
+    <string name="onboarding_title_2">အင်တာနက်မလိုဘဲ မျှဝေပါ</string>
+    <string name="onboarding_desc_2">အနီးအနားရှိ ဖုန်းသို့ အက်ပ်နှင့် သီချင်းအားလုံးကို လွှဲပြောင်းပေးနိုင်ပါသည်။ ဖုန်းနှစ်လုံးစလုံးတွင် အင်တာနက်ချိတ်ဆက်ရန် မလိုအပ်ပါ။</string>
+    <string name="onboarding_feature_2_1">အက်ပ်နှင့် သီချင်းများကို အတူတကွ မျှဝေပါ</string>
+    <string name="onboarding_feature_2_2">ဘလူးတုသ်၊ Wi-Fi Direct သို့မဟုတ် ဖိုင်လွှဲပြောင်းခြင်းဖြင့် အသုံးပြုနိုင်သည်</string>
+    <string name="onboarding_feature_2_3">အင်တာနက်အားနည်းသော ဒေသများအတွက် သင့်တော်သည်</string>
 
-    <string name="onboarding_title_3">အကြိုက်ဆုံးများ သိမ်းဆည်းပါ</string>
-    <string name="onboarding_desc_3">သင်နှစ်သက်သော သီချင်းများကို အလွယ်တကူ သိမ်းဆည်းထားပါ။</string>
-    <string name="onboarding_feature_3_1">အကြိုက်ဆုံး သီချင်းများ</string>
-    <string name="onboarding_feature_3_2">အကြိုက်ဆုံးများထဲမှ ရှာပါ</string>
-    <string name="onboarding_feature_3_3">အမျိုးအစားအလိုက် စစ်ထုတ်ပါ</string>
-    <string name="onboarding_feature_3_4">🎲 ကျပန်းရွေးပါ</string>
+    <string name="onboarding_title_3">အစွမ်းထက်သော ရှာဖွေမှု</string>
+    <string name="onboarding_desc_3">သီချင်းတိုင်းကို ချက်ချင်းရှာဖွေပါ — ခေါင်းစဉ်၊ စာသား၊ နံပါတ်၊ အဆိုတော် သို့မဟုတ် တေးရေးသူဖြင့် ရှာနိုင်ပါသည်။</string>
+    <string name="onboarding_feature_3_1">ချက်ချင်းရှာဖွေနိုင်ခြင်း</string>
+    <string name="onboarding_feature_3_2">လုံးဝ အော့ဖ်လိုင်းဖြင့် အသုံးပြုနိုင်သည်</string>
+    <string name="onboarding_feature_3_3">စမတ်ကျသော အကြံပြုချက်များ</string>
 
-    <string name="onboarding_title_4">စိတ်ကြိုက် အတွေ့အကြုံ</string>
-    <string name="onboarding_desc_4">သင့်စိတ်ကြိုက် ဆက်တင်များကို ပြောင်းလဲပါ။</string>
-    <string name="onboarding_feature_4_1">ဘာသာစကား</string>
-    <string name="onboarding_feature_4_2">အပြင်အဆင် ရွေးချယ်မှု</string>
-    <string name="onboarding_feature_4_3">စာလုံးအရွယ်အစား</string>
-    <string name="onboarding_feature_4_4">အရင်ကြည့်လက်စမှ ပြန်စမည်</string>
+    <string name="onboarding_title_4">အကြိုက်ဆုံးများ သိမ်းဆည်းပါ</string>
+    <string name="onboarding_desc_4">သင်နှစ်သက်သော သီချင်းများကို စုစည်းသိမ်းဆည်းထားပြီး အလွယ်တကူ ပြန်ကြည့်နိုင်ပါသည်။</string>
+    <string name="onboarding_feature_4_1">နှစ်သက်ရာ သီချင်းများ သိမ်းဆည်းပါ</string>
+    <string name="onboarding_feature_4_2">အကြိုက်ဆုံးများထဲမှ ရှာပါ</string>
+    <string name="onboarding_feature_4_3">အမျိုးအစားအလိုက် စစ်ထုတ်ပါ</string>
+    <string name="onboarding_feature_4_4">ကျပန်း အကြိုက်ဆုံး ရွေးပေးခြင်း</string>
+
+    <string name="onboarding_title_5">စိတ်ကြိုက် အတွေ့အကြုံ</string>
+    <string name="onboarding_desc_5">သင့်စိတ်ကြိုက် ဆက်တင်များကို ပြောင်းလဲပါ။</string>
+    <string name="onboarding_feature_5_1">အင်္ဂလိပ်၊ မရာနှင့် မြန်မာ</string>
+    <string name="onboarding_feature_5_2">အလင်း၊ အမှောင်နှင့် အရောင် အပြင်အဆင်များ</string>
+    <string name="onboarding_feature_5_3">စာလုံးအရွယ်အစားနှင့် စာကြောင်းအကွာအဝေး ချိန်ညှိနိုင်ခြင်း</string>
+    <string name="onboarding_feature_5_4">အရင်ကြည့်လက်စမှ ပြန်စမည်</string>
 
     <string name="view_tutorial_again">လမ်းညွှန်ကို ထပ်ကြည့်မည်</string>
 
@@ -273,6 +297,14 @@
     <string name="notif_sync_started">ဒေတာများ အပ်ဒိတ်လုပ်နေသည်...</string>
     <string name="notif_sync_success">အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။</string>
     <string name="notif_sync_failed">အပ်ဒိတ်လုပ်ခြင်း မအောင်မြင်ပါ။</string>
+    <!-- New Song Notification -->
+    <string name="notif_channel_new_songs">သီချင်းအသစ်များ</string>
+    <string name="notif_channel_new_songs_desc">သီချင်းအသစ်များ ဒေါင်းလုဒ်ပြီး အော့ဖ်လိုင်းတွင် ဖတ်ရှုနိုင်သောအခါ အသိပေးပါသည်။</string>
+    <string name="notif_new_songs_title">သီချင်းအသစ်များ ထည့်သွင်းပြီးပါပြီ!</string>
+    <string name="notif_new_song_single">"%1$s" ကို အော့ဖ်လိုင်းတွင် ယခုဖတ်ရှုနိုင်ပါပြီ။</string>
+    <plurals name="notif_new_songs_count">
+        <item quantity="other">သီချင်းအသစ် %1$d ပုဒ်ကို အော့ဖ်လိုင်းတွင် ယခုဖတ်ရှုနိုင်ပါပြီ။</item>
+    </plurals>
     <string name="btn_try_again">ပြန်ကြိုးစားမည်</string>
     <string name="error_prefix">အမှား- %1$s</string>
     <string name="no_exact_results">ကိုက်ညီသော သီချင်းမရှိပါ။</string>
@@ -295,6 +327,11 @@
     <string name="notif_fav_restore_success">အကြိုက်ဆုံး %1$d ခုကို ပြန်ယူပြီးပါပြီ</string>
     <string name="notif_fav_restore_no_file">သိမ်းထားသည့်ဖိုင် မရှိပါ။</string>
     <string name="notif_fav_restore_failed">ပြန်ယူခြင်း မအောင်မြင်ပါ: %1$s</string>
+    <string name="share_export_failed">မျှဝေရန် ဖိုင်များ ပြင်ဆင်၍မရပါ: %1$s</string>
+    <string name="share_split_apk_error">ဤထည့်သွင်းမှုတွင် တစ်ဖိုင်တည်းအဖြစ် ပေါင်းစပ်မရသော အပိုအစိတ်အပိုင်းများ ပါရှိနေပါသည်။ အက်ပ်ကို နောက်ဆုံးဗားရှင်းအဖြစ် အပ်ဒိတ်လုပ်ပြီး ထပ်မံစမ်းကြည့်ပါ။</string>
+    <string name="import_success_restarting">ဒေတာ တင်သွင်းပြီးပါပြီ။ ပြန်လည်စတင်နေသည်…</string>
+    <string name="import_incompatible_version">ဤဖိုင်သည် ဤအက်ပ်ဗားရှင်းနှင့် မကိုက်ညီပါ။</string>
+    <string name="import_failed">တင်သွင်းခြင်း မအောင်မြင်ပါ: %1$s</string>
     <string name="sync_downloading_prefix">%1$s ကို ဒေါင်းလုဒ်လုပ်နေသည်…</string>
     <string name="never">တစ်ခါမှမလုပ်ရသေးပါ</string>
     <string name="kb">KB</string>
@@ -327,14 +364,21 @@
         <item quantity="other">တေးရေးဆရာ %1$d ဦး</item>
     </plurals>
     <string name="update_msg_combined">%1$s အသစ် ရရှိနိုင်ပါသည်။</string>
-    <string name="update_conjunction_and"> နှင့် </string>
-    <string name="update_conjunction_comma">၊ </string>
-    <string name="update_ask_download">ယခု ဒေါင်းလုဒ်လုပ်လိုပါသလား?</string>
+    <string name="update_conjunction_and">" နှင့် "</string>
+    <string name="update_conjunction_comma">"၊ "</string>
+    <string name="update_ask_download">ယခု အသစ်များကို ဒေါင်းလုဒ်လုပ်မလား?</string>
     <string name="update_only_new">အကြောင်းအရာအသစ်များကိုသာ ဒေါင်းလုဒ်လုပ်မည်ဖြစ်သည်။</string>
     <string name="btn_download_now">ဒေါင်းလုဒ်လုပ်မည်</string>
     <string name="btn_later">နောက်မှ</string>
     <string name="sync_status_prefix">%1$s ဒေါင်းလုဒ်လုပ်နေသည်...</string>
     <string name="low_storage_error">ဖုန်းအတွင်းရှိ နေရာလွတ် အလွန်နည်းနေပါသည် (%1$d%%)။ ဒေတာများကို ဒေါင်းလုဒ်လုပ်ရန်အတွက် နေရာလွတ်အချို့ အရင်ရှင်းလင်းပေးပါ။</string>
+    <!-- Google Play In-App Update Dialog (app version update, via Google Play) -->
+    <string name="play_update_available_title">အပ်ဒိတ်ရရှိနိုင်ပါပြီ</string>
+    <string name="play_update_available_desc">Mara Lyrics ၏ ဗားရှင်းအသစ်ကို အသုံးပြုနိုင်ပါပြီ။ နောက်ဆုံးပေါ် ဝန်ဆောင်မှုများနှင့် ပြင်ဆင်မှုများအတွက် ယခုပင် အပ်ဒိတ်လုပ်ပါ။</string>
+    <string name="play_update_action_update">အပ်ဒိတ်လုပ်မည်</string>
+    <string name="play_update_action_later">နောက်မှ</string>
+    <string name="play_update_ready_message">အပ်ဒိတ်ဒေါင်းလုဒ်ပြီးပြီ၊ ထည့်သွင်းရန် အသင့်ဖြစ်ပါပြီ။</string>
+    <string name="play_update_action_restart">ပြန်လည်စတင်မည်</string>
     <string name="storage_insufficient_title">သိုလှောင်ခန်း မလုံလောက်ပါ</string>
     <string name="storage_insufficient_msg">ဒေတာဘေ့စ် ဒေါင်းလုဒ်ကို ဆက်လက်လုပ်ဆောင်၍ မရပါ။\n\nလိုအပ်သော ပမာဏ - %1$s\nရရှိနိုင်သော ပမာဏ - %2$s\nထပ်မံလိုအပ်သော နေရာလွတ် - %3$s\n\nကျေးဇူးပြု၍ သိုလှောင်ခန်း နေရာလွတ်အချို့ကို ရှင်းလင်းပြီး ထပ်မံကြိုးစားပါ။</string>
     <string name="storage_low_warning_msg">သင့်စက်၏ သိုလှောင်ခန်း နေရာလွတ်မှာ ပြည့်လုနီးပါး ဖြစ်နေပါသည် (%1$d%% အသုံးပြုပြီး)။ လုံလောက်သော နေရာလွတ် ရှိနေသေးသည့်အတွက် ဒေါင်းလုဒ်ကို ဆက်လက်လုပ်ဆောင်နိုင်သော်လည်း၊ သိုလှောင်ခန်း နေရာလွတ်ကို ထပ်မံရှင်းလင်းထားရန် အကြံပြုအပ်ပါသည်။</string>

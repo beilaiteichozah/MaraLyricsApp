@@ -65,7 +65,7 @@ fun OnboardingContent(
     onPrivacyAccepted: () -> Unit,
     onFinish: () -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { 5 })
+    val pagerState = rememberPagerState(pageCount = { 6 })
     val scope = rememberCoroutineScope()
     var showPrivacyDialog by remember { mutableStateOf(false) }
 
@@ -78,7 +78,7 @@ fun OnboardingContent(
                     .padding(top = 16.dp, end = 16.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                if (pagerState.currentPage in 1..3) {
+                if (pagerState.currentPage in 1..4) {
                     TextButton(onClick = { onFinish() }) {
                         Text(
                             text = stringResource(R.string.onboarding_skip),
@@ -92,6 +92,7 @@ fun OnboardingContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .navigationBarsPadding()
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -102,7 +103,7 @@ fun OnboardingContent(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    repeat(5) { iteration ->
+                    repeat(6) { iteration ->
                         val color = if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
                         Box(
                             modifier = Modifier
@@ -137,7 +138,7 @@ fun OnboardingContent(
                     }
 
                     // Next / Get Started Button
-                    if (pagerState.currentPage < 4) {
+                    if (pagerState.currentPage < 5) {
                         Button(
                             onClick = {
                                 if (pagerState.currentPage == 0 && !privacyAccepted) {
@@ -219,13 +220,18 @@ fun PrivacyPolicyDialog(
     // since Dialog can otherwise lose the app's in-app locale override for its content.
     val localizedContext = LocalContext.current
     val localizedConfiguration = LocalConfiguration.current
+    // Dialog's own window doesn't reliably report system bar insets, so the bottom
+    // buttons can end up drawn under the 3-button nav bar. Capture the real inset here
+    // (still in the correctly-inset host composition) and apply it as explicit padding.
+    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             dismissOnBackPress = true,
-            dismissOnClickOutside = false
+            dismissOnClickOutside = false,
+            decorFitsSystemWindows = false
         )
     ) {
       CompositionLocalProvider(
@@ -237,7 +243,7 @@ fun PrivacyPolicyDialog(
                 .fillMaxSize()
                 .padding(16.dp)
                 .statusBarsPadding()
-                .navigationBarsPadding(),
+                .padding(bottom = navigationBarPadding),
             shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 6.dp
@@ -424,6 +430,7 @@ fun OnboardingPage(page: Int) {
         1 -> stringResource(R.string.onboarding_title_2)
         2 -> stringResource(R.string.onboarding_title_3)
         3 -> stringResource(R.string.onboarding_title_4)
+        4 -> stringResource(R.string.onboarding_title_5)
         else -> ""
     }
 
@@ -432,6 +439,7 @@ fun OnboardingPage(page: Int) {
         1 -> stringResource(R.string.onboarding_desc_2)
         2 -> stringResource(R.string.onboarding_desc_3)
         3 -> stringResource(R.string.onboarding_desc_4)
+        4 -> stringResource(R.string.onboarding_desc_5)
         else -> ""
     }
 
@@ -449,8 +457,7 @@ fun OnboardingPage(page: Int) {
         2 -> listOf(
             stringResource(R.string.onboarding_feature_3_1),
             stringResource(R.string.onboarding_feature_3_2),
-            stringResource(R.string.onboarding_feature_3_3),
-            stringResource(R.string.onboarding_feature_3_4)
+            stringResource(R.string.onboarding_feature_3_3)
         )
         3 -> listOf(
             stringResource(R.string.onboarding_feature_4_1),
@@ -458,14 +465,21 @@ fun OnboardingPage(page: Int) {
             stringResource(R.string.onboarding_feature_4_3),
             stringResource(R.string.onboarding_feature_4_4)
         )
+        4 -> listOf(
+            stringResource(R.string.onboarding_feature_5_1),
+            stringResource(R.string.onboarding_feature_5_2),
+            stringResource(R.string.onboarding_feature_5_3),
+            stringResource(R.string.onboarding_feature_5_4)
+        )
         else -> emptyList()
     }
 
     val icon = when (page) {
         0 -> Icons.Default.MusicNote
-        1 -> Icons.Default.Search
-        2 -> Icons.Default.Favorite
-        3 -> Icons.Default.Settings
+        1 -> Icons.Default.Share
+        2 -> Icons.Default.Search
+        3 -> Icons.Default.Favorite
+        4 -> Icons.Default.Settings
         else -> Icons.Default.Info
     }
 

@@ -9,7 +9,10 @@ import javax.inject.Inject
 
 data class SyncResult(
     val updatedSongs: Int,
-    val newVersion: Int
+    val newVersion: Int,
+    // Songs specifically (as opposed to artist/composer/copyright-owner-only changes) —
+    // used to decide whether the "new songs available" notification should fire.
+    val newSongs: Int = 0
 )
 
 class InsufficientStorageException(val info: StorageUtils.SpaceInfo) : Exception("Insufficient storage: ${info.additionalNeededBytes} bytes more required")
@@ -88,7 +91,11 @@ class SyncDatabaseUseCase @Inject constructor(
                 result.map { count ->
                     settingsRepository.updateLastSync(System.currentTimeMillis())
                     settingsRepository.updateDatabaseVersion(status.serverVersion)
-                    SyncResult(updatedSongs = count, newVersion = status.serverVersion)
+                    SyncResult(
+                        updatedSongs = count,
+                        newVersion = status.serverVersion,
+                        newSongs = if (status.newSongs > 0) status.newSongs else 0
+                    )
                 }
             } else {
                 Result.success(SyncResult(updatedSongs = 0, newVersion = status.localVersion))

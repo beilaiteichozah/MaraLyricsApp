@@ -1,44 +1,40 @@
 package com.maralyrics.laitei
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import com.maralyrics.laitei.R
-import com.maralyrics.laitei.domain.model.AppLanguage
-import com.maralyrics.laitei.domain.model.SyncStatus
-import com.maralyrics.laitei.domain.model.DownloadProgress
 import com.maralyrics.laitei.presentation.MainViewModel
 import com.maralyrics.laitei.presentation.common.notification.NotificationHost
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
+import com.maralyrics.laitei.presentation.update.PlayUpdateAvailableDialog
+import com.maralyrics.laitei.presentation.update.PlayUpdateReadySnackbar
+import com.maralyrics.laitei.presentation.update.PlayUpdateState
+import com.maralyrics.laitei.presentation.update.PlayUpdateViewModel
 import com.maralyrics.laitei.utils.LocalizedContextWrapper
-import com.maralyrics.laitei.utils.StorageUtils
-import com.maralyrics.laitei.utils.findActivity
 import com.maralyrics.laitei.presentation.navigation.MaraLyricsNavHost
 import com.maralyrics.laitei.presentation.theme.MaraLyricsTheme
 import com.maralyrics.laitei.utils.ConnectivityObserver
@@ -54,13 +50,30 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var connectivityObserver: ConnectivityObserver
 
+    private var pendingIntentState by mutableStateOf<Intent?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        pendingIntentState = intent
 
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
+
+            // A notification tap or home screen widget tap arrives as extras on the
+            // launching intent (initial launch here, or onNewIntent while already open).
+            LaunchedEffect(pendingIntentState) {
+                pendingIntentState?.let { intent ->
+                    val songId = intent.getLongExtra(EXTRA_OPEN_SONG_ID, -1L).takeIf { it != -1L }
+                    val openSearch = intent.getBooleanExtra(EXTRA_OPEN_SEARCH, false)
+                    if (songId != null || openSearch) {
+                        viewModel.handleDeepLink(songId, openSearch)
+                    }
+                    pendingIntentState = null
+                }
+            }
+            val playUpdateViewModel: PlayUpdateViewModel = hiltViewModel()
             val isReady by viewModel.isReady.collectAsState()
             val theme by viewModel.theme.collectAsState()
             val language by viewModel.language.collectAsState()
@@ -70,16 +83,52 @@ class MainActivity : ComponentActivity() {
             val privacyAccepted by viewModel.privacyAccepted.collectAsState()
             val lastRoute by viewModel.lastRoute.collectAsState()
             val syncAvailable by viewModel.syncAvailable.collectAsState()
-            val updateStatus by viewModel.updateStatus.collectAsState()
-            val isDownloading by viewModel.isDownloading.collectAsState()
-            val downloadProgress by viewModel.downloadProgress.collectAsState()
-            
+
             val networkStatus by connectivityObserver.observe().collectAsState(initial = ConnectivityObserver.Status.Available)
             
             var showSyncDialog by remember { mutableStateOf(false) }
-            
+
             LaunchedEffect(syncAvailable) {
                 if (syncAvailable) showSyncDialog = true
+            }
+
+            // Google Play In-App Updates — separate from the song-data sync above.
+            // Checked on first composition and again on every onResume, per Play's guidance.
+            val playUpdateState by playUpdateViewModel.state.collectAsState()
+            val playUpdateLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.StartIntentSenderForResult()
+            ) { playUpdateViewModel.checkForUpdate() }
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            LaunchedEffect(Unit) {
+                playUpdateViewModel.checkForUpdate()
+            }
+
+            // Required on Android 13+ for the "new songs" notification to ever be
+            // allowed to show — asked once per install, like most apps do at launch.
+            val notificationPermissionLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.RequestPermission()
+            ) { /* Result isn't acted on directly — SongUpdateNotifier checks at post-time. */ }
+            LaunchedEffect(Unit) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(
+                        this@MainActivity,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+
+            val lifecycleOwner = LocalLifecycleOwner.current
+            DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        playUpdateViewModel.checkForUpdate()
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
             }
 
             LaunchedEffect(networkStatus) {
@@ -120,44 +169,20 @@ class MainActivity : ComponentActivity() {
                 MaraLyricsTheme(theme = theme, colorTheme = colorTheme) {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         if (isReady) {
+                            val pendingSongDeepLink by viewModel.pendingSongDeepLink.collectAsState()
+                            val pendingSearchDeepLink by viewModel.pendingSearchDeepLink.collectAsState()
                             MaraLyricsNavHost(
                                 isSetupComplete = isSetupComplete,
                                 hasCompletedOnboarding = hasCompletedOnboarding,
                                 privacyAccepted = privacyAccepted,
                                 initialRoute = lastRoute,
-                                onRouteChanged = viewModel::onRouteChanged
+                                onRouteChanged = viewModel::onRouteChanged,
+                                pendingSongDeepLink = pendingSongDeepLink,
+                                onSongDeepLinkConsumed = viewModel::consumeSongDeepLink,
+                                pendingSearchDeepLink = pendingSearchDeepLink,
+                                onSearchDeepLinkConsumed = viewModel::consumeSearchDeepLink
                             )
                             NotificationHost(manager = notificationManager)
-
-                            val showStorageWarning by viewModel.showStorageWarning.collectAsState()
-                            val insufficientStorage by viewModel.insufficientStorage.collectAsState()
-
-                            if (updateStatus != null || isDownloading) {
-                                UpdateNotificationDialog(
-                                    status = updateStatus,
-                                    isDownloading = isDownloading,
-                                    progress = downloadProgress,
-                                    onDownload = viewModel::startUpdateDownload,
-                                    onDismiss = viewModel::dismissUpdate
-                                )
-                            }
-
-                            if (showStorageWarning != null) {
-                                StorageWarningDialog(
-                                    info = showStorageWarning!!,
-                                    onConfirm = viewModel::confirmDownloadWithStorageWarning,
-                                    onCancel = viewModel::cancelDownloadWithStorageWarning,
-                                    onManageStorage = viewModel::openStorageSettings
-                                )
-                            }
-
-                            if (insufficientStorage != null) {
-                                InsufficientStorageDialog(
-                                    info = insufficientStorage!!,
-                                    onDismiss = viewModel::dismissInsufficientStorage,
-                                    onManageStorage = viewModel::openStorageSettings
-                                )
-                            }
 
                             if (showSyncDialog) {
                                 // Re-provided inside each lambda since AlertDialog's own Dialog
@@ -187,281 +212,52 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
-@Composable
-fun UpdateNotificationDialog(
-    status: SyncStatus?,
-    isDownloading: Boolean,
-    progress: DownloadProgress?,
-    onDownload: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    // Captured here (outside Dialog's own window boundary) and re-provided below,
-    // since Dialog can otherwise lose the app's in-app locale override for its content.
-    val localizedContext = LocalContext.current
-    val localizedConfiguration = LocalConfiguration.current
+                            // Google Play In-App Updates — kept visually and semantically
+                            // separate from the song-data sync UI above.
+                            when (val state = playUpdateState) {
+                                is PlayUpdateState.Available -> {
+                                    PlayUpdateAvailableDialog(
+                                        isImmediate = state.isImmediate,
+                                        onUpdate = {
+                                            playUpdateViewModel.startUpdate(playUpdateLauncher)
+                                        },
+                                        onDismiss = playUpdateViewModel::dismissPrompt
+                                    )
+                                }
+                                PlayUpdateState.Downloaded -> {
+                                    PlayUpdateReadySnackbar(
+                                        hostState = snackbarHostState,
+                                        onRestart = playUpdateViewModel::completeUpdate
+                                    )
+                                }
+                                PlayUpdateState.Idle -> Unit
+                            }
 
-    Dialog(
-        onDismissRequest = { if (!isDownloading) onDismiss() },
-        properties = DialogProperties(
-            dismissOnBackPress = !isDownloading,
-            dismissOnClickOutside = false
-        )
-    ) {
-      CompositionLocalProvider(
-        LocalContext provides localizedContext,
-        LocalConfiguration provides localizedConfiguration
-      ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(24.dp),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 6.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CloudDownload,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(48.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.update_title),
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.ExtraBold),
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                if (isDownloading) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        LinearProgressIndicator(
-                            progress = { progress?.percentage?.div(100f) ?: 0f },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)),
-                            strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "${progress?.percentage?.toInt() ?: 0}%",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = stringResource(R.string.sync_status_prefix, progress?.currentEntity ?: ""),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else if (status != null) {
-                    val updateItems = mutableListOf<String>()
-                    if (status.newSongs > 0) {
-                        updateItems.add(pluralStringResource(R.plurals.update_item_songs, status.newSongs, status.newSongs))
-                    }
-                    if (status.newArtists > 0) {
-                        updateItems.add(pluralStringResource(R.plurals.update_item_artists, status.newArtists, status.newArtists))
-                    }
-                    if (status.newComposers > 0) {
-                        updateItems.add(pluralStringResource(R.plurals.update_item_composers, status.newComposers, status.newComposers))
-                    }
-
-                    val combinedText = when (updateItems.size) {
-                        0 -> ""
-                        1 -> updateItems[0]
-                        2 -> updateItems[0] + stringResource(R.string.update_conjunction_and) + updateItems[1]
-                        else -> {
-                            val allButLast = updateItems.dropLast(1).joinToString(stringResource(R.string.update_conjunction_comma))
-                            allButLast + stringResource(R.string.update_conjunction_and) + updateItems.last()
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        if (combinedText.isNotEmpty()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 8.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.CheckCircle,
-                                    contentDescription = null,
-                                    tint = Color(0xFF4CAF50),
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Text(
-                                    text = stringResource(R.string.update_msg_combined, combinedText),
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        lineHeight = 24.sp
-                                    ),
-                                    textAlign = TextAlign.Start,
-                                    modifier = Modifier.weight(1f, fill = false)
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                SnackbarHost(
+                                    hostState = snackbarHostState,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .navigationBarsPadding()
+                                        .padding(bottom = 16.dp)
                                 )
                             }
                         }
-                        
-                        if (!status.requiresFullRefresh) {
-                            Text(
-                                text = stringResource(R.string.update_only_new),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        Text(
-                            text = stringResource(R.string.update_ask_download),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                if (!isDownloading) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = onDismiss,
-                            modifier = Modifier.weight(1f).height(54.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.btn_later),
-                                maxLines = 1,
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
-                        Button(
-                            onClick = onDownload,
-                            modifier = Modifier.weight(1f).height(54.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.btn_download_now),
-                                maxLines = 1,
-                                softWrap = false,
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
                     }
                 }
             }
         }
-      }
-    }
-}
-
-@Composable
-fun StorageWarningDialog(
-    info: StorageUtils.SpaceInfo,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-    onManageStorage: () -> Unit
-) {
-    // Captured here (outside AlertDialog's own window boundary) and re-provided below,
-    // since its Dialog can otherwise lose the app's in-app locale override for its content.
-    val localizedContext = LocalContext.current
-    val localizedConfiguration = LocalConfiguration.current
-    fun localized(content: @Composable () -> Unit): @Composable () -> Unit = {
-        CompositionLocalProvider(
-            LocalContext provides localizedContext,
-            LocalConfiguration provides localizedConfiguration
-        ) { content() }
     }
 
-    AlertDialog(
-        onDismissRequest = onCancel,
-        title = localized { Text(stringResource(R.string.update_title)) },
-        text = localized {
-            Text(stringResource(R.string.storage_low_warning_msg, info.usedPercentage))
-        },
-        confirmButton = localized {
-            Button(onClick = onConfirm) {
-                Text(stringResource(R.string.btn_continue))
-            }
-        },
-        dismissButton = localized {
-            TextButton(onClick = onManageStorage) {
-                Text(stringResource(R.string.btn_manage_storage))
-            }
-        }
-    )
-}
-
-@Composable
-fun InsufficientStorageDialog(
-    info: StorageUtils.SpaceInfo,
-    onDismiss: () -> Unit,
-    onManageStorage: () -> Unit
-) {
-    // Captured here (outside AlertDialog's own window boundary) and re-provided below,
-    // since its Dialog can otherwise lose the app's in-app locale override for its content.
-    val localizedContext = LocalContext.current
-    val localizedConfiguration = LocalConfiguration.current
-    fun localized(content: @Composable () -> Unit): @Composable () -> Unit = {
-        CompositionLocalProvider(
-            LocalContext provides localizedContext,
-            LocalConfiguration provides localizedConfiguration
-        ) { content() }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        pendingIntentState = intent
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = localized { Text(stringResource(R.string.storage_insufficient_title)) },
-        text = localized {
-            Text(
-                stringResource(
-                    R.string.storage_insufficient_msg,
-                    StorageUtils.formatSize(info.requiredBytes),
-                    StorageUtils.formatSize(info.availableBytes),
-                    StorageUtils.formatSize(info.additionalNeededBytes)
-                )
-            )
-        },
-        confirmButton = localized {
-            Button(onClick = onManageStorage) {
-                Text(stringResource(R.string.btn_manage_storage))
-            }
-        },
-        dismissButton = localized {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.btn_ok))
-            }
-        }
-    )
+    companion object {
+        const val EXTRA_OPEN_SONG_ID = "open_song_id"
+        const val EXTRA_OPEN_SEARCH = "open_search"
+    }
 }

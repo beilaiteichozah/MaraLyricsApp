@@ -79,6 +79,31 @@ fun SongWithArtistAndComposer.toDomain(isFavorite: Boolean = false) = Song(
     composers = composers.map { it.toSongContributor() }
 )
 
+// Skips the @Relation artist/composer list lookup entirely — for callers (widgets,
+// notifications) that only need the song's own denormalized fields, since Room's
+// relation-population code throws for a plain SELECT * FROM songs ... LIMIT 1 query
+// when the picked song has zero rows in the artist/composer junction tables.
+fun SongEntity.toDomain(isFavorite: Boolean = false) = Song(
+    id = id,
+    slug = slug,
+    title = title,
+    lyrics = lyrics,
+    category = category ?: "",
+    createdAt = createdAt,
+    artistId = artistId,
+    artistName = artistName,
+    artistSlug = artistSlug,
+    composerId = composerId,
+    composerName = composerName,
+    composerSlug = composerSlug,
+    copyrightOwnerId = copyrightOwnerId,
+    copyrightOwnerName = copyrightOwnerName,
+    isFavorite = isFavorite,
+    views = views,
+    artists = emptyList(),
+    composers = emptyList()
+)
+
 fun ArtistEntity.toSongContributor() = SongContributor(
     id = id,
     name = name,

@@ -337,7 +337,23 @@ fun SongDetailScreen(
                             }
                         }
                         
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // 4. Tagline
+                        Text(
+                            text = stringResource(R.string.tagline_made_in_maraland),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontFamily = androidx.compose.ui.text.font.FontFamily(
+                                    androidx.compose.ui.text.font.Font(R.font.cmu_serif_slanted)
+                                ),
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
             }

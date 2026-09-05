@@ -19,12 +19,11 @@ android {
         applicationId = "com.maralyrics.laitei"
         minSdk = 24
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.0.3"
+        versionCode = 4
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        resConfigs("en", "mrh", "my")
+        resourceConfigurations += setOf("en", "mrh", "my")
 
         val buildDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
         buildConfigField("String", "BUILD_DATE", "\"$buildDate\"")
@@ -60,7 +59,16 @@ android {
     }
 
     bundle {
+        // All disabled so Play always delivers one universal base APK — the app has no
+        // native/ABI-specific code, and a single complete APK is what AppShareUtils.exportApk()
+        // shares for offline installs; a split base APK alone fails to install on another device.
         language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
             enableSplit = false
         }
     }
@@ -121,6 +129,13 @@ dependencies {
 
     // WorkManager
     implementation(libs.work.runtime.ktx)
+
+    // Google Play In-App Updates
+    implementation(libs.play.app.update)
+    implementation(libs.play.app.update.ktx)
+
+    // Home screen widgets
+    implementation(libs.glance.appwidget)
 
     // Testing
     testImplementation(libs.junit)

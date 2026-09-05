@@ -297,14 +297,17 @@ class SettingsViewModel @Inject constructor(
 
     fun checkNewData() {
         viewModelScope.launch {
-            notificationManager.showSyncStarted()
             syncDatabaseUseCase.checkForUpdates().onSuccess { status ->
                 if (!status.isAvailable) {
                     _showNoUpdatesDialog.value = true
                 }
                 // If isAvailable is true, MainViewModel's observer will show the update dialog
-            }.onFailure {
-                notificationManager.showSyncFailed()
+            }.onFailure { exception ->
+                if (exception is java.io.IOException) {
+                    notificationManager.showOffline()
+                } else {
+                    notificationManager.showSyncFailed()
+                }
             }
         }
     }

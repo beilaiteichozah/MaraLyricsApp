@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Mara Lyrics</string>
 
+    <!-- Home Screen Widgets -->
+    <string name="widget_search_bar_label">Mara Lyrics Search</string>
+    <string name="widget_search_bar_desc">A shortcut to search Mara Lyrics right from your home screen.</string>
+    <string name="widget_search_hint">Search Mara Lyrics…</string>
+    <string name="widget_featured_lyrics_label">Featured Lyrics</string>
+    <string name="widget_featured_lyrics_desc">Shows a random song from your library, right on your home screen.</string>
+    <string name="widget_featured_title">Featured Lyrics</string>
+    <string name="widget_no_songs">Download some songs to see them featured here.</string>
+    <string name="widget_refresh">Shuffle</string>
+
     <!-- Setup -->
     <string name="setup_welcome">Welcome to Mara Lyrics</string>
     <string name="setup_description">A hub for Mara song lyrics.</string>
@@ -115,7 +125,7 @@
 
     <!-- New Settings -->
     <string name="about_app">About App</string>
-    <string name="about_app_desc">Mara Lyrics is a free and open-source application created by the Mara Lyrics Team for the Mara community. It provides easy access to a large collection of Mara songs and lyrics, preserving and promoting Mara language and culture.\n\nThe app includes various categories of songs, including Gospel, Love, Patriotic, and Traditional songs. Users can browse, search, and read lyrics offline, making it useful for daily use, gatherings, cultural events, and personal enjoyment.\n\nMara Lyrics is developed for Mara people worldwide and is available free of charge. The project is community-driven and dedicated to supporting the growth and preservation of Mara language and heritage.</string>
+    <string name="about_app_desc">Mara Lyrics is a free and open-source application created by the Mara Lyrics Team for the Mara community. It provides easy access to a large collection of Mara songs and lyrics, preserving and promoting Mara language and culture.\n\nThe app includes various categories of songs, including Gospel, Love, Patriotic, and Traditional songs. Users can browse, search, and read lyrics offline, making it useful for daily use, gatherings, cultural events, and personal enjoyment.\n\nTo keep the song collection accurate, Mara Lyrics checks for updates — such as corrected lyrics or newly added songs — and downloads them automatically in the background. Because this data is very small, updates apply quietly without asking or interrupting you, and only over Wi-Fi by default. This behavior can be adjusted anytime in Settings under Data &amp; Sync.\n\nMara Lyrics is developed for Mara people worldwide and is available free of charge. The project is community-driven and dedicated to supporting the growth and preservation of Mara language and heritage.</string>
     <string name="credits">Credits</string>
     <string name="credits_desc">Honoring the songwriters, composers, contributors, translators, and community members whose dedication has preserved and shared Mara songs across generations.</string>
     <string name="licenses">Licenses</string>
@@ -180,30 +190,36 @@
     <string name="onboarding_get_started">Get Started</string>
 
     <string name="onboarding_title_1">Welcome to Mara Lyrics</string>
-    <string name="onboarding_desc_1">Discover, search, and read Mara songs anytime, anywhere.</string>
+    <string name="onboarding_desc_1">Discover, search, and read Mara songs — anytime, anywhere.</string>
     <string name="onboarding_feature_1_1">Offline-first experience</string>
     <string name="onboarding_feature_1_2">Thousands of songs</string>
-    <string name="onboarding_feature_1_3">Fast search</string>
+    <string name="onboarding_feature_1_3">Fast, accurate search</string>
 
-    <string name="onboarding_title_2">Powerful Search</string>
-    <string name="onboarding_desc_2">Search by Song title, Lyrics, Song number, Artist, or Composer.</string>
-    <string name="onboarding_feature_2_1">Instant search</string>
-    <string name="onboarding_feature_2_2">Offline search</string>
-    <string name="onboarding_feature_2_3">Smart suggestions</string>
+    <string name="onboarding_title_2">Share Without Internet</string>
+    <string name="onboarding_desc_2">Pass the app and its full song collection to a nearby phone — no data connection needed on either device.</string>
+    <string name="onboarding_feature_2_1">Share the app and songs together</string>
+    <string name="onboarding_feature_2_2">Works over Bluetooth, Wi-Fi Direct, or file transfer</string>
+    <string name="onboarding_feature_2_3">Built for areas with limited connectivity</string>
 
-    <string name="onboarding_title_3">Save Your Favorites</string>
-    <string name="onboarding_desc_3">Keep your favorite songs organized and easily accessible.</string>
-    <string name="onboarding_feature_3_1">Favorite Songs</string>
-    <string name="onboarding_feature_3_2">Search Favorites</string>
-    <string name="onboarding_feature_3_3">Filter Favorites</string>
-    <string name="onboarding_feature_3_4">Surprise Me</string>
+    <string name="onboarding_title_3">Powerful Search</string>
+    <string name="onboarding_desc_3">Find any song instantly — search by title, lyrics, number, artist, or composer.</string>
+    <string name="onboarding_feature_3_1">Instant search</string>
+    <string name="onboarding_feature_3_2">Works fully offline</string>
+    <string name="onboarding_feature_3_3">Smart suggestions</string>
 
-    <string name="onboarding_title_4">Your Lyrics, Your Experience</string>
-    <string name="onboarding_desc_4">Customize Mara Lyrics to fit your preferences.</string>
-    <string name="onboarding_feature_4_1">App Language</string>
-    <string name="onboarding_feature_4_2">Theme Selection</string>
-    <string name="onboarding_feature_4_3">Font Size</string>
-    <string name="onboarding_feature_4_4">Resume Previous Session</string>
+    <string name="onboarding_title_4">Save Your Favorites</string>
+    <string name="onboarding_desc_4">Keep your favorite songs organized and always within reach.</string>
+    <string name="onboarding_feature_4_1">Save songs you love</string>
+    <string name="onboarding_feature_4_2">Search within favorites</string>
+    <string name="onboarding_feature_4_3">Filter by category</string>
+    <string name="onboarding_feature_4_4">Random favorite picks</string>
+
+    <string name="onboarding_title_5">Your Lyrics, Your Experience</string>
+    <string name="onboarding_desc_5">Customize Mara Lyrics to fit your preferences.</string>
+    <string name="onboarding_feature_5_1">English, Mara, and Burmese</string>
+    <string name="onboarding_feature_5_2">Light, dark, and color themes</string>
+    <string name="onboarding_feature_5_3">Adjustable font size and spacing</string>
+    <string name="onboarding_feature_5_4">Resume where you left off</string>
 
     <string name="view_tutorial_again">View Tutorial Again</string>
 
@@ -292,6 +308,15 @@
     <string name="notif_sync_started">Synchronizing data...</string>
     <string name="notif_sync_success">Database synchronized successfully.</string>
     <string name="notif_sync_failed">Synchronization failed.</string>
+    <!-- New Song Notification -->
+    <string name="notif_channel_new_songs">New Songs</string>
+    <string name="notif_channel_new_songs_desc">Notifies you when new songs are downloaded and ready to read offline.</string>
+    <string name="notif_new_songs_title">New songs added!</string>
+    <string name="notif_new_song_single">“%1$s” is now available offline.</string>
+    <plurals name="notif_new_songs_count">
+        <item quantity="one">%1$d new song is now available offline.</item>
+        <item quantity="other">%1$d new songs are now available offline.</item>
+    </plurals>
     <string name="btn_try_again">Try Again</string>
     <string name="error_prefix">Error: %1$s</string>
     <string name="no_exact_results">No exact results found.</string>
@@ -315,6 +340,7 @@
     <string name="notif_fav_restore_no_file">No backup file found</string>
     <string name="notif_fav_restore_failed">Restore failed: %1$s</string>
     <string name="share_export_failed">Couldn\'t prepare files to share: %1$s</string>
+    <string name="share_split_apk_error">This install has extra components that can\'t be combined into one shareable file. Please update the app to the latest version, then try sharing again.</string>
     <string name="import_success_restarting">Data imported. Restarting…</string>
     <string name="import_incompatible_version">This file isn\'t compatible with this app version.</string>
     <string name="import_failed">Import failed: %1$s</string>
@@ -352,15 +378,22 @@
         <item quantity="one">%1$d composer</item>
         <item quantity="other">%1$d composers</item>
     </plurals>
-    <string name="update_msg_combined">%1$s available.</string>
-    <string name="update_conjunction_and"> and </string>
-    <string name="update_conjunction_comma">, </string>
-    <string name="update_ask_download">Would you like to download them now?</string>
+    <string name="update_msg_combined">%1$s are available.</string>
+    <string name="update_conjunction_and">" and "</string>
+    <string name="update_conjunction_comma">", "</string>
+    <string name="update_ask_download">Download these updates now?</string>
     <string name="update_only_new">Only new content will be downloaded.</string>
     <string name="btn_download_now">Download Now</string>
     <string name="btn_later">Later</string>
     <string name="sync_status_prefix">Downloading %1$s...</string>
     <string name="low_storage_error">Storage is almost full (%1$d%%). Please free up space to download data.</string>
+    <!-- Google Play In-App Update Dialog (app version update, via Google Play) -->
+    <string name="play_update_available_title">Update Available</string>
+    <string name="play_update_available_desc">A new version of Mara Lyrics is ready. Update now for the latest features and fixes.</string>
+    <string name="play_update_action_update">Update</string>
+    <string name="play_update_action_later">Later</string>
+    <string name="play_update_ready_message">Update downloaded and ready to install.</string>
+    <string name="play_update_action_restart">Restart</string>
     <string name="storage_insufficient_title">Insufficient Storage</string>
     <string name="storage_insufficient_msg">Database download cannot continue.\n\nRequired: %1$s\nAvailable: %2$s\nAdditional space needed: %3$s\n\nPlease free some storage and try again.</string>
     <string name="storage_low_warning_msg">Your device storage is almost full (%1$d%% used). The download can continue because sufficient free space is available, but freeing additional storage is recommended.</string>

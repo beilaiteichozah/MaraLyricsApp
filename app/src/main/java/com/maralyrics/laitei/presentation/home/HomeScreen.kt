@@ -10,9 +10,13 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.laitei.R
@@ -34,6 +38,8 @@ fun HomeScreen(
     onComposerClick: (String) -> Unit,
     onFavoritesClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    focusSearchOnStart: Boolean = false,
+    onSearchFocusConsumed: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val allSongs by viewModel.allSongs.collectAsState()
@@ -49,6 +55,20 @@ fun HomeScreen(
     val context = LocalContext.current
 
     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val searchFocusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Opened via the Search widget or a similar shortcut — jump straight into typing.
+    // The short delay avoids a common Compose/IME race where show() fires before the
+    // field's focus has actually attached to the input session.
+    LaunchedEffect(focusSearchOnStart) {
+        if (focusSearchOnStart) {
+            delay(150)
+            searchFocusRequester.requestFocus()
+            keyboardController?.show()
+            onSearchFocusConsumed()
+        }
+    }
 
     LaunchedEffect(initialScrollState) {
         if (initialScrollState.first > 0 || initialScrollState.second > 0) {
@@ -142,8 +162,15 @@ fun HomeScreen(
                     onValueChange = viewModel::onSearchQueryChange,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    placeholder = { Text(stringResource(R.string.search_hint)) },
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .focusRequester(searchFocusRequester),
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.search_hint),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {

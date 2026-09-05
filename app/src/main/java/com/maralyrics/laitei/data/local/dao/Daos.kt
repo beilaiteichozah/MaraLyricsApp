@@ -27,6 +27,13 @@ interface SongDao {
     @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY RANDOM() LIMIT :limit")
     fun getRandomSongs(categories: List<String>, isFiltered: Boolean, limit: Int): Flow<List<SongWithArtistAndComposer>>
 
+    // Plain entity fetch (no @Relation join) for the Featured Lyrics widget — only the
+    // song's own denormalized fields (title/artistName/lyrics) are needed here, and the
+    // widget/notifier run outside the usual screen flows where a song is always opened
+    // by id, so this avoids a relation-population edge case some rows can hit.
+    @Query("SELECT * FROM songs ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomSongEntity(): SongEntity?
+
     @Transaction
     @Query("SELECT * FROM songs WHERE id = :id")
     suspend fun getSongById(id: Long): SongWithArtistAndComposer?
@@ -54,6 +61,11 @@ interface SongDao {
     @Transaction
     @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY created_at ASC")
     fun getAllSongsByDateAsc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
+
+    // Plain entity fetch (no @Relation join) — see getRandomSongEntity() for why.
+    // Used to personalize the "new song available" notification for exactly one new song.
+    @Query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 1")
+    suspend fun getMostRecentSongEntity(): SongEntity?
 
     @Transaction
     @Query("SELECT * FROM songs WHERE slug = :slug")

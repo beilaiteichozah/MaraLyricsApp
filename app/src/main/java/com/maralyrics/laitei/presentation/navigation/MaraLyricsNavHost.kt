@@ -24,7 +24,11 @@ fun MaraLyricsNavHost(
     hasCompletedOnboarding: Boolean,
     privacyAccepted: Boolean,
     initialRoute: String? = null,
-    onRouteChanged: (String?) -> Unit = {}
+    onRouteChanged: (String?) -> Unit = {},
+    pendingSongDeepLink: Long? = null,
+    onSongDeepLinkConsumed: () -> Unit = {},
+    pendingSearchDeepLink: Boolean = false,
+    onSearchDeepLinkConsumed: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     
@@ -57,7 +61,28 @@ fun MaraLyricsNavHost(
             onRouteChanged(route)
         }
     }
-    
+
+    // A notification or home screen widget tap wants to jump straight to a specific
+    // song or to the search field — takes priority over restoring the last session route.
+    LaunchedEffect(isSetupComplete, hasCompletedOnboarding, privacyAccepted, pendingSongDeepLink) {
+        if (hasCompletedOnboarding && privacyAccepted && isSetupComplete && pendingSongDeepLink != null) {
+            navController.navigate("song_detail/$pendingSongDeepLink") {
+                popUpTo("home") { inclusive = false }
+            }
+            onSongDeepLinkConsumed()
+        }
+    }
+
+    // The search widget always wants the home screen showing (with the field focused),
+    // regardless of whatever screen the last session left off on.
+    LaunchedEffect(isSetupComplete, hasCompletedOnboarding, privacyAccepted, pendingSearchDeepLink) {
+        if (hasCompletedOnboarding && privacyAccepted && isSetupComplete && pendingSearchDeepLink) {
+            navController.navigate("home") {
+                popUpTo("home") { inclusive = true }
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -94,7 +119,9 @@ fun MaraLyricsNavHost(
                 },
                 onSettingsClick = {
                     navController.navigate("settings")
-                }
+                },
+                focusSearchOnStart = pendingSearchDeepLink,
+                onSearchFocusConsumed = onSearchDeepLinkConsumed
             )
         }
 

@@ -410,6 +410,10 @@ class SyncRepositoryImpl @Inject constructor(
             } else {
                 SyncStatus(false, localVersion, localVersion)
             }
+        } catch (e: java.io.IOException) {
+            // No connectivity (or the request otherwise couldn't reach the server) —
+            // let this propagate so callers can tell it apart from a genuine "no update".
+            throw e
         } catch (e: Exception) {
             SyncStatus(false, localVersion, localVersion)
         }

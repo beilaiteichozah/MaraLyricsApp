@@ -35,7 +35,8 @@ fun NotificationHost(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(bottom = 80.dp, start = 16.dp, end = 16.dp),
+            .navigationBarsPadding()
+            .padding(bottom = 48.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
         AnimatedVisibility(

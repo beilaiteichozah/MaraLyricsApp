@@ -1,8 +1,5 @@
 package com.maralyrics.laitei.presentation
 
-import android.content.Context
-import android.content.Intent
-import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.*
@@ -12,8 +9,8 @@ import com.maralyrics.laitei.domain.usecase.SyncDatabaseUseCase
 import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
 import com.maralyrics.laitei.utils.StorageUtils
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
+import com.maralyrics.laitei.presentation.common.notification.SongUpdateNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +21,7 @@ class MainViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
-    @ApplicationContext private val context: Context
+    private val songUpdateNotifier: SongUpdateNotifier
 ) : ViewModel() {
 
     private val _isReady = MutableStateFlow(false)
@@ -33,23 +30,29 @@ class MainViewModel @Inject constructor(
     private val _syncAvailable = MutableStateFlow(false)
     val syncAvailable: StateFlow<Boolean> = _syncAvailable.asStateFlow()
 
-    private val _updateStatus = MutableStateFlow<SyncStatus?>(null)
-    val updateStatus: StateFlow<SyncStatus?> = _updateStatus.asStateFlow()
-
-    private val _isDownloading = MutableStateFlow(false)
-    val isDownloading: StateFlow<Boolean> = _isDownloading.asStateFlow()
-
-    private val _downloadProgress = MutableStateFlow<DownloadProgress?>(null)
-    val downloadProgress: StateFlow<DownloadProgress?> = _downloadProgress.asStateFlow()
-
-    private val _showStorageWarning = MutableStateFlow<StorageUtils.SpaceInfo?>(null)
-    val showStorageWarning: StateFlow<StorageUtils.SpaceInfo?> = _showStorageWarning.asStateFlow()
-
-    private val _insufficientStorage = MutableStateFlow<StorageUtils.SpaceInfo?>(null)
-    val insufficientStorage: StateFlow<StorageUtils.SpaceInfo?> = _insufficientStorage.asStateFlow()
-
     private val _lastRoute = MutableStateFlow<String?>(null)
     val lastRoute: StateFlow<String?> = _lastRoute.asStateFlow()
+
+    // One-shot navigation requests coming from outside the Compose tree — a notification
+    // tap or a home screen widget tap. Cleared by the consumer once handled.
+    private val _pendingSongDeepLink = MutableStateFlow<Long?>(null)
+    val pendingSongDeepLink: StateFlow<Long?> = _pendingSongDeepLink.asStateFlow()
+
+    private val _pendingSearchDeepLink = MutableStateFlow(false)
+    val pendingSearchDeepLink: StateFlow<Boolean> = _pendingSearchDeepLink.asStateFlow()
+
+    fun handleDeepLink(songId: Long?, openSearch: Boolean) {
+        if (songId != null) _pendingSongDeepLink.value = songId
+        if (openSearch) _pendingSearchDeepLink.value = true
+    }
+
+    fun consumeSongDeepLink() {
+        _pendingSongDeepLink.value = null
+    }
+
+    fun consumeSearchDeepLink() {
+        _pendingSearchDeepLink.value = false
+    }
 
     private var hasCheckedForUpdatesThisSession = false
 
@@ -84,16 +87,6 @@ class MainViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     init {
-        viewModelScope.launch {
-            syncDatabaseUseCase.updateStatus.collect { status ->
-                if (status != null && status.isAvailable) {
-                    _updateStatus.value = status
-                } else if (status == null || !status.isAvailable) {
-                    _updateStatus.value = null
-                }
-            }
-        }
-
         settings.onEach {
             if (it != null) {
                 val isPrivacyValid = it.privacyPolicyAccepted && it.privacyPolicyVersion == CURRENT_PRIVACY_VERSION
@@ -127,99 +120,25 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    // Song data (including small lyric corrections) is lightweight, so updates are
+    // fetched and applied silently in the background rather than prompting the user —
+    // see WorkManager's periodic SyncWorker for the same behavior when the app is closed.
     private fun checkForUpdates() {
         viewModelScope.launch {
-            syncDatabaseUseCase.checkForUpdates().onSuccess { status ->
-                if (status.isAvailable) {
-                    _updateStatus.value = status
-                }
-            }
-        }
-    }
-
-    fun startUpdateDownload() {
-        viewModelScope.launch {
-            // Check if there are actually items to download
-            val status = _updateStatus.value
-            if (status == null || !status.isAvailable) {
-                _updateStatus.value = null
-                return@launch
-            }
-
-            _isDownloading.value = true
-            syncDatabaseUseCase.checkAndSync(
-                isAutomatic = false,
-                onProgress = { progress ->
-                    _downloadProgress.value = progress
-                }
-            ).onSuccess { result ->
-                _isDownloading.value = false
-                _updateStatus.value = null
-                _downloadProgress.value = null
-                if (result.updatedSongs > 0) {
+            syncDatabaseUseCase.checkAndSync(isAutomatic = true).onSuccess { result ->
+                if (result.newSongs > 0) {
+                    songUpdateNotifier.notifyNewSongs(result.newSongs)
+                } else if (result.updatedSongs > 0) {
                     notificationManager.showSyncSuccess()
                 }
             }.onFailure { exception ->
-                _isDownloading.value = false
-                _downloadProgress.value = null
-                
                 if (exception is InsufficientStorageException) {
-                    if (exception.info.isEnoughSpace) {
-                        _showStorageWarning.value = exception.info
-                    } else {
-                        _insufficientStorage.value = exception.info
-                    }
-                } else {
-                    notificationManager.showSyncFailed()
+                    notificationManager.showStorageWarning(StorageUtils.getUsedStoragePercentage())
                 }
+                // Any other failure (offline, server error, etc.) is silently retried
+                // on the next automatic check — no need to interrupt the user.
             }
         }
-    }
-
-    fun confirmDownloadWithStorageWarning() {
-        val info = _showStorageWarning.value ?: return
-        _showStorageWarning.value = null
-        viewModelScope.launch {
-            _isDownloading.value = true
-            // No need to re-check here as the use case will check again in Stage 2
-            syncDatabaseUseCase.checkAndSync(
-                isAutomatic = false,
-                onProgress = { _downloadProgress.value = it }
-            ).onSuccess { result ->
-                _isDownloading.value = false
-                _updateStatus.value = null
-                _downloadProgress.value = null
-                if (result.updatedSongs > 0) {
-                    notificationManager.showSyncSuccess()
-                }
-            }.onFailure { exception ->
-                _isDownloading.value = false
-                _downloadProgress.value = null
-                if (exception is InsufficientStorageException) {
-                    _insufficientStorage.value = exception.info
-                } else {
-                    notificationManager.showSyncFailed()
-                }
-            }
-        }
-    }
-
-    fun cancelDownloadWithStorageWarning() {
-        _showStorageWarning.value = null
-    }
-
-    fun dismissInsufficientStorage() {
-        _insufficientStorage.value = null
-    }
-
-    fun dismissUpdate() {
-        _updateStatus.value = null
-    }
-
-    fun openStorageSettings() {
-        val intent = Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(intent)
     }
 
     companion object {
