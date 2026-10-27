@@ -143,6 +143,7 @@ class UpdateSettingsUseCase @Inject constructor(
     suspend fun updateResumeSession(enabled: Boolean) = settingsRepository.updateResumeSession(enabled)
     suspend fun updateDefaultFontSize(size: Int) = settingsRepository.updateDefaultFontSize(size)
     suspend fun updateLineSpacing(spacing: Float) = settingsRepository.updateLineSpacing(spacing)
+    suspend fun updateKeepScreenOn(enabled: Boolean) = settingsRepository.updateKeepScreenOn(enabled)
     suspend fun updateColorTheme(theme: AppColorTheme) = settingsRepository.updateColorTheme(theme)
 }
 

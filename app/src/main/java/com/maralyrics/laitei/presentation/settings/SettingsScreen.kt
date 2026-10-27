@@ -1,6 +1,5 @@
 package com.maralyrics.laitei.presentation.settings
 
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,7 +33,6 @@ import com.maralyrics.laitei.R
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.presentation.theme.MaraColorSchemes
 import com.maralyrics.laitei.utils.StorageUtils
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,18 +48,12 @@ fun SettingsScreen(
     val composerCount by viewModel.composerCount.collectAsState()
     val copyrightOwnerCount by viewModel.copyrightOwnerCount.collectAsState()
     val dbSize by viewModel.dbSize.collectAsState()
-    val showNoUpdatesDialog by viewModel.showNoUpdatesDialog.collectAsState()
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
     var showAboutDialog by remember { mutableStateOf(false) }
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showLicensesDialog by remember { mutableStateOf(false) }
-    var showShareSheet by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val importLauncher = rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.OpenDocument()
-    ) { uri -> uri?.let { viewModel.importOfflineData(it) } }
 
     Scaffold(
         topBar = {
@@ -147,8 +139,17 @@ fun SettingsScreen(
                         steps = 15
                     )
 
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    SwitchItem(
+                        title = stringResource(R.string.keep_screen_on),
+                        description = stringResource(R.string.keep_screen_on_desc),
+                        checked = currentSettings.keepScreenOnEnabled,
+                        onCheckedChange = viewModel::updateKeepScreenOn
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Preview Card
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -211,12 +212,6 @@ fun SettingsScreen(
                         icon = Icons.Default.DeleteSweep,
                         onClick = viewModel::clearCache
                     )
-                    SettingsItem(
-                        title = stringResource(R.string.import_offline_data),
-                        description = stringResource(R.string.import_offline_data_desc),
-                        icon = Icons.Default.FileDownload,
-                        onClick = { importLauncher.launch(arrayOf("*/*")) }
-                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
                     
@@ -227,8 +222,7 @@ fun SettingsScreen(
                         artistCount = artistCount,
                         composerCount = composerCount,
                         copyrightOwnerCount = copyrightOwnerCount,
-                        dbSize = dbSize,
-                        onCheckNewDataClick = viewModel::checkNewData
+                        dbSize = dbSize
                     )
                 }
 
@@ -300,7 +294,17 @@ fun SettingsScreen(
                     SettingsItem(
                         title = stringResource(R.string.share_app),
                         icon = Icons.Default.Share,
-                        onClick = { showShareSheet = true }
+                        onClick = {
+                            val intent = android.content.Intent().apply {
+                                action = android.content.Intent.ACTION_SEND
+                                putExtra(
+                                    android.content.Intent.EXTRA_TEXT,
+                                    context.getString(R.string.share_app_text) + " https://play.google.com/store/apps/details?id=${context.packageName}"
+                                )
+                                type = "text/plain"
+                            }
+                            context.startActivity(android.content.Intent.createChooser(intent, null))
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -350,19 +354,6 @@ fun SettingsScreen(
                     ) {
                         Text(stringResource(R.string.btn_ok))
                     }
-                }
-            }
-        )
-    }
-
-    if (showNoUpdatesDialog) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissNoUpdatesDialog() },
-            title = { Text(stringResource(R.string.no_new_data_title)) },
-            text = { Text(stringResource(R.string.no_new_data_msg)) },
-            confirmButton = {
-                TextButton(onClick = { viewModel.dismissNoUpdatesDialog() }) {
-                    Text(stringResource(R.string.btn_ok))
                 }
             }
         )
@@ -488,115 +479,6 @@ fun SettingsScreen(
         )
     }
 
-    if (showShareSheet) {
-        val currentContext = LocalContext.current
-        val currentConfiguration = LocalConfiguration.current
-
-        AlertDialog(
-            onDismissRequest = { showShareSheet = false },
-            title = {
-                CompositionLocalProvider(
-                    LocalContext provides currentContext,
-                    LocalConfiguration provides currentConfiguration
-                ) {
-                    Text(stringResource(R.string.share_app_title))
-                }
-            },
-            text = {
-                CompositionLocalProvider(
-                    LocalContext provides currentContext,
-                    LocalConfiguration provides currentConfiguration
-                ) {
-                    Column {
-                        ShareOptionRow(
-                            icon = Icons.Default.Public,
-                            title = stringResource(R.string.share_via_play_store),
-                            description = stringResource(R.string.share_via_play_store_desc),
-                            onClick = {
-                                showShareSheet = false
-                                val intent = android.content.Intent().apply {
-                                    action = android.content.Intent.ACTION_SEND
-                                    putExtra(
-                                        android.content.Intent.EXTRA_TEXT,
-                                        context.getString(R.string.share_app_text) + " https://play.google.com/store/apps/details?id=${context.packageName}"
-                                    )
-                                    type = "text/plain"
-                                }
-                                context.startActivity(android.content.Intent.createChooser(intent, null))
-                            }
-                        )
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                        ShareOptionRow(
-                            icon = Icons.Default.Inventory2,
-                            title = stringResource(R.string.share_via_apk_data),
-                            description = stringResource(R.string.share_apk_data_desc),
-                            onClick = {
-                                showShareSheet = false
-                                scope.launch {
-                                    val files = viewModel.exportApkAndData()
-                                    if (files != null) {
-                                        val (apk, db) = files
-                                        val intent = android.content.Intent(android.content.Intent.ACTION_SEND_MULTIPLE).apply {
-                                            type = "*/*"
-                                            putParcelableArrayListExtra(
-                                                android.content.Intent.EXTRA_STREAM,
-                                                arrayListOf(viewModel.uriFor(apk), viewModel.uriFor(db))
-                                            )
-                                            putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_apk_data_message))
-                                            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        }
-                                        context.startActivity(android.content.Intent.createChooser(intent, null))
-                                    }
-                                }
-                            }
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showShareSheet = false }) {
-                    CompositionLocalProvider(
-                        LocalContext provides currentContext,
-                        LocalConfiguration provides currentConfiguration
-                    ) {
-                        Text(stringResource(R.string.btn_cancel))
-                    }
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun ShareOptionRow(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    description: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(28.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(text = title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
 }
 
 @Composable
@@ -818,8 +700,7 @@ fun OfflineDataInfo(
     artistCount: Int,
     composerCount: Int,
     copyrightOwnerCount: Int,
-    dbSize: Long,
-    onCheckNewDataClick: () -> Unit
+    dbSize: Long
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -854,18 +735,6 @@ fun OfflineDataInfo(
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(stringResource(R.string.db_size), style = MaterialTheme.typography.bodySmall)
                 Text(StorageUtils.formatSize(dbSize), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
-            }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(
-                    onClick = onCheckNewDataClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Text(stringResource(R.string.check_new_data))
-                }
             }
         }
     }

@@ -80,8 +80,6 @@ class FavoriteSongsViewModel @Inject constructor(
             SongSortOrder.NUMBER_DESC -> filtered.sortedByDescending { it.id }
             SongSortOrder.A_Z -> filtered.sortedBy { it.title } // Ideally use MaraAlphabetUtils.compare
             SongSortOrder.Z_A -> filtered.sortedByDescending { it.title }
-            SongSortOrder.NEWEST -> filtered.sortedByDescending { it.createdAt }
-            SongSortOrder.OLDEST -> filtered.sortedBy { it.createdAt }
             SongSortOrder.RECENTLY_ADDED -> filtered // Already sorted by favorited_at from DAO
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

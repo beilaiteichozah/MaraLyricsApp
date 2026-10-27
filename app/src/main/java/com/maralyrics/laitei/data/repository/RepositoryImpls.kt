@@ -147,7 +147,6 @@ class SongRepositoryImpl @Inject constructor(
     override suspend fun markAsViewed(songId: Long) {
         recentViewDao.insertRecentView(RecentViewEntity(songId = songId))
         recentViewDao.trimRecentViews()
-        songDao.incrementViewCount(songId)
     }
 
     override suspend fun saveSongs(songs: List<Song>) {
@@ -216,8 +215,6 @@ class SongRepositoryImpl @Inject constructor(
             SongSortOrder.NUMBER_DESC -> songDao.getAllSongsByNumberDesc(cats, isFiltered)
             SongSortOrder.A_Z -> songDao.getAllSongsByTitleAsc(cats, isFiltered)
             SongSortOrder.Z_A -> songDao.getAllSongsByTitleDesc(cats, isFiltered)
-            SongSortOrder.NEWEST -> songDao.getAllSongsByDateDesc(cats, isFiltered)
-            SongSortOrder.OLDEST -> songDao.getAllSongsByDateAsc(cats, isFiltered)
             else -> songDao.getAllSongsByNumberAsc(cats, isFiltered)
         }
         return combine(flow, favoriteDao.getAllFavoriteSongIds()) { list, favorites ->

@@ -1,6 +1,7 @@
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -11,16 +12,35 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// Local, gitignored file holding the release signing credentials — see keystore.properties.
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+
 android {
     namespace = "com.maralyrics.laitei"
     compileSdk = 36
+
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.maralyrics.laitei"
         minSdk = 24
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.1.0"
+        versionCode = 7
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += setOf("en", "mrh", "my")
@@ -38,6 +58,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             isDebuggable = true
@@ -59,16 +82,10 @@ android {
     }
 
     bundle {
-        // All disabled so Play always delivers one universal base APK — the app has no
-        // native/ABI-specific code, and a single complete APK is what AppShareUtils.exportApk()
-        // shares for offline installs; a split base APK alone fails to install on another device.
+        // Disabled so every install includes all in-app language resources — the app has its
+        // own in-app language switcher independent of the device locale, so a per-locale split
+        // would leave a user missing strings for a language they switch to after install.
         language {
-            enableSplit = false
-        }
-        density {
-            enableSplit = false
-        }
-        abi {
             enableSplit = false
         }
     }

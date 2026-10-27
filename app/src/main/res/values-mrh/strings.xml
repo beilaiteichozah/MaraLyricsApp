@@ -2,6 +2,7 @@
     <string name="app_name">Mara Hlabie</string>
 
     <!-- Setup -->
+    <string name="widget_refresh">Viala</string>
     <string name="setup_welcome">Mara Hlabie tawhta eima chaw dy</string>
     <string name="setup_description">Mara Hlabiezy â paphaohna su.</string>
     <string name="setup_language_title">Reih atlyh</string>
@@ -48,7 +49,6 @@
     <string name="lyrics_copied">Hla patly hawpa a châ</string>
     <string name="share_lyrics">Hlabie Hlâ</string>
     <string name="font_size">Font Laichyhna</string>
-    <string name="views_suffix">Mohpazy</string>
 
     <!-- Settings -->
     <string name="song_not_found">Hla hmôpa y vei</string>
@@ -68,9 +68,6 @@
     <string name="last_sync">Sync Pachiena</string>
     <string name="app_version">App Vâsie</string>
     <string name="sync_now">Tahmâ Sync</string>
-    <string name="check_new_data">Data thiehpa moh</string>
-    <string name="no_new_data_title">Data thiehpa y vei</string>
-    <string name="no_new_data_msg">Hlabie database cha a thieh chaipa a châ.</string>
     <string name="clear_data">Offline Data Pathai</string>
     <string name="clear_data_confirm">Offline Hlabie zydua na thy khai tlai aw ma? Nâ dao heih thei nawpa ta internet â byuh heih aw.</string>
     <string name="cancel">Châvei</string>
@@ -113,9 +110,11 @@
 
     <!-- New Settings -->
     <string name="about_app">App Thâtih</string>
+    <string name="about_app_desc">Mara Hlabie cha Mara chipho châta Mara Hlabie py tawhta taopa a saipa nata hnawh pahypa app sâ kha a châ. Cha Mara Hlabie cha Mara Hlabiezy hluhpi tluana liata baokhâ ta, Mara reih nata phoryhpa khâsiana a pasâh.\n\nHe app lia he Khazoh, Hlâsa, Râh, nata Phoryhpa hla phozy a tlôh. Offline ta hlabiezy tlua, moh theipa a châpa vâta nohto hmâna, ahmaohna lia zy, phoryh chaypi lia zy, nata pôhkha palôh thlihua pasiesana liata zy hmâdao a tla kaw.\n\nHlabiezy â do thei nawpa ta, Mara Hlabie cha paraih chiehpa hlabiezy, châveikhiah, khô thiehpa hla hawhpazy update-zy cha anotata tlua ta â dao lymâ. He data a chytapa vâta update-zy hiahrina taopa tlyma pabuabâna y leipa ya a rulâta Wi-Fi pazaopa a châ no deita a khô. He feature he Paraihnazy liata Data &amp; Sync ry liata na khona daihti liata na panano thei.\n\nMara Hlabie he khizaw kaoki liata Marasawzy châta a saipa ta taopa a châ. He parawche he khitlâh ta hmahlapa châ ta, Mara reih nata Ryu zy khâsia mohôh awpa ta pachhuahpa a châ.</string>
     <string name="credits">Alyna Bie</string>
     <string name="credits_desc">Mara Hlazy he chhâ kha nata chhâ kha vaw khâsia laihpa ta, pakha hnoh pakha a vaw hlâ laihpa Hla Phituhpazy, Hlabie Rohtuhpazy, Reihpaleituhpazy, nata eima vaihtlâh zydua hnohta alyna bie eima hlâ.</string>
     <string name="licenses">Laisiezy</string>
+    <string name="tagline_made_in_maraland">Apalaikhei kawpa ta Mararâh lia taopa</string>
     <string name="mit_license_title">MIT License</string>
     <string name="mit_license_text">Copyright (c) 2026 Maralyrics  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="preview_text">He he na screen liata hlabie â luahna dâh pamosapa a châ. Font laichyhna nata châtlâh â hniahlana kha na khodâh ta na tao pathi thei.</string>
@@ -139,6 +138,8 @@
     <string name="accessibility_display">Hmâtheina &amp; Palâsapa</string>
     <string name="default_font_size">Ypâpa font laichyhna</string>
     <string name="line_spacing">Châtlâh Ahniahla</string>
+    <string name="keep_screen_on">Screen Khaihna</string>
+    <string name="keep_screen_on_desc">Hlabie na en liata screen a ip lohna awpa</string>
     <string name="legal">Ryh Lâchhâh</string>
     <string name="privacy_policy">Pôhkha Thlalôhna</string>
     <string name="terms_of_use">Hmâna Ryhpa</string>
@@ -166,9 +167,6 @@
     <string name="onboarding_feature_1_1">Offline hmiapasahpa</string>
     <string name="onboarding_feature_1_2">Hla sâhluhpi</string>
     <string name="onboarding_feature_1_3">Tluana chatleipa</string>
-
-    <!-- onboarding_title_2 / desc_2 / feature_2_x (offline sharing page) intentionally
-         left untranslated here — falls back to English until translated into Mara. -->
 
     <string name="onboarding_title_3">Tluana Thatlôpa</string>
     <string name="onboarding_desc_3">Chôtlâhpi, Hlabie, Hla nuhby, Hlasatuhpa, chvk Phituhpa ta tlua mah y.</string>
@@ -207,8 +205,6 @@
     <string name="sort_number_desc">No. (9-1)</string>
     <string name="sort_az">A-Z</string>
     <string name="sort_za">Z-A</string>
-    <string name="sort_new_old">Thieh-Paroh</string>
-    <string name="sort_old_new">Paroh-Thieh</string>
     <string name="sort_added">Khô hawpa</string>
 
     <!-- Settings Labels -->
@@ -292,7 +288,7 @@
     <string name="notif_mode_dark">Zoh</string>
     <string name="notif_mode_system">Khaw Hawhta</string>
     <string name="notif_default_cat_updated">%1$s cha hmâpa hla pho châta sopa a châ.</string>
-    <string name="notif_color_theme_updated">Hnôh rôh cha cha %1$s lâ â pathlai haw</string>
+    <string name="notif_color_theme_updated">Hnôh rôh cha %1$s lâ â pathlai haw</string>
     <string name="notif_cache_cleared">A puapa pathaisa hawpa a châ</string>
     <string name="notif_fav_backup_success">Khohchaipazy paso hawpa a châ</string>
     <string name="notif_fav_backup_failed">Pasopa hlaotoh vei: %1$s</string>
@@ -339,6 +335,7 @@
     <string name="btn_later">Hetawh sy</string>
     <string name="sync_status_prefix">%1$s â dao hai...</string>
     <string name="low_storage_error">Fô liata data sohna su a bie daihmâ (%1$d%%). Data adao thei nawpa ta parua teh.</string>
+    <string name="play_update_action_restart">Pathaopathi</string>
     <string name="storage_insufficient_title">Sona Akhi vei</string>
     <string name="storage_insufficient_msg">Database adaona hmiatôh theipa châ vei.\n\nAbyuhpa %1$s\nAruapa: %2$s\nSurua abyuhpa: %3$s\n\nPachôna patlyh via tua la, azaoh heih mah y.</string>
     <string name="storage_low_warning_msg">Na chhaichhi pasona cha a bie daihmâ (%1$d%% hmâ hawpa). Adaona cha su ruapa a y chypa vâta â tao thei aw, châhrasala pasona su na parua awpa ta eima cha khokhei.</string>
@@ -347,4 +344,20 @@
     <string name="various_artists">Hlasatuh Hluhpizy</string>
     <string name="various_composers">Hlaphutih Hluhpizy</string>
     <string name="license_retrofit_okhttp">No other invasive permissions are required.</string>
+    <string name="widget_search_bar_label">Mara Hlabie Tluana</string>
+    <string name="widget_search_bar_desc">Na o hmia tawhta Mara Hlabie tluana khôkhâhna</string>
+    <string name="widget_search_hint">Mara Hlabie Tlua...</string>
+    <string name="widget_featured_lyrics_label">Chaluahpa Hlabie</string>
+    <string name="widget_featured_lyrics_desc">Na laibarâri tawhta hla vialapazy na o hmia liata a chaluah.</string>
+    <string name="widget_featured_title">Chaluahpa Hlabie</string>
+    <string name="widget_no_songs">He liata chaluahpa hmô awpa ta hla thokhazy adao teh.</string>
+    <string name="notif_channel_new_songs">Hla Thiehpazy</string>
+    <string name="notif_channel_new_songs_desc">Hla thiehpazy adaopa ta hmâ thei awpa a châ tita a cha chho aw.</string>
+    <string name="notif_new_songs_title">Hla thiehpazy khôpa a châ!</string>
+    <string name="notif_new_song_single">"%1$s" he offline ta mo theipa a châ.</string>
+    <string name="play_update_available_title">Update A Y</string>
+    <string name="play_update_available_desc">Mara Hlabie vâsie thiehpa a y. Paraih hnôh chaipazy châta pasâh teh.</string>
+    <string name="play_update_action_update">Pasâh</string>
+    <string name="play_update_action_later">Hmialâ</string>
+    <string name="play_update_ready_message">Update cha adao haw ta, patyh awpa ta â mâ thlâh.</string>
 </resources>

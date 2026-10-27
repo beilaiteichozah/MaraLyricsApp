@@ -78,6 +78,7 @@ interface SettingsRepository {
     suspend fun updateResumeSession(enabled: Boolean)
     suspend fun updateDefaultFontSize(size: Int)
     suspend fun updateLineSpacing(spacing: Float)
+    suspend fun updateKeepScreenOn(enabled: Boolean)
     suspend fun updateColorTheme(theme: com.maralyrics.laitei.domain.model.AppColorTheme)
     fun getLastSurpriseSongId(): Flow<Long?>
     suspend fun setLastSurpriseSongId(id: Long)

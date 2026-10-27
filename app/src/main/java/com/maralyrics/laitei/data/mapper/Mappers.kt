@@ -4,6 +4,39 @@ import com.maralyrics.laitei.data.local.dao.SongWithArtistAndComposer
 import com.maralyrics.laitei.data.local.entity.*
 import com.maralyrics.laitei.data.remote.dto.*
 import com.maralyrics.laitei.domain.model.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.PairSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
+// A List, not a Map — the same platform can appear more than once (e.g. two Facebook links).
+private val socialLinksListSerializer = ListSerializer(PairSerializer(String.serializer(), String.serializer()))
+
+// Room stores social links as a single JSON TEXT column rather than a related table.
+private fun List<Pair<String, String>>?.toSocialLinksJson(): String? =
+    this?.takeIf { it.isNotEmpty() }?.let { Json.encodeToString(socialLinksListSerializer, it) }
+
+private fun String?.toSocialLinks(): List<SocialLink> =
+    this?.let {
+        try {
+            Json.decodeFromString(socialLinksListSerializer, it).map { (platform, url) -> SocialLink(platform, url) }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    } ?: emptyList()
+
+// The API sends "yyyy-MM-dd HH:mm:ss" (server/UTC time, no offset). Only relative ordering
+// (most-recent song, New-Old sort) depends on this value, so the exact zone doesn't matter.
+private fun String.toEpochMillisOrZero(): Long =
+    try {
+        java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
+            .apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }
+            .parse(this)?.time ?: 0L
+    } catch (e: Exception) {
+        0L
+    }
 
 fun SongDto.toEntity() = SongEntity(
     id = id,
@@ -11,7 +44,7 @@ fun SongDto.toEntity() = SongEntity(
     title = title,
     lyrics = lyrics,
     category = category,
-    createdAt = 0L,
+    createdAt = createdAt.toEpochMillisOrZero(),
     views = views,
     artistId = artistId,
     composerId = composerId,
@@ -29,7 +62,7 @@ fun ArtistDto.toEntity() = ArtistEntity(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = null 
+    socialLinks = socialLinks.toSocialLinksJson()
 )
 
 fun ComposerDto.toEntity() = ComposerEntity(
@@ -38,7 +71,7 @@ fun ComposerDto.toEntity() = ComposerEntity(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = null
+    socialLinks = socialLinks.toSocialLinksJson()
 )
 
 fun CopyrightOwnerDto.toEntity() = CopyrightOwnerEntity(
@@ -122,7 +155,7 @@ fun ArtistEntity.toDomain(songCount: Int = 0) = Artist(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = emptyList(), // Needs parsing if present
+    socialLinks = socialLinks.toSocialLinks(),
     songCount = songCount
 )
 
@@ -132,7 +165,7 @@ fun ComposerEntity.toDomain(songCount: Int = 0) = Composer(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = emptyList(), // Needs parsing if present
+    socialLinks = socialLinks.toSocialLinks(),
     songCount = songCount
 )
 
@@ -184,7 +217,7 @@ fun Artist.toEntity() = ArtistEntity(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = null 
+    socialLinks = socialLinks.map { it.platform to it.url }.toSocialLinksJson()
 )
 
 fun Composer.toEntity() = ComposerEntity(
@@ -193,5 +226,5 @@ fun Composer.toEntity() = ComposerEntity(
     name = name,
     bio = bio,
     imageUrl = imageUrl,
-    socialLinks = null
+    socialLinks = socialLinks.map { it.platform to it.url }.toSocialLinksJson()
 )

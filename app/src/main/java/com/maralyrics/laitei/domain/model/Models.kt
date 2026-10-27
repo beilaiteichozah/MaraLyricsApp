@@ -92,6 +92,7 @@ data class AppSettings(
     val resumeSessionEnabled: Boolean = true,
     val defaultFontSize: Int = 18,
     val lineSpacing: Float = 1.5f,
+    val keepScreenOnEnabled: Boolean = false,
     val privacyPolicyAccepted: Boolean = false,
     val privacyPolicyVersion: String = "",
     val privacyPolicyAcceptedAt: Long = 0L
@@ -149,7 +150,7 @@ data class Feedback(
 )
 
 enum class SongSortOrder {
-    NUMBER_ASC, NUMBER_DESC, A_Z, Z_A, NEWEST, OLDEST, RECENTLY_ADDED
+    NUMBER_ASC, NUMBER_DESC, A_Z, Z_A, RECENTLY_ADDED
 }
 
 enum class SongLayoutType {

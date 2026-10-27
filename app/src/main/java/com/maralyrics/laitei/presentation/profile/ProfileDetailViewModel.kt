@@ -11,6 +11,7 @@ import com.maralyrics.laitei.domain.usecase.SyncDatabaseUseCase
 import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
 import com.maralyrics.laitei.utils.StorageUtils
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
+import com.maralyrics.laitei.presentation.common.notification.SongUpdateNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ class ProfileDetailViewModel @Inject constructor(
     private val getProfileDetailUseCase: GetProfileDetailUseCase,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
+    private val songUpdateNotifier: SongUpdateNotifier,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -54,11 +56,19 @@ class ProfileDetailViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             _isRefreshing.value = true
-            syncDatabaseUseCase.checkAndSync().onFailure { exception ->
-                if (exception is InsufficientStorageException) {
-                    notificationManager.showStorageWarning(StorageUtils.getUsedStoragePercentage())
+            syncDatabaseUseCase.checkAndSync()
+                .onSuccess { result ->
+                    if (result.newSongs > 0) {
+                        songUpdateNotifier.notifyNewSongs(result.newSongs)
+                    } else if (result.updatedSongs > 0) {
+                        notificationManager.showSyncSuccess()
+                    }
                 }
-            }
+                .onFailure { exception ->
+                    if (exception is InsufficientStorageException) {
+                        notificationManager.showStorageWarning(StorageUtils.getUsedStoragePercentage())
+                    }
+                }
             _isRefreshing.value = false
             loadProfile()
         }

@@ -65,7 +65,7 @@ fun OnboardingContent(
     onPrivacyAccepted: () -> Unit,
     onFinish: () -> Unit
 ) {
-    val pagerState = rememberPagerState(pageCount = { 6 })
+    val pagerState = rememberPagerState(pageCount = { 5 })
     val scope = rememberCoroutineScope()
     var showPrivacyDialog by remember { mutableStateOf(false) }
 
@@ -78,7 +78,7 @@ fun OnboardingContent(
                     .padding(top = 16.dp, end = 16.dp, bottom = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                if (pagerState.currentPage in 1..4) {
+                if (pagerState.currentPage in 1..3) {
                     TextButton(onClick = { onFinish() }) {
                         Text(
                             text = stringResource(R.string.onboarding_skip),
@@ -103,7 +103,7 @@ fun OnboardingContent(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    repeat(6) { iteration ->
+                    repeat(5) { iteration ->
                         val color = if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
                         Box(
                             modifier = Modifier
@@ -138,7 +138,7 @@ fun OnboardingContent(
                     }
 
                     // Next / Get Started Button
-                    if (pagerState.currentPage < 5) {
+                    if (pagerState.currentPage < 4) {
                         Button(
                             onClick = {
                                 if (pagerState.currentPage == 0 && !privacyAccepted) {
@@ -427,19 +427,17 @@ fun LanguageSelectionPage(
 fun OnboardingPage(page: Int) {
     val title = when (page) {
         0 -> stringResource(R.string.onboarding_title_1)
-        1 -> stringResource(R.string.onboarding_title_2)
-        2 -> stringResource(R.string.onboarding_title_3)
-        3 -> stringResource(R.string.onboarding_title_4)
-        4 -> stringResource(R.string.onboarding_title_5)
+        1 -> stringResource(R.string.onboarding_title_3)
+        2 -> stringResource(R.string.onboarding_title_4)
+        3 -> stringResource(R.string.onboarding_title_5)
         else -> ""
     }
 
     val description = when (page) {
         0 -> stringResource(R.string.onboarding_desc_1)
-        1 -> stringResource(R.string.onboarding_desc_2)
-        2 -> stringResource(R.string.onboarding_desc_3)
-        3 -> stringResource(R.string.onboarding_desc_4)
-        4 -> stringResource(R.string.onboarding_desc_5)
+        1 -> stringResource(R.string.onboarding_desc_3)
+        2 -> stringResource(R.string.onboarding_desc_4)
+        3 -> stringResource(R.string.onboarding_desc_5)
         else -> ""
     }
 
@@ -450,22 +448,17 @@ fun OnboardingPage(page: Int) {
             stringResource(R.string.onboarding_feature_1_3)
         )
         1 -> listOf(
-            stringResource(R.string.onboarding_feature_2_1),
-            stringResource(R.string.onboarding_feature_2_2),
-            stringResource(R.string.onboarding_feature_2_3)
-        )
-        2 -> listOf(
             stringResource(R.string.onboarding_feature_3_1),
             stringResource(R.string.onboarding_feature_3_2),
             stringResource(R.string.onboarding_feature_3_3)
         )
-        3 -> listOf(
+        2 -> listOf(
             stringResource(R.string.onboarding_feature_4_1),
             stringResource(R.string.onboarding_feature_4_2),
             stringResource(R.string.onboarding_feature_4_3),
             stringResource(R.string.onboarding_feature_4_4)
         )
-        4 -> listOf(
+        3 -> listOf(
             stringResource(R.string.onboarding_feature_5_1),
             stringResource(R.string.onboarding_feature_5_2),
             stringResource(R.string.onboarding_feature_5_3),
@@ -476,10 +469,9 @@ fun OnboardingPage(page: Int) {
 
     val icon = when (page) {
         0 -> Icons.Default.MusicNote
-        1 -> Icons.Default.Share
-        2 -> Icons.Default.Search
-        3 -> Icons.Default.Favorite
-        4 -> Icons.Default.Settings
+        1 -> Icons.Default.Search
+        2 -> Icons.Default.Favorite
+        3 -> Icons.Default.Settings
         else -> Icons.Default.Info
     }
 

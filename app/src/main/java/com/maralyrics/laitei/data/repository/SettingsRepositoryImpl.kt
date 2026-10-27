@@ -29,6 +29,7 @@ object PreferencesKeys {
     val RESUME_SESSION = booleanPreferencesKey("resume_session")
     val DEFAULT_FONT_SIZE = intPreferencesKey("default_font_size")
     val LINE_SPACING = floatPreferencesKey("line_spacing")
+    val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
     val COLOR_THEME = stringPreferencesKey("color_theme")
     val LAST_SURPRISE_SONG_ID = longPreferencesKey("last_surprise_song_id")
     val SURPRISE_ME_USES = intPreferencesKey("surprise_me_uses")
@@ -82,6 +83,7 @@ class SettingsRepositoryImpl @Inject constructor(
                     resumeSessionEnabled = preferences[PreferencesKeys.RESUME_SESSION] ?: true,
                     defaultFontSize = preferences[PreferencesKeys.DEFAULT_FONT_SIZE] ?: 18,
                     lineSpacing = preferences[PreferencesKeys.LINE_SPACING] ?: 1.5f,
+                    keepScreenOnEnabled = preferences[PreferencesKeys.KEEP_SCREEN_ON] ?: false,
                     colorTheme = AppColorTheme.valueOf(
                         preferences[PreferencesKeys.COLOR_THEME] ?: AppColorTheme.MARA.name
                     ),
@@ -172,6 +174,10 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun updateLineSpacing(spacing: Float) {
         dataStore.edit { it[PreferencesKeys.LINE_SPACING] = spacing }
+    }
+
+    override suspend fun updateKeepScreenOn(enabled: Boolean) {
+        dataStore.edit { it[PreferencesKeys.KEEP_SCREEN_ON] = enabled }
     }
 
     override suspend fun updateColorTheme(theme: AppColorTheme) {

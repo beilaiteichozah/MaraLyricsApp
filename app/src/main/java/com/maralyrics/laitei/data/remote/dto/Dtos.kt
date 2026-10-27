@@ -10,36 +10,35 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 
-object SocialLinksSerializer : KSerializer<Map<String, String>?> {
+// A List<Pair<platform, url>>, not a Map — the API can send multiple URLs for the same
+// platform (e.g. two Facebook pages), and a Map would silently drop all but the last one.
+object SocialLinksSerializer : KSerializer<List<Pair<String, String>>?> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("SocialLinks", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): Map<String, String>? {
+    override fun deserialize(decoder: Decoder): List<Pair<String, String>>? {
         val jsonDecoder = decoder as? JsonDecoder ?: return null
         val element = jsonDecoder.decodeJsonElement()
         return parseSocialLinksElement(element)
     }
 
-    private fun parseSocialLinksElement(element: JsonElement): Map<String, String>? {
+    private fun parseSocialLinksElement(element: JsonElement): List<Pair<String, String>>? {
         return when (element) {
             is JsonObject -> {
-                element.mapValues { it.value.jsonPrimitive.content }
+                element.map { it.key to it.value.jsonPrimitive.content }.ifEmpty { null }
             }
             is JsonArray -> {
-                val map = mutableMapOf<String, String>()
-                element.forEach { item ->
+                element.mapNotNull { item ->
                     if (item is JsonPrimitive && item.isString) {
                         val url = item.content
-                        val platform = extractPlatform(url)
-                        map[platform] = url
-                    }
-                }
-                map.ifEmpty { null }
+                        extractPlatform(url) to url
+                    } else null
+                }.ifEmpty { null }
             }
             is JsonPrimitive -> {
                 if (element.isString) {
                     val content = element.content.trim()
                     if (content.isEmpty()) return null
-                    
+
                     // Try to parse as JSON if it looks like one
                     if (content.startsWith("[") || content.startsWith("{")) {
                         try {
@@ -50,7 +49,7 @@ object SocialLinksSerializer : KSerializer<Map<String, String>?> {
                         }
                     }
                     val platform = extractPlatform(content)
-                    mapOf(platform to content)
+                    listOf(platform to content)
                 } else {
                     null
                 }
@@ -69,11 +68,11 @@ object SocialLinksSerializer : KSerializer<Map<String, String>?> {
         }
     }
 
-    override fun serialize(encoder: Encoder, value: Map<String, String>?) {
+    override fun serialize(encoder: Encoder, value: List<Pair<String, String>>?) {
         if (value == null) {
             encoder.encodeNull()
         } else {
-            encoder.encodeSerializableValue(JsonObject.serializer(), JsonObject(value.mapValues { JsonPrimitive(it.value) }))
+            encoder.encodeSerializableValue(JsonArray.serializer(), JsonArray(value.map { JsonPrimitive(it.second) }))
         }
     }
 }
@@ -124,7 +123,7 @@ data class ArtistDto(
     @SerialName("bio") val bio: String? = null,
     @SerialName("image_url") val imageUrl: String? = null,
     @Serializable(with = SocialLinksSerializer::class)
-    @SerialName("social_links") val socialLinks: Map<String, String>? = null
+    @SerialName("social_links") val socialLinks: List<Pair<String, String>>? = null
 )
 
 @Serializable
@@ -135,7 +134,7 @@ data class ComposerDto(
     @SerialName("bio") val bio: String? = null,
     @SerialName("image_url") val imageUrl: String? = null,
     @Serializable(with = SocialLinksSerializer::class)
-    @SerialName("social_links") val socialLinks: Map<String, String>? = null
+    @SerialName("social_links") val socialLinks: List<Pair<String, String>>? = null
 )
 
 @Serializable

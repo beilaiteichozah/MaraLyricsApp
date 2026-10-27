@@ -127,13 +127,6 @@ fun SortToggleRow(
                 onOrderChange(if (currentOrder == SongSortOrder.A_Z) SongSortOrder.Z_A else SongSortOrder.A_Z)
             }
         )
-        SortChip(
-            label = if (currentOrder == SongSortOrder.OLDEST) stringResource(R.string.sort_old_new) else stringResource(R.string.sort_new_old),
-            selected = currentOrder == SongSortOrder.NEWEST || currentOrder == SongSortOrder.OLDEST,
-            onClick = {
-                onOrderChange(if (currentOrder == SongSortOrder.NEWEST) SongSortOrder.OLDEST else SongSortOrder.NEWEST)
-            }
-        )
         if (showAddedSort) {
             SortChip(
                 label = stringResource(R.string.sort_added),

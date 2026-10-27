@@ -54,14 +54,6 @@ interface SongDao {
     @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY title DESC")
     fun getAllSongsByTitleDesc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
 
-    @Transaction
-    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY created_at DESC")
-    fun getAllSongsByDateDesc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
-
-    @Transaction
-    @Query("SELECT * FROM songs WHERE (:isFiltered = 0 OR category IN (:categories)) ORDER BY created_at ASC")
-    fun getAllSongsByDateAsc(categories: List<String>, isFiltered: Boolean): Flow<List<SongWithArtistAndComposer>>
-
     // Plain entity fetch (no @Relation join) — see getRandomSongEntity() for why.
     // Used to personalize the "new song available" notification for exactly one new song.
     @Query("SELECT * FROM songs ORDER BY created_at DESC LIMIT 1")
