@@ -17,8 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.maralyrics.laitei.R
 import com.maralyrics.laitei.domain.model.SearchInitializationState
 import com.maralyrics.laitei.domain.model.SearchResponse
@@ -26,6 +29,7 @@ import com.maralyrics.laitei.domain.model.SongLayoutType
 import com.maralyrics.laitei.domain.model.SuggestionType
 import com.maralyrics.laitei.presentation.common.components.SearchProgressBar
 import com.maralyrics.laitei.presentation.common.components.SongListContent
+import com.maralyrics.laitei.presentation.home.components.HomeHeader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -33,16 +37,21 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onSongClick: (Long) -> Unit,
+    // The ids of the list the song was tapped in, in display order, for Previous/Next.
+    onSongClick: (songId: Long, order: List<Long>) -> Unit,
     onArtistClick: (String) -> Unit,
     onComposerClick: (String) -> Unit,
     onFavoritesClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onArticlesClick: () -> Unit,
+    onMaraIdolClick: () -> Unit,
+    onCalendarClick: () -> Unit,
     focusSearchOnStart: Boolean = false,
     onSearchFocusConsumed: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val allSongs by viewModel.allSongs.collectAsState()
+    val songOfTheDay by viewModel.songOfTheDay.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val searchResponse by viewModel.searchResponse.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
@@ -67,6 +76,15 @@ fun HomeScreen(
             searchFocusRequester.requestFocus()
             keyboardController?.show()
             onSearchFocusConsumed()
+        }
+    }
+
+    // Re-check whenever Home comes back into view, so the card rolls over to the new day's pick
+    // even if the app has been sitting in the background past midnight.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.refreshSongOfTheDay()
         }
     }
 
@@ -208,13 +226,27 @@ fun HomeScreen(
                         sortOrder = sortOrder,
                         layoutType = layoutType,
                         onSortOrderChange = viewModel::onSortOrderChange,
-                        onSongClick = onSongClick,
+                        // Previous/Next in the song view walk what's on screen right now: the list in
+                        // its current sort, or the search results.
+                        onSongClick = { songId -> onSongClick(songId, displaySongs.map { it.id }) },
                         onFavoriteClick = viewModel::toggleFavorite,
                         searchResponse = searchResponse,
                         listState = listState,
+                        // Search results should be just results; the header is for browsing.
+                        header = if (searchQuery.isEmpty()) {
+                            {
+                                HomeHeader(
+                                    songOfTheDay = songOfTheDay,
+                                    onSongClick = { songId -> onSongClick(songId, emptyList()) },
+                                    onArticlesClick = onArticlesClick,
+                                    onMaraIdolClick = onMaraIdolClick,
+                                    onCalendarClick = onCalendarClick
+                                )
+                            }
+                        } else null,
                         onSuggestionClick = { suggestion ->
                             when (suggestion.type) {
-                                SuggestionType.SONG -> onSongClick(suggestion.id)
+                                SuggestionType.SONG -> onSongClick(suggestion.id, emptyList())
                                 SuggestionType.ARTIST -> onArtistClick(suggestion.slug)
                                 SuggestionType.COMPOSER -> onComposerClick(suggestion.slug)
                             }

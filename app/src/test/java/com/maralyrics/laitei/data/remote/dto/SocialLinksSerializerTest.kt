@@ -72,3 +72,8 @@ class SocialLinksSerializerTest {
         assertEquals("https://instagram.com/i", artist3.socialLinks?.get("instagram"))
     }
 }
+
+// SocialLinksSerializer returns a List<Pair<platform, url>> (a Map would drop a second link on
+// the same platform); the assertions above just want "the url for <platform>".
+private fun List<Pair<String, String>>.get(platform: String): String? =
+    firstOrNull { it.first == platform }?.second

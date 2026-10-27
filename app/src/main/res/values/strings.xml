@@ -58,7 +58,6 @@
     <string name="lyrics_copied">Lyrics copied to clipboard</string>
     <string name="share_lyrics">Share Lyrics</string>
     <string name="font_size">Font Size</string>
-    <string name="views_suffix">Views</string>
     <string name="various_artists">Various Artists</string>
     <string name="various_composers">Various Composers</string>
     <string name="song_not_found">Song not found</string>
@@ -80,9 +79,6 @@
     <string name="last_sync">Last Sync Date</string>
     <string name="app_version">App Version</string>
     <string name="sync_now">Sync Now</string>
-    <string name="check_new_data">Check new data</string>
-    <string name="no_new_data_title">No New Data</string>
-    <string name="no_new_data_msg">Your database is already up to date.</string>
     <string name="clear_data">Clear Offline Data</string>
     <string name="clear_data_confirm">Are you sure you want to clear all offline data? You will need an internet connection to download it again.</string>
     <string name="cancel">Cancel</string>
@@ -146,14 +142,6 @@
     <string name="rate_app">Rate this App</string>
     <string name="share_app">Share App</string>
     <string name="share_app_text">Discover Mara song lyrics with the Mara Lyrics app.</string>
-    <string name="share_app_title">Share MaraLyrics</string>
-    <string name="share_via_play_store">Play Store Link</string>
-    <string name="share_via_play_store_desc">Online installation</string>
-    <string name="share_via_apk_data">APK + Downloaded Data</string>
-    <string name="share_apk_data_desc">Offline installation</string>
-    <string name="share_apk_data_message">Install this APK (you may need to enable \"install from unknown sources\"), then open MaraLyrics — your song data is already included, no internet needed.</string>
-    <string name="import_offline_data">Import Offline Data</string>
-    <string name="import_offline_data_desc">Load song data from a file shared by another device, no internet needed</string>
     <string name="data_sync">Data &amp; Sync</string>
     <string name="auto_sync">Auto-Sync</string>
     <string name="auto_sync_desc">Automatically check for updates</string>
@@ -197,12 +185,6 @@
     <string name="onboarding_feature_1_2">Thousands of songs</string>
     <string name="onboarding_feature_1_3">Fast, accurate search</string>
 
-    <string name="onboarding_title_2">Share Without Internet</string>
-    <string name="onboarding_desc_2">Pass the app and its full song collection to a nearby phone — no data connection needed on either device.</string>
-    <string name="onboarding_feature_2_1">Share the app and songs together</string>
-    <string name="onboarding_feature_2_2">Works over Bluetooth, Wi-Fi Direct, or file transfer</string>
-    <string name="onboarding_feature_2_3">Built for areas with limited connectivity</string>
-
     <string name="onboarding_title_3">Powerful Search</string>
     <string name="onboarding_desc_3">Find any song instantly — search by title, lyrics, number, artist, or composer.</string>
     <string name="onboarding_feature_3_1">Instant search</string>
@@ -240,8 +222,6 @@
     <string name="sort_number_desc">No. (9-1)</string>
     <string name="sort_az">A-Z</string>
     <string name="sort_za">Z-A</string>
-    <string name="sort_new_old">New-Old</string>
-    <string name="sort_old_new">Old-New</string>
     <string name="sort_added">Added</string>
 
     <!-- Settings Labels -->
@@ -341,11 +321,6 @@
     <string name="notif_fav_restore_success">%1$d favorites restored</string>
     <string name="notif_fav_restore_no_file">No backup file found</string>
     <string name="notif_fav_restore_failed">Restore failed: %1$s</string>
-    <string name="share_export_failed">Couldn\'t prepare files to share: %1$s</string>
-    <string name="share_split_apk_error">This install has extra components that can\'t be combined into one shareable file. Please update the app to the latest version, then try sharing again.</string>
-    <string name="import_success_restarting">Data imported. Restarting…</string>
-    <string name="import_incompatible_version">This file isn\'t compatible with this app version.</string>
-    <string name="import_failed">Import failed: %1$s</string>
     <string name="sync_downloading_prefix">Downloading %1$s…</string>
     <string name="never">Never</string>
     <string name="kb">KB</string>
@@ -401,4 +376,70 @@
     <string name="storage_low_warning_msg">Your device storage is almost full (%1$d%% used). The download can continue because sufficient free space is available, but freeing additional storage is recommended.</string>
     <string name="btn_manage_storage">Manage Storage</string>
     <string name="btn_continue">Continue</string>
+
+    <string name="song_link_not_found">Couldn\'t find that song in your library yet.</string>
+
+    <!-- Song view reading controls -->
+    <string name="song_previous">Previous song</string>
+    <string name="song_next">Next song</string>
+    <string name="song_rotate">Rotate screen</string>
+    <string name="song_enter_fullscreen">Enter fullscreen</string>
+    <string name="song_exit_fullscreen">Exit fullscreen</string>
+    <string name="song_position_format">%1$d / %2$d</string>
+    <string name="song_toggle_controls">Show or hide reading controls</string>
+    <string name="song_zoom_in">Larger text</string>
+    <string name="song_zoom_out">Smaller text</string>
+    <string name="song_zoom_reset">Reset text size to default</string>
+    <string name="song_zoom_percent">%1$d%%</string>
+
+    <!-- Website sections: Song of the Day, Articles, Mara Idol, Community Calendar -->
+    <string name="song_of_the_day">Song of the Day</string>
+    <string name="song_of_the_day_badge">Today\'s Pick</string>
+    <string name="explore_articles">Articles</string>
+    <string name="explore_mara_idol">Mara Idol</string>
+    <string name="explore_calendar">Calendar</string>
+    <string name="content_offline_notice">Offline — showing saved content</string>
+    <string name="content_load_error_title">Couldn\'t load this</string>
+    <string name="content_load_error_desc">Please check your connection and try again.</string>
+
+    <string name="articles_title">Articles &amp; News</string>
+    <string name="articles_empty_title">No articles yet</string>
+    <string name="articles_empty_desc">Check back soon for news and updates from the MaraLyrics team.</string>
+    <string name="article_by_author">By %1$s</string>
+    <string name="article_open_website">Open on website</string>
+    <string name="article_share">Share article</string>
+
+    <string name="idol_title">Mara Idol</string>
+    <string name="idol_empty_title">Nothing here yet</string>
+    <string name="idol_empty_desc">Mara Idol seasons will appear here once they are published.</string>
+    <plurals name="idol_contestant_count">
+        <item quantity="one">%1$d contestant</item>
+        <item quantity="other">%1$d contestants</item>
+    </plurals>
+    <string name="idol_contestants">Contestants</string>
+    <string name="idol_no_contestants">No contestants have been added to this season yet.</string>
+    <string name="idol_videos">Videos</string>
+    <string name="idol_video_fallback">Video %1$d</string>
+    <string name="idol_view_artist">View artist profile</string>
+    <string name="idol_result_winner">Winner</string>
+    <string name="idol_result_runner_up">Runner-up</string>
+    <string name="idol_result_second_runner_up">2nd Runner-up</string>
+    <string name="idol_result_finalist">Finalist</string>
+    <string name="idol_result_semi_finalist">Semi-finalist</string>
+
+    <string name="calendar_title">Community Calendar</string>
+    <string name="calendar_prev_year">Previous year</string>
+    <string name="calendar_next_year">Next year</string>
+    <string name="calendar_empty_for">No events for %1$s in %2$d.</string>
+    <string name="calendar_no_calendars">No calendars available yet.</string>
+    <plurals name="event_day_count">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="event_status_today">Happening today</string>
+    <string name="event_status_tomorrow">Tomorrow</string>
+    <plurals name="event_status_soon">
+        <item quantity="one">In %1$d day</item>
+        <item quantity="other">In %1$d days</item>
+    </plurals>
 </resources>

@@ -20,7 +20,7 @@ import com.maralyrics.laitei.presentation.common.components.SongListContent
 @Composable
 fun CategorySongsScreen(
     onBackClick: () -> Unit,
-    onSongClick: (Long) -> Unit,
+    onSongClick: (songId: Long, order: List<Long>) -> Unit,
     viewModel: CategorySongsViewModel = hiltViewModel()
 ) {
     val songs by viewModel.songs.collectAsState()
@@ -69,7 +69,7 @@ fun CategorySongsScreen(
                 sortOrder = sortOrder,
                 layoutType = layoutType,
                 onSortOrderChange = viewModel::onSortOrderChange,
-                onSongClick = onSongClick,
+                onSongClick = { songId -> onSongClick(songId, songs.map { it.id }) },
                 onFavoriteClick = viewModel::toggleFavorite
             )
         }

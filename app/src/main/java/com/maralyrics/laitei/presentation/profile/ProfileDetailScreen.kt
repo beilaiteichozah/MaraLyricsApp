@@ -31,7 +31,7 @@ import com.maralyrics.laitei.presentation.common.components.ProfileSongCard
 @Composable
 fun ProfileDetailScreen(
     onBackClick: () -> Unit,
-    onSongClick: (Long) -> Unit,
+    onSongClick: (songId: Long, order: List<Long>) -> Unit,
     viewModel: ProfileDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -84,7 +84,7 @@ fun ProfileDetailScreen(
 private fun ProfileContent(
     profile: Profile,
     songs: List<Song>,
-    onSongClick: (Long) -> Unit
+    onSongClick: (songId: Long, order: List<Long>) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +172,7 @@ private fun ProfileContent(
         items(songs) { song ->
             ProfileSongCard(
                 song = song,
-                onClick = { onSongClick(song.id) }
+                onClick = { onSongClick(song.id, songs.map { it.id }) }
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),

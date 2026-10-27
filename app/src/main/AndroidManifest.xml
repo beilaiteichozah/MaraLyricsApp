@@ -20,10 +20,25 @@
             android:name="com.maralyrics.laitei.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
             android:theme="@style/Theme.MaraLyrics.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Song pages on the website (maralyrics.com/song/{slug}) open in the app. Only song
+                 pages, so articles, terms, etc. keep opening in the browser. autoVerify makes
+                 Android open these straight in the app instead of asking — it needs this
+                 package listed in https://maralyrics.com/.well-known/assetlinks.json. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="maralyrics.com" />
+                <data android:host="www.maralyrics.com" />
+                <data android:pathPrefix="/song/" />
             </intent-filter>
         </activity>
 

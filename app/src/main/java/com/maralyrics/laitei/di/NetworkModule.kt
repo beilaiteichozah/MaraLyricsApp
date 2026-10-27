@@ -1,5 +1,7 @@
 package com.maralyrics.laitei.di
 
+import com.maralyrics.laitei.BuildConfig
+import com.maralyrics.laitei.data.remote.CalendarApiService
 import com.maralyrics.laitei.data.remote.MaraLyricsApiService
 import dagger.Module
 import dagger.Provides
@@ -11,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +31,9 @@ object NetworkModule {
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            // Bodies carry user-submitted names/emails and, for Mara Idol, ~260 KB of base64
+            // images per response — only worth logging while debugging.
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
     }
 
@@ -59,4 +64,23 @@ object NetworkModule {
     fun provideApiService(retrofit: Retrofit): MaraLyricsApiService {
         return retrofit.create(MaraLyricsApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    @Named(CALENDAR_RETROFIT)
+    fun provideCalendarRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(CalendarApiService.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalendarApiService(@Named(CALENDAR_RETROFIT) retrofit: Retrofit): CalendarApiService {
+        return retrofit.create(CalendarApiService::class.java)
+    }
+
+    private const val CALENDAR_RETROFIT = "calendar"
 }

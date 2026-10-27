@@ -53,4 +53,28 @@ abstract class RepositoryModule {
     abstract fun bindCreditsRepository(
         creditsRepositoryImpl: CreditsRepositoryImpl
     ): CreditsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSongOfTheDayRepository(
+        songOfTheDayRepositoryImpl: SongOfTheDayRepositoryImpl
+    ): SongOfTheDayRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindArticleRepository(
+        articleRepositoryImpl: ArticleRepositoryImpl
+    ): ArticleRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMaraIdolRepository(
+        maraIdolRepositoryImpl: MaraIdolRepositoryImpl
+    ): MaraIdolRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCalendarRepository(
+        calendarRepositoryImpl: CalendarRepositoryImpl
+    ): CalendarRepository
 }

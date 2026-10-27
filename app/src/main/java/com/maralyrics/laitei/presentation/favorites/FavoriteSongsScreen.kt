@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun FavoriteSongsScreen(
     onBackClick: () -> Unit,
-    onSongClick: (Long) -> Unit,
+    onSongClick: (songId: Long, order: List<Long>) -> Unit,
     onBrowseClick: () -> Unit,
     viewModel: FavoriteSongsViewModel = hiltViewModel()
 ) {
@@ -45,6 +45,9 @@ fun FavoriteSongsScreen(
     val initialScrollState by viewModel.initialScrollState.collectAsState()
 
     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+
+    // "Surprise me" picks a song from anywhere, so it has no list order to page through.
+    val openSurprise: (Long) -> Unit = { songId -> onSongClick(songId, emptyList()) }
 
     LaunchedEffect(initialScrollState) {
         if (initialScrollState.first > 0 || initialScrollState.second > 0) {
@@ -70,7 +73,7 @@ fun FavoriteSongsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.getSurpriseSong(onSongClick) }) {
+                    IconButton(onClick = { viewModel.getSurpriseSong(openSurprise) }) {
                         Icon(Icons.Default.AutoAwesome, contentDescription = stringResource(R.string.surprise_me))
                     }
                     IconButton(onClick = {
@@ -149,7 +152,7 @@ fun FavoriteSongsScreen(
             Box(modifier = Modifier.weight(1f)) {
                 if (songs.isEmpty()) {
                     if (searchQuery.isEmpty() && selectedCategory == null) {
-                        EmptyFavoritesState(onBrowseClick, { viewModel.getSurpriseSong(onSongClick) })
+                        EmptyFavoritesState(onBrowseClick, { viewModel.getSurpriseSong(openSurprise) })
                     } else {
                         EmptyState(
                             icon = Icons.Default.SearchOff,
@@ -163,7 +166,7 @@ fun FavoriteSongsScreen(
                         songs = songs,
                         sortOrder = sortOrder,
                         layoutType = layoutType,
-                        onSongClick = onSongClick,
+                        onSongClick = { songId -> onSongClick(songId, songs.map { it.id }) },
                         onFavoriteClick = viewModel::toggleFavorite,
                         listState = listState,
                         enableSwipeToRemove = true

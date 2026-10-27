@@ -32,6 +32,9 @@ interface MaraLyricsApiService {
         @Query("limit") limit: Int = 6
     ): Response<List<SongDto>>
 
+    @GET("api/v1/songs/of-the-day")
+    suspend fun getSongOfTheDay(): Response<SongDto>
+
     @GET("api/v1/songs/{slug}")
     suspend fun getSongBySlug(
         @Path("slug") slug: String
@@ -98,6 +101,25 @@ interface MaraLyricsApiService {
     suspend fun submitContact(
         @Body request: ContactRequest
     ): Response<Unit>
+
+    @GET("api/v1/articles")
+    suspend fun getArticles(
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 12
+    ): Response<ArticlesResponse>
+
+    @GET("api/v1/articles/{slug}")
+    suspend fun getArticle(
+        @Path("slug") slug: String
+    ): Response<ArticleDto>
+
+    @GET("api/v1/mara-idol")
+    suspend fun getMaraIdol(): Response<IdolIndexResponse>
+
+    @GET("api/v1/mara-idol/{season}")
+    suspend fun getMaraIdolSeason(
+        @Path("season") seasonSlug: String
+    ): Response<IdolSeasonDto>
 
     companion object {
         const val BASE_URL = "https://api.maralyrics.com/"

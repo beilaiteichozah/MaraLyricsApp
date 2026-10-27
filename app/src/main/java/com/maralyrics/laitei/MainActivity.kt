@@ -35,6 +35,7 @@ import com.maralyrics.laitei.presentation.update.PlayUpdateReadySnackbar
 import com.maralyrics.laitei.presentation.update.PlayUpdateState
 import com.maralyrics.laitei.presentation.update.PlayUpdateViewModel
 import com.maralyrics.laitei.utils.LocalizedContextWrapper
+import com.maralyrics.laitei.utils.SiteLink
 import com.maralyrics.laitei.presentation.navigation.MaraLyricsNavHost
 import com.maralyrics.laitei.presentation.theme.MaraLyricsTheme
 import com.maralyrics.laitei.utils.ConnectivityObserver
@@ -56,19 +57,26 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        pendingIntentState = intent
+        // Only a fresh launch carries something to act on. After the activity is rebuilt (a theme
+        // or language switch) the original intent is still attached, and acting on it again would
+        // reopen the song over whatever the user has navigated to since.
+        pendingIntentState = if (savedInstanceState == null) intent else null
 
         setContent {
             val viewModel: MainViewModel = hiltViewModel()
 
             // A notification tap or home screen widget tap arrives as extras on the
             // launching intent (initial launch here, or onNewIntent while already open).
+            // A maralyrics.com/song/{slug} link tapped in a browser arrives as the intent's data.
             LaunchedEffect(pendingIntentState) {
                 pendingIntentState?.let { intent ->
                     val songId = intent.getLongExtra(EXTRA_OPEN_SONG_ID, -1L).takeIf { it != -1L }
                     val openSearch = intent.getBooleanExtra(EXTRA_OPEN_SEARCH, false)
                     if (songId != null || openSearch) {
                         viewModel.handleDeepLink(songId, openSearch)
+                    }
+                    if (intent.action == Intent.ACTION_VIEW) {
+                        SiteLink.songSlug(intent.dataString)?.let(viewModel::handleSongLink)
                     }
                     pendingIntentState = null
                 }
@@ -146,11 +154,16 @@ class MainActivity : ComponentActivity() {
             splashScreen.setKeepOnScreenCondition { !isReady }
 
             val context = LocalContext.current
+            // The system's live configuration. Rotation and resizes are handled in place (see
+            // configChanges in the manifest) rather than by rebuilding the activity, so the localized
+            // copy below must be rebuilt when it changes — otherwise screen orientation and size
+            // would stay frozen at whatever they were when the language was last set.
+            val liveConfiguration = LocalConfiguration.current
             val locale = remember(language) {
                 java.util.Locale.forLanguageTag(language.code)
             }
-            val configuration = remember(locale) {
-                android.content.res.Configuration(context.resources.configuration).apply {
+            val configuration = remember(locale, liveConfiguration) {
+                android.content.res.Configuration(liveConfiguration).apply {
                     setLocale(locale)
                     setLayoutDirection(locale)
                 }

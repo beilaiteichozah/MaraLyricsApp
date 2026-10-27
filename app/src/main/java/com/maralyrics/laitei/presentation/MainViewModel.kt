@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.domain.repository.SettingsRepository
+import com.maralyrics.laitei.domain.repository.SongRepository
 import com.maralyrics.laitei.domain.usecase.GetSettingsUseCase
 import com.maralyrics.laitei.domain.usecase.SyncDatabaseUseCase
 import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     getSettingsUseCase: GetSettingsUseCase,
     private val settingsRepository: SettingsRepository,
+    private val songRepository: SongRepository,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
     private val songUpdateNotifier: SongUpdateNotifier
@@ -44,6 +46,31 @@ class MainViewModel @Inject constructor(
     fun handleDeepLink(songId: Long?, openSearch: Boolean) {
         if (songId != null) _pendingSongDeepLink.value = songId
         if (openSearch) _pendingSearchDeepLink.value = true
+    }
+
+    /**
+     * A maralyrics.com/song/{slug} link tapped in a browser. The site knows songs by slug and the
+     * app opens them by id, so look the id up in the downloaded library first.
+     */
+    fun handleSongLink(slug: String) {
+        viewModelScope.launch {
+            // On a first launch the library is still being downloaded behind onboarding and setup;
+            // hold the link until there is something to look it up in.
+            isSetupComplete.first { it }
+
+            var songId = songRepository.getSongBySlug(slug)?.id
+            if (songId == null) {
+                // Most likely a song added to the site since this phone last synced.
+                syncDatabaseUseCase.checkAndSync()
+                songId = songRepository.getSongBySlug(slug)?.id
+            }
+
+            if (songId != null) {
+                _pendingSongDeepLink.value = songId
+            } else {
+                notificationManager.showInfo("song_link_not_found")
+            }
+        }
     }
 
     fun consumeSongDeepLink() {

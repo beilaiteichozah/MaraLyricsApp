@@ -114,10 +114,6 @@ fun getResId(key: String): Int {
         "notif_fav_restore_success" -> R.string.notif_fav_restore_success
         "notif_fav_restore_no_file" -> R.string.notif_fav_restore_no_file
         "notif_fav_restore_failed" -> R.string.notif_fav_restore_failed
-        "share_export_failed" -> R.string.share_export_failed
-        "import_success_restarting" -> R.string.import_success_restarting
-        "import_incompatible_version" -> R.string.import_incompatible_version
-        "import_failed" -> R.string.import_failed
         "notif_copied" -> R.string.notif_copied
         "notif_sync_started" -> R.string.notif_sync_started
         "notif_sync_success" -> R.string.notif_sync_success
@@ -127,7 +123,9 @@ fun getResId(key: String): Int {
         "sync_download_failed" -> R.string.sync_download_failed
         "sync_redownloading" -> R.string.sync_redownloading
         "low_storage_error" -> R.string.low_storage_error
+        "storage_low_warning_msg" -> R.string.storage_low_warning_msg
         "exit_press_back" -> R.string.exit_press_back
+        "song_link_not_found" -> R.string.song_link_not_found
         "feedback_success" -> R.string.feedback_success
         "feedback_saved" -> R.string.feedback_saved
         "lang_mara" -> R.string.lang_mara

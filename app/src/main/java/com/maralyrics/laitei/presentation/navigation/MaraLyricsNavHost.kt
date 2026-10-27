@@ -1,5 +1,6 @@
 package com.maralyrics.laitei.presentation.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -7,7 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.maralyrics.laitei.presentation.articles.ArticleDetailScreen
+import com.maralyrics.laitei.presentation.articles.ArticlesScreen
+import com.maralyrics.laitei.presentation.calendar.CalendarScreen
 import com.maralyrics.laitei.presentation.home.HomeScreen
+import com.maralyrics.laitei.presentation.idol.IdolSeasonScreen
+import com.maralyrics.laitei.presentation.idol.MaraIdolScreen
 import com.maralyrics.laitei.presentation.onboarding.OnboardingScreen
 import com.maralyrics.laitei.presentation.settings.SettingsScreen
 import com.maralyrics.laitei.presentation.settings.CreditsScreen
@@ -66,7 +72,7 @@ fun MaraLyricsNavHost(
     // song or to the search field — takes priority over restoring the last session route.
     LaunchedEffect(isSetupComplete, hasCompletedOnboarding, privacyAccepted, pendingSongDeepLink) {
         if (hasCompletedOnboarding && privacyAccepted && isSetupComplete && pendingSongDeepLink != null) {
-            navController.navigate("song_detail/$pendingSongDeepLink") {
+            navController.navigate(SongRoute.create(pendingSongDeepLink)) {
                 popUpTo("home") { inclusive = false }
             }
             onSongDeepLinkConsumed()
@@ -105,8 +111,8 @@ fun MaraLyricsNavHost(
         composable("home") {
             saveRoute("home")
             HomeScreen(
-                onSongClick = { songId ->
-                    navController.navigate("song_detail/$songId")
+                onSongClick = { songId, order ->
+                    navController.navigate(SongRoute.create(songId, order))
                 },
                 onArtistClick = { slug ->
                     navController.navigate("profile_detail/$slug/${ProfileType.ARTIST.name}")
@@ -120,6 +126,9 @@ fun MaraLyricsNavHost(
                 onSettingsClick = {
                     navController.navigate("settings")
                 },
+                onArticlesClick = { navController.navigate("articles") },
+                onMaraIdolClick = { navController.navigate("mara_idol") },
+                onCalendarClick = { navController.navigate("calendar") },
                 focusSearchOnStart = pendingSearchDeepLink,
                 onSearchFocusConsumed = onSearchDeepLinkConsumed
             )
@@ -129,20 +138,28 @@ fun MaraLyricsNavHost(
             saveRoute("favorites")
             FavoriteSongsScreen(
                 onBackClick = { navController.popBackStack() },
-                onSongClick = { songId -> navController.navigate("song_detail/$songId") },
+                onSongClick = { songId, order -> navController.navigate(SongRoute.create(songId, order)) },
                 onBrowseClick = { navController.navigate("home") }
             )
         }
         
         composable(
-            route = "song_detail/{songId}",
-            arguments = listOf(navArgument("songId") { type = NavType.LongType })
+            route = SongRoute.PATTERN,
+            arguments = listOf(
+                navArgument(SongRoute.ARG_SONG_ID) { type = NavType.LongType },
+                navArgument(SongRoute.ARG_ORDER) {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
         ) { backStackEntry ->
-            val songId = backStackEntry.arguments?.getLong("songId")
+            val songId = backStackEntry.arguments?.getLong(SongRoute.ARG_SONG_ID)
             LaunchedEffect(songId) {
-                if (songId != null) saveRoute("song_detail/$songId")
+                if (songId != null) saveRoute(SongRoute.create(songId))
             }
             SongDetailScreen(
+                // Previous/Next swap the song in place; keep the session pointing at the one on screen.
+                onCurrentSongChanged = { currentId -> saveRoute(SongRoute.create(currentId)) },
                 onBackClick = { navController.popBackStack() },
                 onArtistClick = { slug -> navController.navigate("profile_detail/$slug/${ProfileType.ARTIST.name}") },
                 onComposerClick = { slug -> navController.navigate("profile_detail/$slug/${ProfileType.COMPOSER.name}") },
@@ -164,7 +181,7 @@ fun MaraLyricsNavHost(
             }
             ProfileDetailScreen(
                 onBackClick = { navController.popBackStack() },
-                onSongClick = { songId -> navController.navigate("song_detail/$songId") }
+                onSongClick = { songId, order -> navController.navigate(SongRoute.create(songId, order)) }
             )
         }
 
@@ -178,10 +195,49 @@ fun MaraLyricsNavHost(
             }
             CategorySongsScreen(
                 onBackClick = { navController.popBackStack() },
-                onSongClick = { songId -> navController.navigate("song_detail/$songId") }
+                onSongClick = { songId, order -> navController.navigate(SongRoute.create(songId, order)) }
             )
         }
         
+        // Website sections. These deliberately don't call saveRoute: a relaunch resumes on the
+        // last song/list screen, not on a news or calendar page.
+        composable("articles") {
+            ArticlesScreen(
+                onBackClick = { navController.popBackStack() },
+                onArticleClick = { slug -> navController.navigate("article/${Uri.encode(slug)}") }
+            )
+        }
+
+        composable(
+            route = "article/{slug}",
+            arguments = listOf(navArgument("slug") { type = NavType.StringType })
+        ) {
+            ArticleDetailScreen(onBackClick = { navController.popBackStack() })
+        }
+
+        composable("mara_idol") {
+            MaraIdolScreen(
+                onBackClick = { navController.popBackStack() },
+                onSeasonClick = { slug -> navController.navigate("mara_idol/${Uri.encode(slug)}") }
+            )
+        }
+
+        composable(
+            route = "mara_idol/{season}",
+            arguments = listOf(navArgument("season") { type = NavType.StringType })
+        ) {
+            IdolSeasonScreen(
+                onBackClick = { navController.popBackStack() },
+                onArtistClick = { slug ->
+                    navController.navigate("profile_detail/${Uri.encode(slug)}/${ProfileType.ARTIST.name}")
+                }
+            )
+        }
+
+        composable("calendar") {
+            CalendarScreen(onBackClick = { navController.popBackStack() })
+        }
+
         composable("settings") {
             saveRoute("settings")
             SettingsScreen(

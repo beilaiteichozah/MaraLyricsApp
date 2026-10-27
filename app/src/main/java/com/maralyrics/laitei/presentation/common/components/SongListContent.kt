@@ -49,6 +49,8 @@ fun SongListContent(
     listState: LazyListState = rememberLazyListState(),
     showAddedSort: Boolean = false,
     onSuggestionClick: (SearchSuggestion) -> Unit = {},
+    // Rendered as the first (scrolling) item of the song list.
+    header: (@Composable () -> Unit)? = null,
     emptyState: @Composable () -> Unit = {
         if (searchResponse is SearchResponse.Suggestions) {
             FuzzySuggestionsList(
@@ -83,7 +85,8 @@ fun SongListContent(
                     layoutType = layoutType,
                     onSongClick = onSongClick,
                     onFavoriteClick = onFavoriteClick,
-                    listState = listState
+                    listState = listState,
+                    header = header
                 )
             }
 
@@ -92,6 +95,7 @@ fun SongListContent(
                 AlphabetScrubber(
                     songs = songs,
                     listState = listState,
+                    leadingItemCount = if (header != null) 1 else 0,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .padding(end = 4.dp)
@@ -166,13 +170,17 @@ fun SongLazyList(
     onSongClick: (Long) -> Unit,
     onFavoriteClick: (Long) -> Unit,
     listState: LazyListState,
-    enableSwipeToRemove: Boolean = false
+    enableSwipeToRemove: Boolean = false,
+    header: (@Composable () -> Unit)? = null
 ) {
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
+        if (header != null) {
+            item(key = "list_header") { header() }
+        }
         val isAlphabetical = sortOrder == SongSortOrder.A_Z || sortOrder == SongSortOrder.Z_A
         if (isAlphabetical) {
             val grouped = songs.groupBy { MaraAlphabetUtils.getFirstLetter(it.title) }
@@ -384,7 +392,9 @@ fun SongRow(
 fun AlphabetScrubber(
     songs: List<Song>,
     listState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // Items in the list ahead of the first section (e.g. the Home header).
+    leadingItemCount: Int = 0
 ) {
     val alphabet = songs.map { MaraAlphabetUtils.getFirstLetter(it.title) }.distinct()
     val scope = rememberCoroutineScope()
@@ -403,7 +413,7 @@ fun AlphabetScrubber(
                     val index = (y / itemHeight).toInt().coerceIn(0, alphabet.size - 1)
                     val targetChar = alphabet[index]
                     
-                    val targetIndex = findFirstIndexForChar(songs, targetChar)
+                    val targetIndex = findFirstIndexForChar(songs, targetChar, leadingItemCount)
                     if (targetIndex != -1) {
                         scope.launch {
                             listState.scrollToItem(targetIndex)
@@ -428,9 +438,9 @@ fun AlphabetScrubber(
     }
 }
 
-private fun findFirstIndexForChar(songs: List<Song>, char: String): Int {
+private fun findFirstIndexForChar(songs: List<Song>, char: String, leadingItemCount: Int = 0): Int {
     val grouped = songs.groupBy { MaraAlphabetUtils.getFirstLetter(it.title) }
-    var currentIndex = 0
+    var currentIndex = leadingItemCount
     for ((initial, sectionSongs) in grouped) {
         if (initial == char) return currentIndex
         currentIndex += sectionSongs.size + 1 // +1 for header

@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.domain.repository.SettingsRepository
+import com.maralyrics.laitei.domain.repository.SongOfTheDayRepository
 import com.maralyrics.laitei.domain.usecase.*
 import com.maralyrics.laitei.utils.StorageUtils
 import com.maralyrics.laitei.presentation.common.notification.NotificationManager
+import com.maralyrics.laitei.presentation.common.notification.SongUpdateNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -24,11 +26,16 @@ class HomeViewModel @Inject constructor(
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val getSearchInitializationStateUseCase: GetSearchInitializationStateUseCase,
     private val settingsRepository: SettingsRepository,
-    private val notificationManager: NotificationManager
+    private val songOfTheDayRepository: SongOfTheDayRepository,
+    private val notificationManager: NotificationManager,
+    private val songUpdateNotifier: SongUpdateNotifier
 ) : ViewModel() {
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
+
+    private val _songOfTheDay = MutableStateFlow<Song?>(null)
+    val songOfTheDay = _songOfTheDay.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
@@ -109,6 +116,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /** Cheap to call repeatedly — it only hits the network once per day. */
+    fun refreshSongOfTheDay() {
+        viewModelScope.launch {
+            _songOfTheDay.value = songOfTheDayRepository.getSongOfTheDay()
+        }
+    }
+
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
         viewModelScope.launch {
@@ -150,11 +164,21 @@ class HomeViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             _isRefreshing.value = true
-            syncDatabaseUseCase.checkAndSync().onFailure { exception ->
-                if (exception is InsufficientStorageException) {
-                    notificationManager.showStorageWarning(StorageUtils.getUsedStoragePercentage())
+            syncDatabaseUseCase.checkAndSync()
+                .onSuccess { result ->
+                    if (result.newSongs > 0) {
+                        songUpdateNotifier.notifyNewSongs(result.newSongs)
+                    } else if (result.updatedSongs > 0) {
+                        notificationManager.showSyncSuccess()
+                    }
                 }
-            }
+                .onFailure { exception ->
+                    if (exception is InsufficientStorageException) {
+                        notificationManager.showStorageWarning(StorageUtils.getUsedStoragePercentage())
+                    }
+                }
+            // A sync can bring in the very song the website picked for today.
+            refreshSongOfTheDay()
             _isRefreshing.value = false
         }
     }
