@@ -530,18 +530,6 @@ fun SongDetailScreen(
                     )
                 }
 
-                // Nothing to show a position in when the song is the only one in its list.
-                neighbors?.takeIf { it.total > 1 }?.let { position ->
-                    AnimatedVisibility(
-                        visible = controlsVisible,
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 10.dp),
-                        enter = slideFromTop,
-                        exit = slideToTop
-                    ) {
-                        SongPositionPill(position)
-                    }
-                }
-
                 AnimatedVisibility(
                     visible = controlsVisible && fullscreen,
                     modifier = Modifier.align(Alignment.TopEnd).padding(top = 4.dp, end = 16.dp),

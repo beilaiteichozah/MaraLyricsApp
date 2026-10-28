@@ -58,6 +58,10 @@ internal fun SongBottomControls(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        // Where this song sits in the list Previous/Next are walking. It lives with those buttons
+        // rather than at the top, where a long title would run underneath it.
+        neighbors?.takeIf { it.total > 1 }?.let { SongPositionPill(it) }
+
         ZoomControls(
             zoom = zoom,
             onZoomIn = onZoomIn,

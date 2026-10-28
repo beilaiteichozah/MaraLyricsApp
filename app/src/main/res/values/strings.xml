@@ -467,6 +467,10 @@
     <string name="people_sort_songs_asc">Fewest songs</string>
     <string name="people_sort_badges_desc">Most badges</string>
     <string name="people_count_format">%1$d shown</string>
+    <plurals name="people_songs_format">
+        <item quantity="one">%1$d song</item>
+        <item quantity="other">%1$d songs</item>
+    </plurals>
     <string name="people_empty_title">No one found</string>
     <string name="people_empty_desc">Try a different name or clear the filters.</string>
     <string name="people_reset">Reset filters</string>

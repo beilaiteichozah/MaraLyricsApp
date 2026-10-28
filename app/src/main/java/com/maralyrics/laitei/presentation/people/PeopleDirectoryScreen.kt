@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -99,6 +100,7 @@ fun PeopleDirectoryScreen(
                 role = state.role,
                 sort = state.sort,
                 hasBadges = state.hasBadges,
+                count = state.people.size.takeIf { !state.isLoading && it > 0 },
                 onRoleChange = viewModel::onRoleChange,
                 onSortChange = viewModel::onSortChange
             )
@@ -113,12 +115,6 @@ fun PeopleDirectoryScreen(
                     onActionClick = viewModel::resetFilters
                 )
                 else -> {
-                    Text(
-                        text = stringResource(R.string.people_count_format, state.people.size),
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(state.people, key = { "${it.type.name}:${it.slug}" }) { person ->
                             PersonRow(person = person, onClick = { onPersonClick(person.slug, person.type) })
@@ -140,44 +136,60 @@ private fun RoleAndSortRow(
     role: PeopleRole,
     sort: PeopleSort,
     hasBadges: Boolean,
+    count: Int?,
     onRoleChange: (PeopleRole) -> Unit,
     onSortChange: (PeopleSort) -> Unit
 ) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        RoleChip(PeopleRole.ALL, role, R.string.people_role_all, onRoleChange)
-        RoleChip(PeopleRole.ARTISTS, role, R.string.people_role_artists, onRoleChange)
-        RoleChip(PeopleRole.COMPOSERS, role, R.string.people_role_composers, onRoleChange)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            RoleChip(PeopleRole.ALL, role, R.string.people_role_all, onRoleChange)
+            RoleChip(PeopleRole.ARTISTS, role, R.string.people_role_artists, onRoleChange)
+            RoleChip(PeopleRole.COMPOSERS, role, R.string.people_role_composers, onRoleChange)
+        }
 
-        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
-            var open by remember { mutableStateOf(false) }
-            AssistChip(
-                onClick = { open = true },
-                label = { Text(stringResource(sort.labelRes()), maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                leadingIcon = {
-                    Icon(
-                        Icons.AutoMirrored.Filled.Sort,
-                        contentDescription = stringResource(R.string.people_sort_label),
-                        modifier = Modifier.size(AssistChipDefaults.IconSize)
+        // The count and the sort control share a row, so the sort label always has room.
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = if (count != null) stringResource(R.string.people_count_format, count) else "",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            SortMenu(sort = sort, hasBadges = hasBadges, onSortChange = onSortChange)
+        }
+    }
+}
+
+@Composable
+private fun SortMenu(sort: PeopleSort, hasBadges: Boolean, onSortChange: (PeopleSort) -> Unit) {
+    var open by remember { mutableStateOf(false) }
+    Box(contentAlignment = Alignment.CenterEnd) {
+        AssistChip(
+            onClick = { open = true },
+            label = { Text(stringResource(sort.labelRes()), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+            leadingIcon = {
+                Icon(
+                    Icons.AutoMirrored.Filled.Sort,
+                    contentDescription = stringResource(R.string.people_sort_label),
+                    modifier = Modifier.size(AssistChipDefaults.IconSize)
+                )
+            }
+        )
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            PeopleSort.entries
+                .filter { it != PeopleSort.BADGES_DESC || hasBadges }
+                .forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(option.labelRes())) },
+                        onClick = {
+                            open = false
+                            onSortChange(option)
+                        }
                     )
                 }
-            )
-            DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
-                PeopleSort.entries
-                    .filter { it != PeopleSort.BADGES_DESC || hasBadges }
-                    .forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(option.labelRes())) },
-                            onClick = {
-                                open = false
-                                onSortChange(option)
-                            }
-                        )
-                    }
-            }
         }
     }
 }
@@ -217,7 +229,7 @@ private fun PersonRow(person: DirectoryPerson, onClick: () -> Unit) {
             }
             val role = stringResource(if (person.type == ProfileType.ARTIST) R.string.artist else R.string.composer)
             Text(
-                text = "$role · ${stringResource(R.string.song_count_format, person.songCount)}",
+                text = "$role · ${pluralStringResource(R.plurals.people_songs_format, person.songCount, person.songCount)}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
