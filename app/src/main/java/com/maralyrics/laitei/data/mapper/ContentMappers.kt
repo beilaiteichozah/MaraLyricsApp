@@ -49,6 +49,28 @@ fun IdolSeasonDto.toDomain() = IdolSeason(
     contestants = contestants.map { it.toDomain() }
 )
 
+/** Links come from the server and get opened, so only plain web links are allowed through. */
+internal fun String?.asWebUrl(): String? {
+    val url = nullIfBlank() ?: return null
+    val scheme = url.substringBefore(':', missingDelimiterValue = "").lowercase()
+    return url.takeIf { (scheme == "https" || scheme == "http") && url.length > scheme.length + 3 }
+}
+
+fun SupporterDto.toDomain(): Supporter? {
+    val label = name.nullIfBlank() ?: return null
+    return Supporter(
+        name = label,
+        description = description.nullIfBlank(),
+        logoUrl = logoUrl.nullIfBlank(),
+        websiteUrl = websiteUrl.asWebUrl()
+    )
+}
+
+fun TeamMemberDto.toDomain(): TeamMember? {
+    val label = username.nullIfBlank() ?: return null
+    return TeamMember(name = label, role = TeamRole.fromApi(role), photoUrl = photo.nullIfBlank())
+}
+
 private fun JsonPrimitive?.asText(): String? = this?.takeIf { it !is JsonNull }?.content.nullIfBlank()
 
 /** The server sends a boolean today; a 0/1 or "true" would mean the same thing. */

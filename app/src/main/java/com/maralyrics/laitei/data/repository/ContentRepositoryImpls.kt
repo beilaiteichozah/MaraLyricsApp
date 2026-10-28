@@ -10,6 +10,8 @@ import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.domain.repository.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
@@ -97,6 +99,25 @@ class MaraIdolRepositoryImpl @Inject constructor(
     override suspend fun getSeason(slug: String): Result<ContentResult<IdolSeason>> =
         cache.networkFirst("mara_idol_season_$slug") { api.getMaraIdolSeason(slug) }
             .map { ContentResult(it.data.toDomain(), it.isFromCache) }
+}
+
+@Singleton
+class CreditsExtrasRepositoryImpl @Inject constructor(
+    private val api: MaraLyricsApiService,
+    private val cache: ContentCache
+) : CreditsExtrasRepository {
+
+    override suspend fun getExtras(): CreditsExtras = coroutineScope {
+        val supporters = async { cache.networkFirst("credits_supporters") { api.getSupporters() }.getOrNull()?.data }
+        val team = async { cache.networkFirst("credits_team") { api.getTeam() }.getOrNull()?.data }
+        val loadedSupporters = supporters.await()
+        val loadedTeam = team.await()
+        CreditsExtras(
+            sponsors = loadedSupporters?.sponsors.orEmpty().mapNotNull { it.toDomain() },
+            partners = loadedSupporters?.partners.orEmpty().mapNotNull { it.toDomain() },
+            team = loadedTeam?.team.orEmpty().mapNotNull { it.toDomain() }
+        )
+    }
 }
 
 @Singleton

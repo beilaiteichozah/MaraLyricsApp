@@ -108,6 +108,33 @@ data class CalendarEventsResponse(
     @SerialName("events") val events: List<CalendarEventDto> = emptyList()
 )
 
+// Sponsors, partners and the editing team, shown on the Credits screen like the website's Project page.
+@Serializable
+data class SupporterDto(
+    @SerialName("name") val name: String = "",
+    @SerialName("description") val description: String? = null,
+    @SerialName("logo_url") val logoUrl: String? = null,
+    @SerialName("website_url") val websiteUrl: String? = null
+)
+
+@Serializable
+data class SupportersResponse(
+    @SerialName("sponsors") val sponsors: List<SupporterDto> = emptyList(),
+    @SerialName("partners") val partners: List<SupporterDto> = emptyList()
+)
+
+@Serializable
+data class TeamMemberDto(
+    @SerialName("username") val username: String = "",
+    @SerialName("role") val role: String? = null,
+    @SerialName("photo") val photo: String? = null
+)
+
+@Serializable
+data class TeamResponse(
+    @SerialName("team") val team: List<TeamMemberDto> = emptyList()
+)
+
 // Recognition shown on artist and composer profiles. GET /artists/{slug} and the /artists list
 // carry far more (the photo as base64, the full bio, every song), so this models only what the
 // app reads, which also keeps the cached copy small. "green" and "period_value" are read as raw

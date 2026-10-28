@@ -21,6 +21,11 @@ interface MaraIdolRepository {
     suspend fun getSeason(slug: String): Result<ContentResult<IdolSeason>>
 }
 
+interface CreditsExtrasRepository {
+    /** Sponsors, partners and team; whatever part can't be loaded or was never saved is left empty. */
+    suspend fun getExtras(): CreditsExtras
+}
+
 interface ProfileExtrasRepository {
     /** Null when the website can't be reached and nothing was saved; profiles still show without it. */
     suspend fun getExtras(slug: String, type: ProfileType): ProfileExtras?

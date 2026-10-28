@@ -74,6 +74,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindCreditsExtrasRepository(
+        creditsExtrasRepositoryImpl: CreditsExtrasRepositoryImpl
+    ): CreditsExtrasRepository
+
+    @Binds
+    @Singleton
     abstract fun bindProfileExtrasRepository(
         profileExtrasRepositoryImpl: ProfileExtrasRepositoryImpl
     ): ProfileExtrasRepository

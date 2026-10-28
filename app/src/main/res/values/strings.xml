@@ -471,4 +471,15 @@
     <string name="people_empty_desc">Try a different name or clear the filters.</string>
     <string name="people_reset">Reset filters</string>
     <string name="badge_more_format">%1$s · +%2$d more</string>
+
+    <!-- Credits: sponsors, partners and editors from the website -->
+    <string name="credits_sponsors">Sponsors</string>
+    <string name="credits_sponsors_intro">With thanks to the people and teams who support MaraLyrics.</string>
+    <string name="credits_partners">Partners</string>
+    <string name="credits_partners_intro">The people and teams we work together with.</string>
+    <string name="credits_editors">Editors</string>
+    <string name="credits_editors_intro">The people who write, edit and curate the songs and lyrics on MaraLyrics.</string>
+    <string name="role_editor">Editor</string>
+    <string name="role_manager">Manager</string>
+    <string name="role_super_admin">Super Admin</string>
 </resources>

@@ -37,6 +37,44 @@ enum class IdolResult {
     }
 }
 
+/** A sponsor or partner of MaraLyrics. */
+data class Supporter(
+    val name: String,
+    val description: String?,
+    /** An inline `data:image` logo or an https URL. */
+    val logoUrl: String?,
+    /** Only ever an http(s) link, so it is safe to open. */
+    val websiteUrl: String?
+)
+
+enum class TeamRole {
+    EDITOR, MANAGER, SUPER_ADMIN, OTHER;
+
+    companion object {
+        fun fromApi(value: String?): TeamRole = when (value?.trim()?.lowercase()) {
+            "editor" -> EDITOR
+            "manager" -> MANAGER
+            "super_admin" -> SUPER_ADMIN
+            else -> OTHER
+        }
+    }
+}
+
+data class TeamMember(
+    val name: String,
+    val role: TeamRole,
+    val photoUrl: String?
+)
+
+/** The website-sourced part of the Credits screen; the contributors list is still bundled. */
+data class CreditsExtras(
+    val sponsors: List<Supporter> = emptyList(),
+    val partners: List<Supporter> = emptyList(),
+    val team: List<TeamMember> = emptyList()
+) {
+    val isEmpty: Boolean get() = sponsors.isEmpty() && partners.isEmpty() && team.isEmpty()
+}
+
 enum class BadgePeriod {
     MONTH, YEAR, LIFETIME, OTHER;
 

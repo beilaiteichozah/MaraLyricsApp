@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
@@ -33,12 +34,14 @@ fun ProfileImage(
     imageUrl: String?,
     name: String,
     modifier: Modifier = Modifier,
-    size: Dp = 120.dp
+    size: Dp = 120.dp,
+    shape: Shape = CircleShape,
+    contentScale: ContentScale = ContentScale.Crop
 ) {
     Box(
         modifier = modifier
             .size(size)
-            .clip(CircleShape),
+            .clip(shape),
         contentAlignment = Alignment.Center
     ) {
         val targetPx = with(LocalDensity.current) { size.roundToPx() }
@@ -49,14 +52,14 @@ fun ProfileImage(
                 bitmap = base64Bitmap,
                 contentDescription = name,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = contentScale
             )
         } else if (!imageUrl.isNullOrBlank()) {
             SubcomposeAsyncImage(
                 model = imageUrl,
                 contentDescription = name,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
+                contentScale = contentScale,
                 loading = {
                     ShimmerLoading()
                 },

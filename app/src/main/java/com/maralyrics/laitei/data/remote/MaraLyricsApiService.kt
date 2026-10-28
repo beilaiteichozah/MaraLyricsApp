@@ -121,6 +121,12 @@ interface MaraLyricsApiService {
         @Path("season") seasonSlug: String
     ): Response<IdolSeasonDto>
 
+    @GET("api/v1/supporters")
+    suspend fun getSupporters(): Response<SupportersResponse>
+
+    @GET("api/v1/team")
+    suspend fun getTeam(): Response<TeamResponse>
+
     // Badges, Green mark and rich-text bio (the slim ProfileExtrasDto), kept apart from the full
     // ArtistDto/ComposerDto that feed the offline library.
     @GET("api/v1/artists/{slug}")
