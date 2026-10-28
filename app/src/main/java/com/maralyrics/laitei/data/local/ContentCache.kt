@@ -42,6 +42,13 @@ class ContentCache @Inject constructor(
         }
     }
 
+    /** How long ago [key] was last written, or null if it never was. */
+    suspend fun ageMillis(key: String): Long? = withContext(Dispatchers.IO) {
+        runCatching {
+            fileFor(key).takeIf { it.isFile }?.let { System.currentTimeMillis() - it.lastModified() }
+        }.getOrNull()
+    }
+
     suspend inline fun <reified T> readJson(key: String): T? =
         read(key)?.let { text -> runCatching { json.decodeFromString<T>(text) }.getOrNull() }
 

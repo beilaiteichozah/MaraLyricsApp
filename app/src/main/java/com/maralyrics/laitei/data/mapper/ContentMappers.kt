@@ -3,6 +3,9 @@ package com.maralyrics.laitei.data.mapper
 import com.maralyrics.laitei.data.remote.dto.*
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.utils.parseServerTimestamp
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 
 private fun String?.nullIfBlank(): String? = this?.trim()?.takeIf { it.isNotEmpty() }
 
@@ -44,6 +47,27 @@ fun IdolSeasonDto.toDomain() = IdolSeason(
     winners = winners.map { IdolWinner(name = it.name, photoUrl = it.photoUrl.nullIfBlank()) },
     videos = videos.map { IdolVideo(title = it.title.nullIfBlank(), url = it.url) },
     contestants = contestants.map { it.toDomain() }
+)
+
+private fun JsonPrimitive?.asText(): String? = this?.takeIf { it !is JsonNull }?.content.nullIfBlank()
+
+/** The server sends a boolean today; a 0/1 or "true" would mean the same thing. */
+private fun JsonPrimitive?.isTrue(): Boolean = when {
+    this == null || this is JsonNull -> false
+    booleanOrNull != null -> booleanOrNull == true
+    else -> content.trim().let { it == "1" || it.equals("true", ignoreCase = true) }
+}
+
+fun BadgeDto.toDomain() = ProfileBadge(
+    period = BadgePeriod.fromApi(period),
+    periodValue = periodValue.asText(),
+    title = title.nullIfBlank()
+)
+
+fun ProfileExtrasDto.toDomain() = ProfileExtras(
+    badges = badges.map { it.toDomain() },
+    isGreen = green.isTrue(),
+    bioHtml = bioHtml.nullIfBlank()
 )
 
 fun CalendarDto.toDomain() = CommunityCalendar(

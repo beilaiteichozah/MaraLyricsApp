@@ -21,6 +21,17 @@ interface MaraIdolRepository {
     suspend fun getSeason(slug: String): Result<ContentResult<IdolSeason>>
 }
 
+interface ProfileExtrasRepository {
+    /** Null when the website can't be reached and nothing was saved; profiles still show without it. */
+    suspend fun getExtras(slug: String, type: ProfileType): ProfileExtras?
+
+    /**
+     * Recognition for everyone of [type], by slug, for the directory. Reused for a few hours
+     * instead of downloaded on every visit, because the list response is large.
+     */
+    suspend fun getRecognition(type: ProfileType): Map<String, ProfileExtras>
+}
+
 interface CalendarRepository {
     suspend fun getCalendars(): Result<ContentResult<List<CommunityCalendar>>>
     suspend fun getEvents(calendarSlug: String, year: Int): Result<ContentResult<List<CommunityEvent>>>

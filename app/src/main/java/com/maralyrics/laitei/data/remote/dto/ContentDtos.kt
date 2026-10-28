@@ -107,3 +107,32 @@ data class CalendarEventsResponse(
     @SerialName("year") val year: Int = 0,
     @SerialName("events") val events: List<CalendarEventDto> = emptyList()
 )
+
+// Recognition shown on artist and composer profiles. GET /artists/{slug} and the /artists list
+// carry far more (the photo as base64, the full bio, every song), so this models only what the
+// app reads, which also keeps the cached copy small. "green" and "period_value" are read as raw
+// JSON values so a boolean-or-number or string-or-number change on the server can't fail a
+// whole list.
+@Serializable
+data class BadgeDto(
+    @SerialName("period") val period: String? = null,
+    @SerialName("period_value") val periodValue: JsonPrimitive? = null,
+    @SerialName("title") val title: String? = null
+)
+
+@Serializable
+data class ProfileExtrasDto(
+    @SerialName("slug") val slug: String = "",
+    @SerialName("badges") val badges: List<BadgeDto> = emptyList(),
+    @SerialName("green") val green: JsonPrimitive? = null,
+    // Only on the single-profile endpoint; the list omits it.
+    @SerialName("bio_html") val bioHtml: String? = null
+)
+
+// GET /artists answers with "artists", GET /composers with "composers"; one class reads both.
+@Serializable
+data class PeopleRecognitionResponse(
+    @SerialName("artists") val artists: List<ProfileExtrasDto> = emptyList(),
+    @SerialName("composers") val composers: List<ProfileExtrasDto> = emptyList(),
+    @SerialName("total") val total: Int = 0
+)

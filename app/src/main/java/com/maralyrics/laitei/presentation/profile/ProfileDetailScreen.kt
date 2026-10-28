@@ -10,19 +10,28 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.laitei.R
 import com.maralyrics.laitei.domain.model.Profile
+import com.maralyrics.laitei.domain.model.ProfileExtras
 import com.maralyrics.laitei.domain.model.ProfileType
 import com.maralyrics.laitei.domain.model.Song
+import com.maralyrics.laitei.presentation.common.components.BadgeChips
 import com.maralyrics.laitei.presentation.common.components.DynamicSocialLinks
+import com.maralyrics.laitei.presentation.common.components.GreenMark
 import com.maralyrics.laitei.presentation.common.components.ListSkeleton
 import com.maralyrics.laitei.presentation.common.components.ProfileImage
 import com.maralyrics.laitei.presentation.common.components.ProfileSongCard
@@ -36,11 +45,12 @@ fun ProfileDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val extras by viewModel.extras.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     if (uiState is ProfileUiState.Success) {
                         Text((uiState as ProfileUiState.Success).profile.name)
                     }
@@ -72,7 +82,7 @@ fun ProfileDetailScreen(
                         isRefreshing = isRefreshing,
                         onRefresh = viewModel::refresh
                     ) {
-                        ProfileContent(state.profile, state.songs, onSongClick)
+                        ProfileContent(state.profile, extras, state.songs, onSongClick)
                     }
                 }
             }
@@ -83,6 +93,7 @@ fun ProfileDetailScreen(
 @Composable
 private fun ProfileContent(
     profile: Profile,
+    extras: ProfileExtras?,
     songs: List<Song>,
     onSongClick: (songId: Long, order: List<Long>) -> Unit
 ) {
@@ -103,25 +114,35 @@ private fun ProfileContent(
                     name = profile.name,
                     size = 140.dp
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                Text(
-                    text = profile.name,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-                
+
+                // The green tick sits beside the name, as on the website.
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    Text(
+                        text = profile.name,
+                        modifier = Modifier.weight(1f, fill = false),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    if (extras?.isGreen == true) {
+                        GreenMark()
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 // Type Badge
                 Surface(
                     color = MaterialTheme.colorScheme.primaryContainer,
                     shape = MaterialTheme.shapes.large
                 ) {
                     Text(
-                        text = if (profile.type == com.maralyrics.laitei.domain.model.ProfileType.ARTIST) 
+                        text = if (profile.type == ProfileType.ARTIST)
                             stringResource(R.string.artist) else stringResource(R.string.composer),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelSmall,
@@ -129,26 +150,23 @@ private fun ProfileContent(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                profile.bio?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 20.sp
-                    )
+
+                if (extras != null && extras.badges.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    BadgeChips(badges = extras.badges, type = profile.type)
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
+                ProfileBio(plainBio = profile.bio, bioHtml = extras?.bioHtml)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // Dynamic Social Links
                 DynamicSocialLinks(links = profile.socialLinks)
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 // Song Count
                 Text(
                     text = stringResource(R.string.song_count_format, profile.songCount),
@@ -158,7 +176,7 @@ private fun ProfileContent(
                 )
             }
         }
-        
+
         // Song List Section
         item {
             Text(
@@ -168,7 +186,7 @@ private fun ProfileContent(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
-        
+
         items(songs) { song ->
             ProfileSongCard(
                 song = song,
@@ -180,5 +198,38 @@ private fun ProfileContent(
                 color = MaterialTheme.colorScheme.outlineVariant
             )
         }
+    }
+}
+
+/**
+ * The website's formatted bio (bold, links, lists, quotes) when it can be loaded, otherwise the
+ * plain text saved in the offline library, so a bio is always there offline.
+ */
+@Composable
+private fun ProfileBio(plainBio: String?, bioHtml: String?) {
+    val linkColor = MaterialTheme.colorScheme.primary
+    val formatted = remember(bioHtml, linkColor) {
+        bioHtml?.let {
+            AnnotatedString.fromHtml(
+                htmlString = it,
+                linkStyles = TextLinkStyles(SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline))
+            )
+        }
+    }
+    when {
+        formatted != null -> Text(
+            text = formatted,
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            lineHeight = 20.sp
+        )
+        plainBio != null -> Text(
+            text = plainBio,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            lineHeight = 20.sp
+        )
     }
 }

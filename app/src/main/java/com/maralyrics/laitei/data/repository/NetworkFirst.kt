@@ -6,6 +6,10 @@ import kotlinx.coroutines.CancellationException
 import retrofit2.Response
 import java.io.IOException
 
+/** True when a saved copy [ageMillis] old is recent enough to use without asking the network. */
+internal fun isFresh(ageMillis: Long?, maxAgeMillis: Long): Boolean =
+    ageMillis != null && ageMillis in 0 until maxAgeMillis
+
 /**
  * Fetches from the network and saves the body under [key]; if that fails for any reason
  * (offline, HTTP error, malformed body) falls back to the last saved copy. Fails only when

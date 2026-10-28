@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.Profile
+import com.maralyrics.laitei.domain.model.ProfileExtras
 import com.maralyrics.laitei.domain.model.ProfileType
 import com.maralyrics.laitei.domain.model.Song
+import com.maralyrics.laitei.domain.repository.ProfileExtrasRepository
 import com.maralyrics.laitei.domain.usecase.GetProfileDetailUseCase
 import com.maralyrics.laitei.domain.usecase.SyncDatabaseUseCase
 import com.maralyrics.laitei.domain.usecase.InsufficientStorageException
@@ -23,6 +25,7 @@ class ProfileDetailViewModel @Inject constructor(
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
     private val songUpdateNotifier: SongUpdateNotifier,
+    private val profileExtrasRepository: ProfileExtrasRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -35,11 +38,21 @@ class ProfileDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ProfileUiState>(ProfileUiState.Loading)
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
+    // Badges, Green mark and rich bio from the website. Null until loaded, and stays null when
+    // offline with nothing saved; the profile reads fine without it.
+    private val _extras = MutableStateFlow<ProfileExtras?>(null)
+    val extras: StateFlow<ProfileExtras?> = _extras.asStateFlow()
+
     init {
         loadProfile()
     }
 
+    private fun loadExtras() {
+        viewModelScope.launch { _extras.value = profileExtrasRepository.getExtras(slug, type) }
+    }
+
     private fun loadProfile() {
+        loadExtras()
         viewModelScope.launch {
             _uiState.value = ProfileUiState.Loading
             val result = getProfileDetailUseCase(slug, type)

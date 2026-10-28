@@ -442,4 +442,14 @@
         <item quantity="one">In %1$d day</item>
         <item quantity="other">In %1$d days</item>
     </plurals>
+
+    <!-- Artist and composer profiles: recognition from the website -->
+    <string name="green_mark">Green mark</string>
+    <string name="badge_artist_month">Artist of the Month</string>
+    <string name="badge_artist_year">Artist of the Year</string>
+    <string name="badge_composer_month">Composer of the Month</string>
+    <string name="badge_composer_year">Composer of the Year</string>
+    <string name="badge_lifetime">Lifetime Achievement</string>
+    <string name="badge_generic">Recognition</string>
+    <string name="badge_title_period">%1$s · %2$s</string>
 </resources>

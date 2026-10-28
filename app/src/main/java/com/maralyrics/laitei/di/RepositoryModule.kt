@@ -74,6 +74,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindProfileExtrasRepository(
+        profileExtrasRepositoryImpl: ProfileExtrasRepositoryImpl
+    ): ProfileExtrasRepository
+
+    @Binds
+    @Singleton
     abstract fun bindCalendarRepository(
         calendarRepositoryImpl: CalendarRepositoryImpl
     ): CalendarRepository

@@ -37,6 +37,37 @@ enum class IdolResult {
     }
 }
 
+enum class BadgePeriod {
+    MONTH, YEAR, LIFETIME, OTHER;
+
+    companion object {
+        fun fromApi(value: String?): BadgePeriod = when (value?.trim()?.lowercase()) {
+            "month" -> MONTH
+            "year" -> YEAR
+            "lifetime" -> LIFETIME
+            else -> OTHER
+        }
+    }
+}
+
+/** A recognition awarded to an artist or composer, e.g. "Artist of the Year · 2024". */
+data class ProfileBadge(
+    val period: BadgePeriod,
+    /** "2024" or "2026-09"; null for a lifetime award. */
+    val periodValue: String?,
+    /** The award's own name when the server sent one; the screen words it from [period] otherwise. */
+    val title: String?
+)
+
+/** What the website knows about a profile beyond what is stored in the offline library. */
+data class ProfileExtras(
+    val badges: List<ProfileBadge> = emptyList(),
+    /** The green tick shown beside the name of a paid profile. */
+    val isGreen: Boolean = false,
+    /** The bio as sanitized HTML (bold, links, lists...); null when there is only plain text. */
+    val bioHtml: String? = null
+)
+
 data class IdolWinner(
     val name: String,
     val photoUrl: String?

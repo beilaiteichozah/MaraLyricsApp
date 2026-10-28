@@ -5,6 +5,7 @@ import com.maralyrics.laitei.data.local.ContentCache
 import com.maralyrics.laitei.data.mapper.toDomain
 import com.maralyrics.laitei.data.remote.CalendarApiService
 import com.maralyrics.laitei.data.remote.MaraLyricsApiService
+import com.maralyrics.laitei.data.remote.dto.PeopleRecognitionResponse
 import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.domain.repository.*
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -96,6 +97,40 @@ class MaraIdolRepositoryImpl @Inject constructor(
     override suspend fun getSeason(slug: String): Result<ContentResult<IdolSeason>> =
         cache.networkFirst("mara_idol_season_$slug") { api.getMaraIdolSeason(slug) }
             .map { ContentResult(it.data.toDomain(), it.isFromCache) }
+}
+
+@Singleton
+class ProfileExtrasRepositoryImpl @Inject constructor(
+    private val api: MaraLyricsApiService,
+    private val cache: ContentCache
+) : ProfileExtrasRepository {
+
+    override suspend fun getExtras(slug: String, type: ProfileType): ProfileExtras? =
+        cache.networkFirst("profile_extras_${type.name.lowercase()}_$slug") {
+            if (type == ProfileType.ARTIST) api.getArtistExtras(slug) else api.getComposerExtras(slug)
+        }.getOrNull()?.data?.toDomain()
+
+    override suspend fun getRecognition(type: ProfileType): Map<String, ProfileExtras> {
+        val key = "recognition_${type.name.lowercase()}"
+        val recent = if (isFresh(cache.ageMillis(key), RECOGNITION_MAX_AGE_MS)) {
+            cache.readJson<PeopleRecognitionResponse>(key)
+        } else {
+            null
+        }
+        val response = recent ?: cache.networkFirst(key) {
+            if (type == ProfileType.ARTIST) api.getArtistRecognition() else api.getComposerRecognition()
+        }.getOrNull()?.data
+
+        val people = if (type == ProfileType.ARTIST) response?.artists else response?.composers
+        return people.orEmpty()
+            .filter { it.slug.isNotBlank() }
+            .associate { it.slug to it.toDomain() }
+    }
+
+    private companion object {
+        // Badges change a few times a month at most; the response is large, so don't ask more often.
+        const val RECOGNITION_MAX_AGE_MS = 12L * 60 * 60 * 1000
+    }
 }
 
 @Singleton

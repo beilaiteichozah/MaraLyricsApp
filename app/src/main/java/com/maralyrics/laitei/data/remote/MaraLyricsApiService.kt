@@ -121,6 +121,28 @@ interface MaraLyricsApiService {
         @Path("season") seasonSlug: String
     ): Response<IdolSeasonDto>
 
+    // Badges, Green mark and rich-text bio (the slim ProfileExtrasDto), kept apart from the full
+    // ArtistDto/ComposerDto that feed the offline library.
+    @GET("api/v1/artists/{slug}")
+    suspend fun getArtistExtras(
+        @Path("slug") slug: String
+    ): Response<ProfileExtrasDto>
+
+    @GET("api/v1/composers/{slug}")
+    suspend fun getComposerExtras(
+        @Path("slug") slug: String
+    ): Response<ProfileExtrasDto>
+
+    @GET("api/v1/artists")
+    suspend fun getArtistRecognition(
+        @Query("per_page") perPage: Int = 200
+    ): Response<PeopleRecognitionResponse>
+
+    @GET("api/v1/composers")
+    suspend fun getComposerRecognition(
+        @Query("per_page") perPage: Int = 200
+    ): Response<PeopleRecognitionResponse>
+
     companion object {
         const val BASE_URL = "https://api.maralyrics.com/"
     }
