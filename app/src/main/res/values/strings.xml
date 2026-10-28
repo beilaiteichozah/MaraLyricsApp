@@ -482,4 +482,15 @@
     <string name="role_editor">Editor</string>
     <string name="role_manager">Manager</string>
     <string name="role_super_admin">Super Admin</string>
+
+    <!-- Event reminders -->
+    <string name="event_reminders">Event reminders</string>
+    <string name="event_reminders_desc">Get a notification in the morning when there is a community event that day</string>
+    <string name="notif_channel_events">Community events</string>
+    <string name="notif_channel_events_desc">A reminder on the day of events in the community calendar</string>
+    <string name="notif_event_today_title">Event today</string>
+    <plurals name="notif_events_today_count">
+        <item quantity="one">%1$d event today</item>
+        <item quantity="other">%1$d events today</item>
+    </plurals>
 </resources>

@@ -43,6 +43,18 @@ class MainViewModel @Inject constructor(
     private val _pendingSearchDeepLink = MutableStateFlow(false)
     val pendingSearchDeepLink: StateFlow<Boolean> = _pendingSearchDeepLink.asStateFlow()
 
+    // The "event today" notification asks for the community calendar.
+    private val _pendingCalendarDeepLink = MutableStateFlow(false)
+    val pendingCalendarDeepLink: StateFlow<Boolean> = _pendingCalendarDeepLink.asStateFlow()
+
+    fun handleOpenCalendar() {
+        _pendingCalendarDeepLink.value = true
+    }
+
+    fun consumeCalendarDeepLink() {
+        _pendingCalendarDeepLink.value = false
+    }
+
     fun handleDeepLink(songId: Long?, openSearch: Boolean) {
         if (songId != null) _pendingSongDeepLink.value = songId
         if (openSearch) _pendingSearchDeepLink.value = true

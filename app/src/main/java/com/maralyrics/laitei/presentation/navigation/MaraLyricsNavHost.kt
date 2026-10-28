@@ -35,7 +35,9 @@ fun MaraLyricsNavHost(
     pendingSongDeepLink: Long? = null,
     onSongDeepLinkConsumed: () -> Unit = {},
     pendingSearchDeepLink: Boolean = false,
-    onSearchDeepLinkConsumed: () -> Unit = {}
+    onSearchDeepLinkConsumed: () -> Unit = {},
+    pendingCalendarDeepLink: Boolean = false,
+    onCalendarDeepLinkConsumed: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     
@@ -77,6 +79,16 @@ fun MaraLyricsNavHost(
                 popUpTo("home") { inclusive = false }
             }
             onSongDeepLinkConsumed()
+        }
+    }
+
+    // The "event today" notification opens the community calendar on top of the home screen.
+    LaunchedEffect(isSetupComplete, hasCompletedOnboarding, privacyAccepted, pendingCalendarDeepLink) {
+        if (hasCompletedOnboarding && privacyAccepted && isSetupComplete && pendingCalendarDeepLink) {
+            navController.navigate("calendar") {
+                popUpTo("home") { inclusive = false }
+            }
+            onCalendarDeepLinkConsumed()
         }
     }
 

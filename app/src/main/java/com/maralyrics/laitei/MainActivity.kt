@@ -75,6 +75,9 @@ class MainActivity : ComponentActivity() {
                     if (songId != null || openSearch) {
                         viewModel.handleDeepLink(songId, openSearch)
                     }
+                    if (intent.getBooleanExtra(EXTRA_OPEN_CALENDAR, false)) {
+                        viewModel.handleOpenCalendar()
+                    }
                     if (intent.action == Intent.ACTION_VIEW) {
                         SiteLink.songSlug(intent.dataString)?.let(viewModel::handleSongLink)
                     }
@@ -184,6 +187,7 @@ class MainActivity : ComponentActivity() {
                         if (isReady) {
                             val pendingSongDeepLink by viewModel.pendingSongDeepLink.collectAsState()
                             val pendingSearchDeepLink by viewModel.pendingSearchDeepLink.collectAsState()
+                            val pendingCalendarDeepLink by viewModel.pendingCalendarDeepLink.collectAsState()
                             MaraLyricsNavHost(
                                 isSetupComplete = isSetupComplete,
                                 hasCompletedOnboarding = hasCompletedOnboarding,
@@ -193,7 +197,9 @@ class MainActivity : ComponentActivity() {
                                 pendingSongDeepLink = pendingSongDeepLink,
                                 onSongDeepLinkConsumed = viewModel::consumeSongDeepLink,
                                 pendingSearchDeepLink = pendingSearchDeepLink,
-                                onSearchDeepLinkConsumed = viewModel::consumeSearchDeepLink
+                                onSearchDeepLinkConsumed = viewModel::consumeSearchDeepLink,
+                                pendingCalendarDeepLink = pendingCalendarDeepLink,
+                                onCalendarDeepLinkConsumed = viewModel::consumeCalendarDeepLink
                             )
                             NotificationHost(manager = notificationManager)
 
@@ -272,5 +278,6 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val EXTRA_OPEN_SONG_ID = "open_song_id"
         const val EXTRA_OPEN_SEARCH = "open_search"
+        const val EXTRA_OPEN_CALENDAR = "open_calendar"
     }
 }

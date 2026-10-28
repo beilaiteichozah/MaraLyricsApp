@@ -31,8 +31,16 @@ class SettingsViewModel @Inject constructor(
     private val getAvailableCategoriesUseCase: GetAvailableCategoriesUseCase,
     private val creditsRepository: CreditsRepository,
     private val notificationManager: NotificationManager,
+    private val eventReminderScheduler: com.maralyrics.laitei.data.worker.EventReminderScheduler,
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
+
+    /** Whether the reader asked for a morning notification on days with a community event. */
+    val eventRemindersEnabled: StateFlow<Boolean> = eventReminderScheduler.enabled
+
+    fun updateEventReminders(enabled: Boolean) {
+        eventReminderScheduler.setEnabled(enabled)
+    }
 
     val settings: StateFlow<AppSettings?> = getSettingsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)

@@ -8,6 +8,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.maralyrics.laitei.data.worker.EventReminderScheduler
 import com.maralyrics.laitei.data.worker.SyncWorker
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
@@ -19,6 +20,9 @@ class MaraLyricsApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var eventReminderScheduler: EventReminderScheduler
+
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
@@ -27,6 +31,8 @@ class MaraLyricsApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         scheduleBackgroundSync()
+        // Only does anything if the reader turned on event reminders in Settings.
+        eventReminderScheduler.ensureScheduled()
     }
 
     // Keeps the song database (including small lyric corrections) current even when

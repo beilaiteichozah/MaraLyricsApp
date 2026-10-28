@@ -1,5 +1,12 @@
 package com.maralyrics.laitei.presentation.settings
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -48,6 +55,10 @@ fun SettingsScreen(
     val composerCount by viewModel.composerCount.collectAsState()
     val copyrightOwnerCount by viewModel.copyrightOwnerCount.collectAsState()
     val dbSize by viewModel.dbSize.collectAsState()
+    val eventReminders by viewModel.eventRemindersEnabled.collectAsState()
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { /* Nothing to do: the reminder checks again when it is due. */ }
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
@@ -195,6 +206,21 @@ fun SettingsScreen(
                         description = stringResource(R.string.resume_session_desc),
                         checked = currentSettings.resumeSessionEnabled,
                         onCheckedChange = viewModel::updateResumeSession
+                    )
+                    SwitchItem(
+                        title = stringResource(R.string.event_reminders),
+                        description = stringResource(R.string.event_reminders_desc),
+                        checked = eventReminders,
+                        onCheckedChange = { enabled ->
+                            // Android 13+ needs the reader's say-so before any notification can show.
+                            if (enabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
+                                PackageManager.PERMISSION_GRANTED
+                            ) {
+                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            }
+                            viewModel.updateEventReminders(enabled)
+                        }
                     )
                     SettingsItem(
                         title = stringResource(R.string.backup_favorites),
