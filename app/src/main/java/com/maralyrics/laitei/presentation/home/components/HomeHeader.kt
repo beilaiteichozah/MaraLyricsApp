@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.*
@@ -33,7 +34,8 @@ fun HomeHeader(
     onSongClick: (Long) -> Unit,
     onArticlesClick: () -> Unit,
     onMaraIdolClick: () -> Unit,
-    onCalendarClick: () -> Unit
+    onCalendarClick: () -> Unit,
+    onPeopleClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         if (songOfTheDay != null) {
@@ -46,7 +48,8 @@ fun HomeHeader(
         ExploreRow(
             onArticlesClick = onArticlesClick,
             onMaraIdolClick = onMaraIdolClick,
-            onCalendarClick = onCalendarClick
+            onCalendarClick = onCalendarClick,
+            onPeopleClick = onPeopleClick
         )
     }
 }
@@ -123,7 +126,8 @@ private fun SongOfTheDayCard(
 private fun ExploreRow(
     onArticlesClick: () -> Unit,
     onMaraIdolClick: () -> Unit,
-    onCalendarClick: () -> Unit
+    onCalendarClick: () -> Unit,
+    onPeopleClick: () -> Unit
 ) {
     // Scrollable so large font sizes or translated labels never wrap or clip a chip.
     Row(
@@ -136,6 +140,7 @@ private fun ExploreRow(
         ExploreChip(stringResource(R.string.explore_articles), Icons.Default.Newspaper, onArticlesClick)
         ExploreChip(stringResource(R.string.explore_mara_idol), Icons.Default.EmojiEvents, onMaraIdolClick)
         ExploreChip(stringResource(R.string.explore_calendar), Icons.Default.CalendarMonth, onCalendarClick)
+        ExploreChip(stringResource(R.string.explore_people), Icons.Default.Groups, onPeopleClick)
     }
 }
 

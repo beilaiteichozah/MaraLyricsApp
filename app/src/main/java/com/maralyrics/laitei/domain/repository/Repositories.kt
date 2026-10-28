@@ -22,6 +22,10 @@ interface SongRepository {
     fun getSongsByArtist(artistId: Long): Flow<List<Song>>
     fun getSongsByComposer(composerId: Long): Flow<List<Song>>
     fun getAvailableCategories(): Flow<List<SongCategory>>
+
+    /** Songs per artist / composer id in the downloaded library, for the people directory. */
+    fun getArtistSongCounts(): Flow<Map<Long, Int>>
+    fun getComposerSongCounts(): Flow<Map<Long, Int>>
     fun getFavoriteStats(): Flow<FavoriteStats>
     fun getFavoriteCategories(): Flow<List<String>>
     suspend fun getFavoriteSongIds(): List<Long>

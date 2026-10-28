@@ -77,6 +77,12 @@ interface SongDao {
     @Query("SELECT COUNT(*) FROM song_composers WHERE composer_id = :composerId")
     suspend fun getSongCountByComposer(composerId: Long): Int
 
+    @Query("SELECT artist_id AS personId, COUNT(*) AS songCount FROM song_artists GROUP BY artist_id")
+    fun getArtistSongCounts(): Flow<List<PersonSongCount>>
+
+    @Query("SELECT composer_id AS personId, COUNT(*) AS songCount FROM song_composers GROUP BY composer_id")
+    fun getComposerSongCounts(): Flow<List<PersonSongCount>>
+
     @Transaction
     @Query("""
         SELECT s.* FROM songs s
@@ -345,6 +351,11 @@ interface SyncMetadataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMetadata(metadata: SyncMetadataEntity)
 }
+
+data class PersonSongCount(
+    val personId: Long,
+    val songCount: Int
+)
 
 data class CategoryCount(
     val key: String,

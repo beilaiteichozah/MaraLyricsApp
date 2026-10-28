@@ -183,6 +183,12 @@ class SongRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getArtistSongCounts(): Flow<Map<Long, Int>> =
+        songDao.getArtistSongCounts().map { list -> list.associate { it.personId to it.songCount } }
+
+    override fun getComposerSongCounts(): Flow<Map<Long, Int>> =
+        songDao.getComposerSongCounts().map { list -> list.associate { it.personId to it.songCount } }
+
     override fun getAvailableCategories(): Flow<List<SongCategory>> {
         return songDao.getCategoriesWithCounts().map { list ->
             list.map { SongCategory(it.key, it.key, it.songCount) }

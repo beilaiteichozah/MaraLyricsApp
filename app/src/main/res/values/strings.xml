@@ -452,4 +452,23 @@
     <string name="badge_lifetime">Lifetime Achievement</string>
     <string name="badge_generic">Recognition</string>
     <string name="badge_title_period">%1$s · %2$s</string>
+
+    <!-- Artists & Composers directory -->
+    <string name="explore_people">Artists</string>
+    <string name="people_title">Artists &amp; Composers</string>
+    <string name="people_search_hint">Search artists or composers…</string>
+    <string name="people_role_all">All</string>
+    <string name="people_role_artists">Artists</string>
+    <string name="people_role_composers">Composers</string>
+    <string name="people_sort_label">Sort</string>
+    <string name="people_sort_name_asc">Name (A–Z)</string>
+    <string name="people_sort_name_desc">Name (Z–A)</string>
+    <string name="people_sort_songs_desc">Most songs</string>
+    <string name="people_sort_songs_asc">Fewest songs</string>
+    <string name="people_sort_badges_desc">Most badges</string>
+    <string name="people_count_format">%1$d shown</string>
+    <string name="people_empty_title">No one found</string>
+    <string name="people_empty_desc">Try a different name or clear the filters.</string>
+    <string name="people_reset">Reset filters</string>
+    <string name="badge_more_format">%1$s · +%2$d more</string>
 </resources>

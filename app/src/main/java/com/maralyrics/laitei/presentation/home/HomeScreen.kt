@@ -46,6 +46,7 @@ fun HomeScreen(
     onArticlesClick: () -> Unit,
     onMaraIdolClick: () -> Unit,
     onCalendarClick: () -> Unit,
+    onPeopleClick: () -> Unit,
     focusSearchOnStart: Boolean = false,
     onSearchFocusConsumed: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
@@ -240,7 +241,8 @@ fun HomeScreen(
                                     onSongClick = { songId -> onSongClick(songId, emptyList()) },
                                     onArticlesClick = onArticlesClick,
                                     onMaraIdolClick = onMaraIdolClick,
-                                    onCalendarClick = onCalendarClick
+                                    onCalendarClick = onCalendarClick,
+                                    onPeopleClick = onPeopleClick
                                 )
                             }
                         } else null,

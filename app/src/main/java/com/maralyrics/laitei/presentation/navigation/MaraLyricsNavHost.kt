@@ -19,6 +19,7 @@ import com.maralyrics.laitei.presentation.settings.SettingsScreen
 import com.maralyrics.laitei.presentation.settings.CreditsScreen
 import com.maralyrics.laitei.presentation.setup.SetupScreen
 import com.maralyrics.laitei.presentation.song_detail.SongDetailScreen
+import com.maralyrics.laitei.presentation.people.PeopleDirectoryScreen
 import com.maralyrics.laitei.presentation.profile.ProfileDetailScreen
 import com.maralyrics.laitei.presentation.category.CategorySongsScreen
 import com.maralyrics.laitei.presentation.favorites.FavoriteSongsScreen
@@ -129,6 +130,7 @@ fun MaraLyricsNavHost(
                 onArticlesClick = { navController.navigate("articles") },
                 onMaraIdolClick = { navController.navigate("mara_idol") },
                 onCalendarClick = { navController.navigate("calendar") },
+                onPeopleClick = { navController.navigate("people") },
                 focusSearchOnStart = pendingSearchDeepLink,
                 onSearchFocusConsumed = onSearchDeepLinkConsumed
             )
@@ -230,6 +232,15 @@ fun MaraLyricsNavHost(
                 onBackClick = { navController.popBackStack() },
                 onArtistClick = { slug ->
                     navController.navigate("profile_detail/${Uri.encode(slug)}/${ProfileType.ARTIST.name}")
+                }
+            )
+        }
+
+        composable("people") {
+            PeopleDirectoryScreen(
+                onBackClick = { navController.popBackStack() },
+                onPersonClick = { slug, type ->
+                    navController.navigate("profile_detail/${Uri.encode(slug)}/${type.name}")
                 }
             )
         }

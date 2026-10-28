@@ -17,8 +17,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,19 +41,8 @@ fun ProfileImage(
             .clip(CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        val base64Bitmap = remember(imageUrl) {
-            if (imageUrl != null && imageUrl.startsWith("data:image")) {
-                try {
-                    val base64String = imageUrl.substringAfter(",")
-                    val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
-                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)?.asImageBitmap()
-                } catch (e: Exception) {
-                    null
-                }
-            } else {
-                null
-            }
-        }
+        val targetPx = with(LocalDensity.current) { size.roundToPx() }
+        val base64Bitmap = remember(imageUrl, targetPx) { decodeDataUri(imageUrl, targetPx) }
 
         if (base64Bitmap != null) {
             Image(
@@ -70,12 +61,35 @@ fun ProfileImage(
                     ShimmerLoading()
                 },
                 error = {
-                    DefaultAvatar(name = name)
+                    DefaultAvatar(name = name, size = size)
                 }
             )
         } else {
-            DefaultAvatar(name = name)
+            DefaultAvatar(name = name, size = size)
         }
+    }
+}
+
+/**
+ * Decodes an inline `data:image/...;base64,` photo, shrunk to about [targetPx]. Profile photos
+ * arrive as full-size base64, and a long list of small avatars would otherwise hold every one of
+ * them in memory at full resolution.
+ */
+private fun decodeDataUri(imageUrl: String?, targetPx: Int): ImageBitmap? {
+    if (imageUrl == null || !imageUrl.startsWith("data:image")) return null
+    return try {
+        val bytes = Base64.decode(imageUrl.substringAfter(","), Base64.DEFAULT)
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+
+        var sample = 1
+        while (targetPx > 0 && bounds.outWidth / (sample * 2) >= targetPx && bounds.outHeight / (sample * 2) >= targetPx) {
+            sample *= 2
+        }
+        val options = BitmapFactory.Options().apply { inSampleSize = sample }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)?.asImageBitmap()
+    } catch (e: Exception) {
+        null
     }
 }
 
@@ -108,10 +122,12 @@ private fun ShimmerLoading() {
 }
 
 @Composable
-private fun DefaultAvatar(name: String) {
+private fun DefaultAvatar(name: String, size: Dp) {
     val firstLetter = name.firstOrNull()?.uppercase() ?: "?"
     val colorPair = getGradientColors(firstLetter)
-    
+    // 48sp on the big profile photo, scaled down to fit a small list avatar.
+    val letterSize = minOf(48f, size.value * 0.4f).sp
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +142,7 @@ private fun DefaultAvatar(name: String) {
             text = firstLetter,
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize = 48.sp,
+                fontSize = letterSize,
                 color = Color.White
             )
         )
