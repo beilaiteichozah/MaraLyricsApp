@@ -371,4 +371,11 @@
     <string name="btn_continue">ရှေ့ဆက်ရန်</string>
     <string name="various_artists">အနုပညာရှင်များစွာ</string>
     <string name="various_composers">တေးရေးများစွာ</string>
+
+    <!-- Taken from the website's own translations -->
+    <string name="song_of_the_day">ယနေ့၏ တေးသီချင်း</string>
+    <string name="song_of_the_day_badge">ယနေ့ ရွေးချယ်ချက်</string>
+    <string name="people_role_all">အားလုံး</string>
+    <string name="people_sort_name_asc">အမည် (A–Z)</string>
+    <string name="people_sort_name_desc">အမည် (Z–A)</string>
 </resources>

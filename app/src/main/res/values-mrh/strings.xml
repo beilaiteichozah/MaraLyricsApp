@@ -360,4 +360,7 @@
     <string name="play_update_action_update">Pasâh</string>
     <string name="play_update_action_later">Hmialâ</string>
     <string name="play_update_ready_message">Update cha adao haw ta, patyh awpa ta â mâ thlâh.</string>
+
+    <!-- Taken from the website's own translations -->
+    <string name="people_role_all">Zydua</string>
 </resources>
