@@ -1,7 +1,6 @@
 package com.maralyrics.laitei.di
 
 import android.content.Context
-import androidx.room.Room
 import com.maralyrics.laitei.data.local.MaraLyricsDatabase
 import com.maralyrics.laitei.data.local.dao.*
 import dagger.Module
@@ -18,24 +17,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): MaraLyricsDatabase {
-        return Room.databaseBuilder(
-            context,
-            MaraLyricsDatabase::class.java,
-            MaraLyricsDatabase.DATABASE_NAME
-        )
-        .addMigrations(
-            MaraLyricsDatabase.MIGRATION_1_2, 
-            MaraLyricsDatabase.MIGRATION_2_3,
-            MaraLyricsDatabase.MIGRATION_3_4,
-            MaraLyricsDatabase.MIGRATION_4_5,
-            MaraLyricsDatabase.MIGRATION_5_6,
-            MaraLyricsDatabase.MIGRATION_6_7,
-            MaraLyricsDatabase.MIGRATION_7_8,
-            MaraLyricsDatabase.MIGRATION_8_9,
-            MaraLyricsDatabase.MIGRATION_9_10
-        )
-        .fallbackToDestructiveMigration()
-        .build()
+        return MaraLyricsDatabase.builder(context).build()
     }
 
     @Provides

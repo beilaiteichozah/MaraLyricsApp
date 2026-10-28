@@ -1,6 +1,8 @@
 package com.maralyrics.laitei.data.local
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -36,6 +38,39 @@ abstract class MaraLyricsDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_NAME = "mara_lyrics.db"
+
+        /**
+         * One step for every schema version, oldest first. When the database `version` is raised,
+         * add the next step here and in `MigrationChainTest` — the build's exported schema for the
+         * new version fails that test until a migration to it exists.
+         */
+        val ALL_MIGRATIONS: Array<Migration>
+            get() = arrayOf(
+                MIGRATION_1_2,
+                MIGRATION_2_3,
+                MIGRATION_3_4,
+                MIGRATION_4_5,
+                MIGRATION_5_6,
+                MIGRATION_6_7,
+                MIGRATION_7_8,
+                MIGRATION_8_9,
+                MIGRATION_9_10
+            )
+
+        /**
+         * The one way the app opens its database (and how the migration tests open it), so tests
+         * exercise exactly the production configuration.
+         *
+         * There is deliberately no destructive fallback for upgrades: a missing or broken migration
+         * must fail loudly, because wiping the database would also wipe the reader's favorites and
+         * queued feedback, which can't be downloaded again. Only a downgrade (an older app version
+         * installed over newer data) is reset, since the older app can't read that data at all and
+         * would otherwise crash on every start.
+         */
+        fun builder(context: Context, name: String = DATABASE_NAME): RoomDatabase.Builder<MaraLyricsDatabase> =
+            Room.databaseBuilder(context, MaraLyricsDatabase::class.java, name)
+                .addMigrations(*ALL_MIGRATIONS)
+                .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
 
         val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -266,6 +301,11 @@ abstract class MaraLyricsDatabase : RoomDatabase() {
                     )
                 """)
                 
+                // Every existing song got the default slug '', and the slug index below is unique,
+                // so two or more songs would make this step fail. Give each its own placeholder;
+                // the real slugs arrive with the next sync.
+                db.execSQL("UPDATE songs SET slug = 'song-' || id")
+
                 // Add indices to songs table
                 db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_songs_slug` ON `songs` (`slug`)")
                 db.execSQL("CREATE INDEX IF NOT EXISTS `index_songs_artist_id` ON `songs` (`artist_id`)")
