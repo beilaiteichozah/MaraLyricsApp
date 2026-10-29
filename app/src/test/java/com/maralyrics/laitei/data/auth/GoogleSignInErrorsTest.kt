@@ -1,6 +1,8 @@
 package com.maralyrics.laitei.data.auth
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GoogleSignInErrorsTest {
@@ -25,6 +27,19 @@ class GoogleSignInErrorsTest {
     @Test
     fun `closing the account picker is not an error`() {
         assertEquals(GoogleIdTokenResult.Cancelled, GoogleSignInErrors.classify("androidx.credentials.TYPE_USER_CANCELED", "activity is cancelled by the user."))
+        assertTrue(GoogleSignInErrors.isUserCancel("activity is cancelled by the user."))
+        assertTrue(GoogleSignInErrors.isUserCancel("Activity was canceled by the user"))
+        assertTrue("no message at all: the reader just backed out", GoogleSignInErrors.isUserCancel(null))
+    }
+
+    @Test
+    fun `an app Google does not recognise is not mistaken for the reader backing out`() {
+        // Seen on a phone: the chooser closes after an account is picked, and Credential Manager reports it as a cancellation.
+        val message = "[16] Account reauth failed."
+
+        assertFalse(GoogleSignInErrors.isUserCancel(message))
+        assertEquals(GoogleIdTokenResult.NotSetUp, GoogleSignInErrors.classify("androidx.credentials.TYPE_USER_CANCELED", message))
+        assertEquals(GoogleIdTokenResult.NotSetUp, GoogleSignInErrors.classify(null, "status=UNREGISTERED_ON_API_CONSOLE"))
     }
 
     @Test

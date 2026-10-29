@@ -1,12 +1,14 @@
 package com.maralyrics.laitei.data.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
+import com.maralyrics.laitei.BuildConfig
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -38,6 +40,10 @@ interface GoogleIdTokenSource {
 
 class CredentialManagerGoogleSource @Inject constructor() : GoogleIdTokenSource {
 
+    private companion object {
+        const val TAG = "GoogleSignIn"
+    }
+
     override suspend fun request(context: Context, serverClientId: String): GoogleIdTokenResult {
         // "Sign in with Google" asked for by a tap on a button: shows Android's own account chooser.
         val option = GetSignInWithGoogleOption.Builder(serverClientId).build()
@@ -53,10 +59,15 @@ class CredentialManagerGoogleSource @Inject constructor() : GoogleIdTokenSource 
         } catch (e: CancellationException) {
             throw e
         } catch (e: GetCredentialCancellationException) {
-            GoogleIdTokenResult.Cancelled
+            // Google also reports its own failures this way (an app it doesn't recognise comes back as
+            // "[16] Account reauth failed."), so only a real "cancelled by the user" is left silent.
+            if (BuildConfig.DEBUG) Log.w(TAG, "Google sign-in cancelled/failed: ${e.type} ${e.message}")
+            if (GoogleSignInErrors.isUserCancel(e.message)) GoogleIdTokenResult.Cancelled
+            else GoogleSignInErrors.classify(e.type, e.message)
         } catch (e: NoCredentialException) {
             GoogleIdTokenResult.NoAccount
         } catch (e: GetCredentialException) {
+            if (BuildConfig.DEBUG) Log.w(TAG, "Google sign-in failed: ${e.type} ${e.message}")
             GoogleSignInErrors.classify(e.type, e.message)
         } catch (e: GoogleIdTokenParsingException) {
             GoogleIdTokenResult.Failed
@@ -73,10 +84,19 @@ internal object GoogleSignInErrors {
      * correctly": the package name and signing key of the installed app have to be listed as an
      * Android OAuth client in the same Google Cloud project as the website's web client.
      */
+    /** True for the reader backing out of the account chooser; false for a failure that merely arrives as a "cancel". */
+    fun isUserCancel(message: String?): Boolean {
+        val text = message?.lowercase() ?: return true // nothing said: the reader simply closed it
+        return "by the user" in text || "user cancel" in text || "user_cancel" in text
+    }
+
     fun classify(type: String?, message: String?): GoogleIdTokenResult {
         val text = "${type.orEmpty()} ${message.orEmpty()}".lowercase()
         return when {
-            "28444" in text || "developer console" in text || "not set up correctly" in text -> GoogleIdTokenResult.NotSetUp
+            // "[16] Account reauth failed." is what an app Google doesn't recognise gets after the account is chosen
+            // (the log says UNREGISTERED_ON_API_CONSOLE), as well as the plain 28444 developer error.
+            "28444" in text || "developer console" in text || "not set up correctly" in text ||
+                "reauth failed" in text || "unregistered" in text -> GoogleIdTokenResult.NotSetUp
             "no_credential" in text || "no credential" in text || "no accounts" in text -> GoogleIdTokenResult.NoAccount
             "cancel" in text -> GoogleIdTokenResult.Cancelled
             else -> GoogleIdTokenResult.Failed
