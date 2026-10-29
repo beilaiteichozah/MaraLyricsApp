@@ -53,6 +53,30 @@ data class ApiErrorDto(
     @SerialName("code") val code: String? = null
 )
 
+// --- Google ------------------------------------------------------------------------------------
+
+/** GET /account/config: what the sign-in needs to know before it starts. */
+@Serializable
+data class AccountConfigDto(
+    /** The website's Google "web" client id: the audience the Google ID token must be issued for. */
+    @SerialName("google_client_id") val googleClientId: String? = null,
+    @SerialName("email_enabled") val emailEnabled: JsonPrimitive? = null
+)
+
+@Serializable
+data class GoogleSignInRequest(
+    /** The ID token Google gave the app. */
+    @SerialName("credential") val credential: String,
+    @SerialName("turnstile_token") val turnstileToken: String? = null
+)
+
+@Serializable
+data class GoogleAuthResponse(
+    @SerialName("token") val token: String = "",
+    @SerialName("account") val account: AccountDto = AccountDto(),
+    @SerialName("created") val created: JsonPrimitive? = null
+)
+
 // --- Sync -------------------------------------------------------------------------------------
 
 @Serializable

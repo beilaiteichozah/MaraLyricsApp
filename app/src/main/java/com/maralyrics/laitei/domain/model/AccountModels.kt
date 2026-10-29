@@ -31,6 +31,20 @@ sealed interface AuthFailure {
 
     data object Offline : AuthFailure
 
+    /**
+     * A Google account that isn't registered on MaraLyrics yet. Creating an account needs the
+     * website's security check, which only the website can show.
+     */
+    data object NewGoogleAccount : AuthFailure
+
+    /** There is no Google account on this phone to choose. */
+    data object GoogleNoAccount : AuthFailure
+
+    /** Google turned the app down: this build isn't registered with Google for sign-in yet. */
+    data object GoogleNotSetUp : AuthFailure
+
+    data object GoogleFailed : AuthFailure
+
     data class Server(val message: String?) : AuthFailure
 }
 

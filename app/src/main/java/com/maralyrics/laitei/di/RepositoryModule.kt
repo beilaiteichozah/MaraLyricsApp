@@ -1,5 +1,7 @@
 package com.maralyrics.laitei.di
 
+import com.maralyrics.laitei.data.auth.CredentialManagerGoogleSource
+import com.maralyrics.laitei.data.auth.GoogleIdTokenSource
 import com.maralyrics.laitei.data.local.KeystoreSessionStore
 import com.maralyrics.laitei.data.local.SessionStore
 import com.maralyrics.laitei.data.repository.*
@@ -85,6 +87,12 @@ abstract class RepositoryModule {
     abstract fun bindSessionTokens(
         accountRepositoryImpl: AccountRepositoryImpl
     ): SessionTokens
+
+    @Binds
+    @Singleton
+    abstract fun bindGoogleIdTokenSource(
+        credentialManagerGoogleSource: CredentialManagerGoogleSource
+    ): GoogleIdTokenSource
 
     @Binds
     @Singleton

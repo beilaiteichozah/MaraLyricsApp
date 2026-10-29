@@ -1,12 +1,15 @@
 package com.maralyrics.laitei.presentation.account
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.text.format.DateUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Language
@@ -34,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -118,6 +123,7 @@ fun AccountScreen(
                 SignInForm(
                     state = signIn,
                     onSignIn = viewModel::signIn,
+                    onGoogle = { context.findActivity()?.let(viewModel::signInWithGoogle) },
                     onEdit = viewModel::clearFailure,
                     onOpenWebsite = { onOpenWebsite(AccountWebMode.SIGN_IN) }
                 )
@@ -139,6 +145,7 @@ fun AccountScreen(
 private fun SignInForm(
     state: SignInUiState,
     onSignIn: (String, String) -> Unit,
+    onGoogle: () -> Unit,
     onEdit: () -> Unit,
     onOpenWebsite: () -> Unit
 ) {
@@ -162,6 +169,26 @@ private fun SignInForm(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        // Android's own account chooser; the website does the same with its "Continue with Google" button.
+        OutlinedButton(
+            onClick = onGoogle,
+            enabled = !state.isLoading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Default.AccountCircle, contentDescription = null, modifier = Modifier.size(20.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.account_google_button))
+        }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HorizontalDivider(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(R.string.account_or_email),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            HorizontalDivider(modifier = Modifier.weight(1f))
+        }
 
         OutlinedTextField(
             value = identifier,
@@ -233,7 +260,14 @@ private fun failureText(context: Context, failure: AuthFailure): String = when (
         if (failure.minutes != null) context.getString(R.string.account_err_too_many, failure.minutes)
         else context.getString(R.string.account_err_too_many_generic)
     AuthFailure.Offline -> context.getString(R.string.account_err_offline)
-    is AuthFailure.Server -> context.getString(R.string.account_err_server)
+    AuthFailure.NewGoogleAccount -> context.getString(R.string.account_err_google_new)
+    AuthFailure.GoogleNoAccount -> context.getString(R.string.account_err_google_no_account)
+    AuthFailure.GoogleNotSetUp -> context.getString(R.string.account_err_google_not_set_up)
+    AuthFailure.GoogleFailed -> context.getString(R.string.account_err_google_failed)
+    // The website's own messages ("This email is already linked to a different Google account.")
+    // are written for readers; anything long or technical gets the general line instead.
+    is AuthFailure.Server ->
+        failure.message?.takeIf { it.length in 1..140 } ?: context.getString(R.string.account_err_server)
 }
 
 @Composable
@@ -369,6 +403,10 @@ private fun SyncCard(status: AccountSyncStatus, onSyncNow: () -> Unit) {
 }
 
 private enum class Confirm { SIGN_OUT, EVERYWHERE }
+
+/** The Activity behind a context the app may have wrapped (for the in-app language). */
+private fun Context.findActivity(): Activity? =
+    generateSequence(this) { (it as? ContextWrapper)?.baseContext }.filterIsInstance<Activity>().firstOrNull()
 
 private fun Modifier.clickableRow(onClick: () -> Unit): Modifier =
     this.then(Modifier.clickable(onClick = onClick))

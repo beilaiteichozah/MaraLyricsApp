@@ -531,6 +531,12 @@
     <string name="account_delete_desc">Opens the website, where you can delete your account and its data</string>
     <string name="account_web_title">MaraLyrics account</string>
     <string name="account_web_close">Close</string>
+    <string name="account_google_button">Continue with Google</string>
+    <string name="account_or_email">or use your email</string>
+    <string name="account_err_google_new">That Google account isn\'t registered with MaraLyrics yet. Create your account on the website first, then come back and continue with Google.</string>
+    <string name="account_err_google_no_account">There is no Google account on this phone. Add one in your phone\'s settings.</string>
+    <string name="account_err_google_not_set_up">Google sign-in isn\'t set up for this version of the app yet.</string>
+    <string name="account_err_google_failed">Couldn\'t sign in with Google. Please try again.</string>
     <string name="account_sync_title">Sync</string>
     <string name="account_sync_desc">Your favorites, theme and language follow you to every device you sign in on.</string>
     <string name="account_sync_now">Sync now</string>

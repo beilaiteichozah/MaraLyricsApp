@@ -2,7 +2,10 @@ package com.maralyrics.laitei.data.sync
 
 
 import com.maralyrics.laitei.data.remote.AccountApiService
+import com.maralyrics.laitei.data.remote.dto.AccountConfigDto
 import com.maralyrics.laitei.data.remote.dto.AuthResponse
+import com.maralyrics.laitei.data.remote.dto.GoogleAuthResponse
+import com.maralyrics.laitei.data.remote.dto.GoogleSignInRequest
 import com.maralyrics.laitei.data.remote.dto.LoginRequest
 import com.maralyrics.laitei.data.remote.dto.MeResponse
 import com.maralyrics.laitei.data.remote.dto.SyncItemDto
@@ -83,6 +86,8 @@ class AccountSyncEngineTest {
         }
 
         override suspend fun login(body: LoginRequest): Response<AuthResponse> = error("not expected")
+        override suspend fun config(): Response<AccountConfigDto> = error("not expected")
+        override suspend fun google(body: GoogleSignInRequest): Response<GoogleAuthResponse> = error("not expected")
         override suspend fun me(authorization: String): Response<MeResponse> = error("not expected")
         override suspend fun logoutAll(authorization: String): Response<TokenResponse> = error("not expected")
     }

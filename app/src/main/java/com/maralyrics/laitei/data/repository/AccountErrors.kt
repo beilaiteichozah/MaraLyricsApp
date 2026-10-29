@@ -12,6 +12,17 @@ internal object AccountErrors {
 
     private val MINUTES = Regex("""(\d+)\s*minute""", RegexOption.IGNORE_CASE)
 
+    /**
+     * POST /account/google. A 403 with the security-check code means this Google account has no
+     * MaraLyrics account yet; making one needs the website's check, so it is not a general challenge.
+     */
+    fun classifyGoogle(status: Int, body: String?, json: Json): AuthFailure =
+        when (val failure = classify(status, body, json)) {
+            AuthFailure.ChallengeRequired -> AuthFailure.NewGoogleAccount
+            AuthFailure.InvalidCredentials -> AuthFailure.GoogleFailed // the server turned the Google token down
+            else -> failure
+        }
+
     fun classify(status: Int, body: String?, json: Json): AuthFailure {
         val error = body?.takeIf { it.isNotBlank() }
             ?.let { runCatching { json.decodeFromString<ApiErrorDto>(it) }.getOrNull() }

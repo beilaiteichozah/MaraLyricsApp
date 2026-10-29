@@ -4,6 +4,7 @@ import com.maralyrics.laitei.data.local.SessionStore
 import com.maralyrics.laitei.data.local.StoredSession
 import com.maralyrics.laitei.data.mapper.toDomain
 import com.maralyrics.laitei.data.remote.AccountApiService
+import com.maralyrics.laitei.data.remote.dto.GoogleSignInRequest
 import com.maralyrics.laitei.data.remote.dto.LoginRequest
 import com.maralyrics.laitei.domain.model.Account
 import com.maralyrics.laitei.domain.model.AuthException
@@ -79,6 +80,46 @@ class AccountRepositoryImpl @Inject constructor(
             failure(AuthFailure.Server(null))
         } else {
             failure(AccountErrors.classify(response.code(), response.errorBodyText(), json))
+        }
+    }
+
+    @Volatile
+    private var cachedGoogleClientId: String? = null
+
+    override suspend fun googleClientId(): String? {
+        cachedGoogleClientId?.let { return it }
+        val response = try {
+            api.config()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            return null
+        }
+        return response.body()?.googleClientId?.trim()?.takeIf { response.isSuccessful && it.isNotEmpty() }
+            ?.also { cachedGoogleClientId = it }
+    }
+
+    override suspend fun signInWithGoogle(idToken: String): Result<Account> {
+        load()
+        val response = try {
+            api.google(GoogleSignInRequest(credential = idToken))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: IOException) {
+            return failure(AuthFailure.Offline)
+        } catch (e: Exception) {
+            return failure(AuthFailure.Server(null))
+        }
+
+        val body = response.body()
+        return if (response.isSuccessful && body != null && body.token.isNotBlank()) {
+            val account = body.account.toDomain()
+            adopt(body.token, account)
+            Result.success(account)
+        } else if (response.isSuccessful) {
+            failure(AuthFailure.Server(null))
+        } else {
+            failure(AccountErrors.classifyGoogle(response.code(), response.errorBodyText(), json))
         }
     }
 

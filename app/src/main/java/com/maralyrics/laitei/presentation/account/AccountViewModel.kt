@@ -1,5 +1,6 @@
 package com.maralyrics.laitei.presentation.account
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.Account
@@ -8,6 +9,8 @@ import com.maralyrics.laitei.domain.model.AuthException
 import com.maralyrics.laitei.domain.model.AuthFailure
 import com.maralyrics.laitei.domain.model.AccountSyncStatus
 import com.maralyrics.laitei.domain.repository.AccountRepository
+import com.maralyrics.laitei.data.auth.GoogleIdTokenResult
+import com.maralyrics.laitei.data.auth.GoogleIdTokenSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +34,8 @@ sealed interface AccountMessage {
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val repository: AccountRepository,
-    private val sync: AccountSync
+    private val sync: AccountSync,
+    private val googleSource: GoogleIdTokenSource
 ) : ViewModel() {
 
     val syncStatus: StateFlow<AccountSyncStatus> = sync.status
@@ -60,6 +64,32 @@ class AccountViewModel @Inject constructor(
             repository.signIn(identifier, password)
                 .onSuccess { _signIn.value = SignInUiState() }
                 .onFailure { _signIn.value = SignInUiState(failure = it.toFailure()) }
+        }
+    }
+
+    /**
+     * Signs in with a Google account. [context] has to be the Activity: Android draws its account
+     * picker over it. It is used for this one call and not kept.
+     */
+    fun signInWithGoogle(context: Context) {
+        if (_signIn.value.isLoading) return
+        viewModelScope.launch {
+            _signIn.value = SignInUiState(isLoading = true)
+            val clientId = repository.googleClientId()
+            if (clientId == null) {
+                _signIn.value = SignInUiState(failure = AuthFailure.Offline)
+                return@launch
+            }
+            when (val result = googleSource.request(context, clientId)) {
+                is GoogleIdTokenResult.Token -> repository.signInWithGoogle(result.idToken)
+                    .onSuccess { _signIn.value = SignInUiState() }
+                    .onFailure { _signIn.value = SignInUiState(failure = it.toFailure()) }
+                // The reader closed the picker: not an error, so no message.
+                GoogleIdTokenResult.Cancelled -> _signIn.value = SignInUiState()
+                GoogleIdTokenResult.NoAccount -> _signIn.value = SignInUiState(failure = AuthFailure.GoogleNoAccount)
+                GoogleIdTokenResult.NotSetUp -> _signIn.value = SignInUiState(failure = AuthFailure.GoogleNotSetUp)
+                GoogleIdTokenResult.Failed -> _signIn.value = SignInUiState(failure = AuthFailure.GoogleFailed)
+            }
         }
     }
 

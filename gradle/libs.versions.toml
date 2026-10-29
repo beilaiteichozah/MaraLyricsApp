@@ -28,6 +28,8 @@ coil = "2.7.0"
 mockito = "5.12.0"
 mockitoKotlin = "5.4.0"
 playAppUpdate = "2.1.0"
+credentials = "1.6.0"
+googleId = "1.1.1"
 glance = "1.1.1"
 
 [libraries]
@@ -72,6 +74,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+google-id = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
 play-app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "playAppUpdate" }
 

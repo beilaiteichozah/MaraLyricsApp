@@ -13,6 +13,12 @@ interface AccountRepository {
     /** Signs in with a username or email and a password. Fails with an [com.maralyrics.laitei.domain.model.AuthException]. */
     suspend fun signIn(identifier: String, password: String): Result<Account>
 
+    /** The Google client id the website uses, which an ID token has to be issued for; null if it can't be fetched. */
+    suspend fun googleClientId(): String?
+
+    /** Signs in with the ID token Google gave the app. */
+    suspend fun signInWithGoogle(idToken: String): Result<Account>
+
     /**
      * Signs in with a token the website's own sign-in page produced (used when the website must
      * show its security check, or the reader is creating an account there). Checks it with the

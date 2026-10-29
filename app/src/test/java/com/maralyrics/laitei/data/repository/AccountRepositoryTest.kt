@@ -3,7 +3,10 @@ package com.maralyrics.laitei.data.repository
 import com.maralyrics.laitei.data.local.SessionStore
 import com.maralyrics.laitei.data.local.StoredSession
 import com.maralyrics.laitei.data.remote.AccountApiService
+import com.maralyrics.laitei.data.remote.dto.AccountConfigDto
 import com.maralyrics.laitei.data.remote.dto.AccountDto
+import com.maralyrics.laitei.data.remote.dto.GoogleAuthResponse
+import com.maralyrics.laitei.data.remote.dto.GoogleSignInRequest
 import com.maralyrics.laitei.data.remote.dto.AuthResponse
 import com.maralyrics.laitei.data.remote.dto.LoginRequest
 import com.maralyrics.laitei.data.remote.dto.MeResponse
@@ -57,6 +60,13 @@ class AccountRepositoryTest {
             meAuthorizations += authorization
             return me.invoke(authorization)
         }
+
+        var config: suspend () -> Response<AccountConfigDto> = { error("config not expected") }
+        var google: suspend (GoogleSignInRequest) -> Response<GoogleAuthResponse> = { error("google not expected") }
+        var configCalls = 0
+
+        override suspend fun config(): Response<AccountConfigDto> { configCalls++; return config.invoke() }
+        override suspend fun google(body: GoogleSignInRequest): Response<GoogleAuthResponse> = google.invoke(body)
 
         override suspend fun sync(authorization: String, body: SyncRequest): Response<SyncResponse> =
             error("sync not expected")

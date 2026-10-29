@@ -151,6 +151,11 @@ dependencies {
     implementation(libs.play.app.update)
     implementation(libs.play.app.update.ktx)
 
+    // Sign in with Google: Android's account picker, then the Google ID token goes to the website's API
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.google.id)
+
     // Home screen widgets
     implementation(libs.glance.appwidget)
 
