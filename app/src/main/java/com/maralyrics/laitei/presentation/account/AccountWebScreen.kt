@@ -3,6 +3,9 @@ package com.maralyrics.laitei.presentation.account
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.webkit.ConsoleMessage
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -33,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.maralyrics.laitei.BuildConfig
 import com.maralyrics.laitei.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -124,6 +128,16 @@ fun AccountWebScreen(
                 modifier = Modifier.fillMaxSize(),
                 factory = { ctx ->
                     WebView(ctx).apply {
+                        // Debug builds only: lets the page be inspected from a computer, and logs its JavaScript errors.
+                        if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
+                        webChromeClient = object : WebChromeClient() {
+                            override fun onConsoleMessage(message: ConsoleMessage): Boolean {
+                                if (BuildConfig.DEBUG) {
+                                    Log.d("AccountWeb", "${message.messageLevel()} ${message.message()} (${message.sourceId()}:${message.lineNumber()})")
+                                }
+                                return true
+                            }
+                        }
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
                         settings.allowFileAccess = false
@@ -140,16 +154,19 @@ fun AccountWebScreen(
                             }
 
                             override fun onPageFinished(view: WebView, url: String?) {
-                                loading = false
-                                if (mode != AccountWebMode.MANAGE || !AccountWeb.isAllowedPage(url)) return
-                                val script = tokenAtStart?.let(AccountWeb::signInScript) ?: return
-                                view.evaluateJavascript(script) { raw ->
-                                    // The page read its (empty) sign-in before the app wrote one: reload once so it sees it.
-                                    if (AccountWeb.parseScriptResult(raw) == "changed") view.reload()
+                                if (url == AccountWeb.PREPARE_URL) {
+                                    // Step one done: write into the site's storage, then open the account page.
+                                    val token = tokenAtStart.takeIf { mode == AccountWebMode.MANAGE }
+                                    view.evaluateJavascript(AccountWeb.prepareScript(token)) {
+                                        view.loadUrl(AccountWeb.ACCOUNT_URL)
+                                    }
+                                    return
                                 }
+                                if (AccountWeb.isAllowedPage(url)) view.evaluateJavascript(AccountWeb.hideGoogleSignInScript, null)
+                                loading = false
                             }
                         }
-                        loadUrl(AccountWeb.ACCOUNT_URL)
+                        loadUrl(AccountWeb.PREPARE_URL)
                         webView = this
                     }
                 }

@@ -8,6 +8,8 @@ import org.junit.Test
 
 class AccountWebTest {
 
+    private val token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2lnbmF0dXJl"
+
     @Test
     fun `only https pages on the website itself load inside the app`() {
         assertTrue(AccountWeb.isAllowedPage("https://maralyrics.com/account"))
@@ -27,29 +29,54 @@ class AccountWebTest {
     }
 
     @Test
-    fun `the sign-in script embeds a real token and nothing else`() {
-        val token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2lnbmF0dXJl"
+    fun `the page the app opens first is on the website, so its storage is the account page's storage`() {
+        assertTrue(AccountWeb.isAllowedPage(AccountWeb.PREPARE_URL))
+        assertTrue(AccountWeb.isAllowedPage(AccountWeb.ACCOUNT_URL))
+    }
 
-        val script = AccountWeb.signInScript(token)!!
+    @Test
+    fun `the preparation marks both first-visit pop-ups as seen`() {
+        val script = AccountWeb.prepareScript(null)
 
-        assertTrue(script.contains("'$token'"))
+        assertTrue(script.contains("localStorage.setItem('ml_calendar_pref_prompted','1')"))
+        assertTrue(script.contains("localStorage.setItem('ml_app_promo_seen','1')"))
+        assertTrue("no token: the page starts signed out", script.endsWith("})(null)"))
+    }
+
+    @Test
+    fun `the preparation can also sign the page in with a real token`() {
+        val script = AccountWeb.prepareScript(token)
+
         assertTrue(script.contains("localStorage.setItem('ml_account_token',t)"))
+        assertTrue(script.endsWith("})('$token')"))
     }
 
     @Test
     fun `text that is not shaped like a token is never put into a page script`() {
-        assertNull(AccountWeb.signInScript(""))
-        assertNull(AccountWeb.signInScript("abc"))
-        assertNull(AccountWeb.signInScript("a.b.c"))
-        assertNull(AccountWeb.signInScript("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2ln');alert(1);('"))
-        assertNull(AccountWeb.signInScript("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2lnbmF0dXJl\nalert(1)"))
-        assertNull(AccountWeb.signInScript("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2lnbmF0dXJl;"))
+        val bad = listOf(
+            "",
+            "abc",
+            "a.b.c",
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEyfQ.c2ln');alert(1);('",
+            "$token\nalert(1)",
+            "$token;"
+        )
+        for (candidate in bad) {
+            val script = AccountWeb.prepareScript(candidate)
+            assertTrue("accepted: $candidate", script.endsWith("})(null)"))
+            assertFalse("leaked: $candidate", script.contains("alert"))
+        }
+    }
+
+    @Test
+    fun `the Google sign-in button is hidden because Google blocks it inside an app window`() {
+        assertTrue(AccountWeb.hideGoogleSignInScript.contains("#googleBlock{display:none!important}"))
     }
 
     @Test
     fun `a script result comes back as the text inside the JSON string`() {
         assertEquals("eyJ.abc.def", AccountWeb.parseScriptResult("\"eyJ.abc.def\""))
-        assertEquals("changed", AccountWeb.parseScriptResult("\"changed\""))
+        assertEquals("ok", AccountWeb.parseScriptResult("\"ok\""))
         assertEquals("", AccountWeb.parseScriptResult("\"\""))
     }
 

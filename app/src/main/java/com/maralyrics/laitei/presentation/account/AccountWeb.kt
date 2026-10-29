@@ -17,6 +17,8 @@ internal object AccountWeb {
 
     /** Where the website keeps the session token once someone is signed in on that page. */
     private const val TOKEN_KEY = "ml_account_token"
+    private const val CALENDAR_PROMPTED_KEY = "ml_calendar_pref_prompted"
+    private const val APP_PROMO_SEEN_KEY = "ml_app_promo_seen"
 
     private val HOSTS = setOf("maralyrics.com", "www.maralyrics.com")
     private val TOKEN_SHAPE = Regex("""[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]{4,}\.[A-Za-z0-9_-]{4,}""")
@@ -32,15 +34,37 @@ internal object AccountWeb {
         "(function(){try{return localStorage.getItem('$TOKEN_KEY')||'';}catch(e){return '';}})()"
 
     /**
-     * Saves [token] as the page's own sign-in, so the account page opens already signed in. Null if
-     * [token] isn't shaped like a token, so nothing but a token is ever written into a page script.
+     * A tiny file on the same site. The page is opened through it so the app can write into the
+     * site's storage first (see [prepareScript]) before the account page's own scripts read it.
      */
-    fun signInScript(token: String): String? {
-        if (!TOKEN_SHAPE.matches(token)) return null
-        return "(function(t){try{if(localStorage.getItem('$TOKEN_KEY')!==t){" +
-            "localStorage.setItem('$TOKEN_KEY',t);return 'changed';}return 'same';}" +
-            "catch(e){return 'error';}})('$token')"
+    const val PREPARE_URL = "https://maralyrics.com/icon.svg"
+
+    /**
+     * Run on [PREPARE_URL], before the account page loads:
+     *  - marks the website's first-visit pop-ups ("pick your calendar", "get the Android app") as
+     *    already seen. They are pointless inside the app that is the Android app, and the first one
+     *    covers the sign-in form;
+     *  - if [token] is given, makes it the page's own sign-in so the account page opens signed in.
+     * The token is only ever put into the script if it is shaped like a token, so nothing else can be.
+     */
+    fun prepareScript(token: String?): String {
+        val literal = token?.takeIf { TOKEN_SHAPE.matches(it) }?.let { "'$it'" } ?: "null"
+        return "(function(t){try{" +
+            "localStorage.setItem('$CALENDAR_PROMPTED_KEY','1');" +
+            "localStorage.setItem('$APP_PROMO_SEEN_KEY','1');" +
+            "if(t){localStorage.setItem('$TOKEN_KEY',t);}return 'ok';}" +
+            "catch(e){return 'error';}})($literal)"
     }
+
+    /**
+     * Google refuses to sign anyone in from inside an app's own browser window, so the page's
+     * "Continue with Google" button (and the "or use your email" line that goes with it) would only
+     * lead nowhere. Hidden here until the app has its own Google sign-in.
+     */
+    val hideGoogleSignInScript: String =
+        "(function(){var s=document.createElement('style');" +
+            "s.textContent='#googleBlock{display:none!important}';" +
+            "document.head.appendChild(s);return 'ok';})()"
 
     /** `evaluateJavascript` hands back the result as JSON text ("\"abc\"" or "null"); this is the string inside. */
     fun parseScriptResult(raw: String?): String? {
