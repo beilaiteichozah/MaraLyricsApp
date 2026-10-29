@@ -1,0 +1,78 @@
+{
+  "unreleased": [],
+  "releases": [
+    {
+      "version": "1.0.0",
+      "ref": "ab506a4",
+      "title": "First release",
+      "summary": "The first MaraLyrics Android app: browse and read Mara lyrics, keep favorites and see who is behind each song, in English, Mara and Burmese.",
+      "highlights": [
+        "Home, category, favorites and song screens for reading lyrics, with artist and composer profiles",
+        "Onboarding and setup screens for a first start",
+        "Mara and Burmese translations next to English, with Transifex set up for translators, and a fix so Burmese can be chosen",
+        "A dynamic, localized Credits screen, an FAQ link in Settings and the About text in all three languages"
+      ]
+    },
+    {
+      "version": "1.0.3",
+      "ref": "629bf4f",
+      "title": "Search and language fixes",
+      "summary": "Search and language switching fixed, a refreshed look and compatibility updates. Version control goes straight from 1.0.0 to 1.0.3, so 1.0.1 and 1.0.2 have no tags of their own.",
+      "highlights": [
+        "Search reliably finds matching songs by title, lyrics or number",
+        "Language switching fixed: Mara and Burmese display correctly everywhere, including on first launch",
+        "The app's visual design refreshed for a cleaner, more consistent look, plus various wording improvements",
+        "Under-the-hood updates for compatibility with the latest Android versions"
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "ref": "5f3c463",
+      "title": "Widgets and background sync",
+      "summary": "Two home screen widgets, new-song notifications, quiet background updates and a refreshed tutorial.",
+      "highlights": [
+        "Two home screen widgets: Search Mara Lyrics instantly, or a Featured Lyrics card with a random song from your library (tap to shuffle or open it)",
+        "A notification when new songs are added and ready to read offline",
+        "Small lyric corrections and new songs sync quietly in the background, with no more prompts asking to download",
+        "Sharing the app and downloaded songs with nearby phones without internet (removed again in 1.2.0)",
+        "A refreshed onboarding tutorial with clearer screens",
+        "Fixed: search finds exact title and number matches; the database size display, offline error messages, small-screen layouts and update prompts"
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "ref": "4709d32",
+      "title": "Articles, Mara Idol and a calendar",
+      "summary": "The website's articles, Mara Idol and community calendar in the app, a Song of the Day, new reading controls on the song screen and song links that open in the app.",
+      "highlights": [
+        "Home gains a Song of the Day card, with shortcuts to Articles, Mara Idol and the Community Calendar",
+        "Articles & News with article pages; Mara Idol seasons, contestants and videos; a Community Calendar with year navigation and countdowns. They read from the same API as maralyrics.com and are saved on the phone, so they open offline once seen (network first, saved copy as fallback)",
+        "Song screen: tap the lyrics for floating Previous / Next (following the list the song was opened from), rotate, fullscreen and favorite; zoom in / out / reset buttons and pinch-to-zoom, kept from song to song",
+        "Share sends only the song's maralyrics.com link",
+        "maralyrics.com/song/{slug} opens that song in the app (an Android App Link), with a notice when the song is not in the library yet",
+        "Sharing the app and songs with nearby phones was removed on purpose, together with its Settings and Setup screens",
+        "Build: keystore.properties, *.jks and *.keystore are ignored, signed release outputs (app/release/) are no longer tracked, and R8 resource shrinking is on"
+      ],
+      "deploy": "R8 resource shrinking is on, so build a signed release (`./gradlew bundleRelease`, needs `keystore.properties`, which is not in git) and try it on a phone before uploading it to Google Play. Opening maralyrics.com/song links automatically in the Play-installed app needs the Play App Signing SHA-256 from Play Console in the website's `/.well-known/assetlinks.json`."
+    },
+    {
+      "version": "1.3.0",
+      "ref": "d6feee9",
+      "title": "Artists, accounts and sync",
+      "summary": "Sign in with your MaraLyrics account (or Google) so favorites, theme and language follow you across devices, an Artists & Composers directory, badges and the Green mark on profiles, event reminders, and database upgrades that can no longer wipe a reader's data.",
+      "highlights": [
+        "Accounts: Settings > Account signs in to the same account as maralyrics.com with email or username and password, or with Continue with Google through Android's own account chooser. Creating an account and resetting a password open the website's account page inside the app (only maralyrics.com pages load there)",
+        "Sync: signed in, favorites, theme and language follow the reader to every device and to maralyrics.com through the website's own sync (newest change wins, removals reach other devices, offline changes are kept and sent later; signing in adds the favorites already on the phone instead of replacing them)",
+        "The session token is encrypted with a key held in the Android Keystore, kept out of Android backups, redacted from network logs and sent only to the account endpoints; a server that stops accepting it signs that device out, being offline never does",
+        "Artist and composer profiles show recognition badges, the Green tick and formatted bios, saved for offline once seen. Buying a Green mark is deliberately not offered in the app",
+        "A new Artists & Composers directory (Home > Artists): search that ignores case and accents, an All / Artists / Composers filter and sorting by name, number of songs or badges; it works offline",
+        "The Credits screen also lists the website's sponsors, partners and editors, saved for offline",
+        "Opt-in event reminders (Settings > Event reminders, off by default): one notification at about 8:00 on days with a community event, on its own notification channel",
+        "Safe database upgrades: opening the database can no longer fall back to wiping favorites, recently viewed songs and queued feedback; every version from 1 to 10 has an explicit, tested migration, and the 1 to 2 step that failed on any database with two or more songs is fixed",
+        "Burmese: Song of the Day, Today's Pick, All and the two name sorts, copied from the website's own translations. The other new screens still show in English until they are translated",
+        "Song screen: the position pill moves beside Previous / Next so a long title or a large text size can no longer run over it"
+      ],
+      "deploy": "versionCode 8; the Room schema stays at version 10 (migrations 1 to 10 are covered by tests). Build with `./gradlew bundleRelease` (needs `keystore.properties`, which is not in git). Before relying on it for readers: (1) register the app, `com.maralyrics.laitei` with the upload key's and the Play App Signing SHA-1, as Android OAuth clients in the same Google Cloud project as the website's web client, or Continue with Google answers that the app is not set up and readers use email and password; (2) add the Play App Signing SHA-256 to the website's `assetlinks.json` so song links open in the app; (3) update the Play Console Data safety form (email address and synced favorites when signed in, Google sign-in) and make the in-app privacy text match the website's policy."
+    }
+  ]
+}
