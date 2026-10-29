@@ -130,10 +130,19 @@ class GetSettingsUseCase @Inject constructor(
 }
 
 class UpdateSettingsUseCase @Inject constructor(
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val syncRecorder: SyncRecorder
 ) {
-    suspend fun updateLanguage(language: AppLanguage) = settingsRepository.updateLanguage(language)
-    suspend fun updateTheme(theme: AppTheme) = settingsRepository.updateTheme(theme)
+    // Theme and language follow a signed-in reader to their other devices.
+    suspend fun updateLanguage(language: AppLanguage) {
+        settingsRepository.updateLanguage(language)
+        syncRecorder.preferenceChanged(PrefMapping.LANGUAGE_KEY, PrefMapping.languageToWire(language))
+    }
+
+    suspend fun updateTheme(theme: AppTheme) {
+        settingsRepository.updateTheme(theme)
+        syncRecorder.preferenceChanged(PrefMapping.THEME_KEY, PrefMapping.themeToWire(theme))
+    }
     suspend fun updateCategories(categories: List<String>) = settingsRepository.updateDefaultCategories(categories)
     suspend fun markSetupComplete() = settingsRepository.markSetupComplete()
     suspend fun markOnboardingComplete() = settingsRepository.markOnboardingComplete()

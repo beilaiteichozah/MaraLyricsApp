@@ -531,4 +531,11 @@
     <string name="account_delete_desc">Opens the website, where you can delete your account and its data</string>
     <string name="account_web_title">MaraLyrics account</string>
     <string name="account_web_close">Close</string>
+    <string name="account_sync_title">Sync</string>
+    <string name="account_sync_desc">Your favorites, theme and language follow you to every device you sign in on.</string>
+    <string name="account_sync_now">Sync now</string>
+    <string name="account_sync_syncing">Syncing…</string>
+    <string name="account_sync_never">Not synced yet</string>
+    <string name="account_sync_done">Synced %1$s</string>
+    <string name="account_sync_failed">Couldn\'t sync. It will try again.</string>
 </resources>

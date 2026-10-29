@@ -77,6 +77,16 @@ interface SongDao {
     @Query("SELECT COUNT(*) FROM song_composers WHERE composer_id = :composerId")
     suspend fun getSongCountByComposer(composerId: Long): Int
 
+    // The website knows songs by slug, the app by id; the account sync translates between them.
+    @Query("SELECT slug FROM songs")
+    suspend fun getAllSlugs(): List<String>
+
+    @Query("SELECT id FROM songs WHERE slug = :slug LIMIT 1")
+    suspend fun getIdBySlug(slug: String): Long?
+
+    @Query("SELECT slug FROM songs WHERE id = :id LIMIT 1")
+    suspend fun getSlugById(id: Long): String?
+
     @Query("SELECT artist_id AS personId, COUNT(*) AS songCount FROM song_artists GROUP BY artist_id")
     fun getArtistSongCounts(): Flow<List<PersonSongCount>>
 
@@ -299,6 +309,9 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addFavorites(favorites: List<FavoriteEntity>)
 
+    @Query("SELECT s.slug AS slug, f.favorited_at AS favoritedAt FROM favorites f JOIN songs s ON s.id = f.song_id")
+    suspend fun getFavoriteSlugs(): List<FavoriteSlug>
+
     @Query("SELECT COUNT(*) FROM favorites")
     fun getFavoriteCount(): Flow<Int>
 
@@ -351,6 +364,11 @@ interface SyncMetadataDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMetadata(metadata: SyncMetadataEntity)
 }
+
+data class FavoriteSlug(
+    val slug: String,
+    val favoritedAt: Long
+)
 
 data class PersonSongCount(
     val personId: Long,

@@ -136,6 +136,7 @@ class MainActivity : ComponentActivity() {
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
                         playUpdateViewModel.checkForUpdate()
+                        viewModel.onAppResumed()
                     }
                 }
                 lifecycleOwner.lifecycle.addObserver(observer)

@@ -23,8 +23,12 @@ class MainViewModel @Inject constructor(
     private val songRepository: SongRepository,
     private val syncDatabaseUseCase: SyncDatabaseUseCase,
     private val notificationManager: NotificationManager,
-    private val songUpdateNotifier: SongUpdateNotifier
+    private val songUpdateNotifier: SongUpdateNotifier,
+    private val accountSync: com.maralyrics.laitei.domain.model.AccountSync
 ) : ViewModel() {
+
+    /** The app came to the front: a signed-in reader's favorites and settings catch up. */
+    fun onAppResumed() = accountSync.onAppResumed()
 
     private val _isReady = MutableStateFlow(false)
     val isReady: StateFlow<Boolean> = _isReady.asStateFlow()

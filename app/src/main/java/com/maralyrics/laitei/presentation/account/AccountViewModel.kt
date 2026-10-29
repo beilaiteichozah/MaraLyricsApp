@@ -3,8 +3,10 @@ package com.maralyrics.laitei.presentation.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maralyrics.laitei.domain.model.Account
+import com.maralyrics.laitei.domain.model.AccountSync
 import com.maralyrics.laitei.domain.model.AuthException
 import com.maralyrics.laitei.domain.model.AuthFailure
+import com.maralyrics.laitei.domain.model.AccountSyncStatus
 import com.maralyrics.laitei.domain.repository.AccountRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -28,8 +30,13 @@ sealed interface AccountMessage {
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val sync: AccountSync
 ) : ViewModel() {
+
+    val syncStatus: StateFlow<AccountSyncStatus> = sync.status
+
+    fun syncNow() = sync.syncNow()
 
     val account: StateFlow<Account?> = repository.account
 

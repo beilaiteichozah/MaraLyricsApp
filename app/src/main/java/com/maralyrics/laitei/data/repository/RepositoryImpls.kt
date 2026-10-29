@@ -24,6 +24,7 @@ class SongRepositoryImpl @Inject constructor(
     private val favoriteDao: FavoriteDao,
     private val recentViewDao: RecentViewDao,
     private val searchCandidateCache: SearchCandidateCache,
+    private val syncRecorder: SyncRecorder,
     @ApplicationContext private val context: Context
 ) : SongRepository {
 
@@ -141,6 +142,8 @@ class SongRepositoryImpl @Inject constructor(
         } else {
             favoriteDao.addFavorite(FavoriteEntity(songId = songId))
         }
+        // Signed-in readers have this change carried to their other devices.
+        songDao.getSlugById(songId)?.let { syncRecorder.favoriteChanged(it, isFavorite = !isFav) }
         return !isFav
     }
 
@@ -211,6 +214,7 @@ class SongRepositoryImpl @Inject constructor(
 
     override suspend fun restoreFavorites(songIds: List<Long>) {
         favoriteDao.addFavorites(songIds.map { FavoriteEntity(songId = it) })
+        syncRecorder.favoritesAdded(songIds.mapNotNull { songDao.getSlugById(it) })
     }
 
     override fun getAllSongs(categories: List<String>?, sortOrder: SongSortOrder): Flow<List<Song>> {

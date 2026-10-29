@@ -1,6 +1,7 @@
 package com.maralyrics.laitei.presentation.account
 
 import android.content.Context
+import android.text.format.DateUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
@@ -65,6 +67,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.maralyrics.laitei.R
 import com.maralyrics.laitei.domain.model.Account
 import com.maralyrics.laitei.domain.model.AuthFailure
+import com.maralyrics.laitei.domain.model.AccountSyncStatus
 import com.maralyrics.laitei.presentation.common.components.ProfileImage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +79,7 @@ fun AccountScreen(
 ) {
     val account by viewModel.account.collectAsState()
     val signIn by viewModel.signIn.collectAsState()
+    val syncStatus by viewModel.syncStatus.collectAsState()
     val snackbar = remember { SnackbarHostState() }
 
     // The in-app language lives in the context the composition provides, so read strings through it.
@@ -120,6 +124,8 @@ fun AccountScreen(
             } else {
                 SignedIn(
                     account = current,
+                    syncStatus = syncStatus,
+                    onSyncNow = viewModel::syncNow,
                     onManage = { onOpenWebsite(AccountWebMode.MANAGE) },
                     onSignOut = viewModel::signOut,
                     onSignOutEverywhere = viewModel::signOutEverywhere
@@ -233,6 +239,8 @@ private fun failureText(context: Context, failure: AuthFailure): String = when (
 @Composable
 private fun SignedIn(
     account: Account,
+    syncStatus: AccountSyncStatus,
+    onSyncNow: () -> Unit,
     onManage: () -> Unit,
     onSignOut: () -> Unit,
     onSignOutEverywhere: () -> Unit
@@ -276,6 +284,8 @@ private fun SignedIn(
         }
     }
 
+    HorizontalDivider()
+    SyncCard(syncStatus, onSyncNow)
     HorizontalDivider()
     ListItem(
         headlineContent = { Text(stringResource(R.string.account_manage)) },
@@ -325,6 +335,37 @@ private fun SignedIn(
             }
         )
     }
+}
+
+/** What is kept in step across devices, when it last was, and a button to do it now. */
+@Composable
+private fun SyncCard(status: AccountSyncStatus, onSyncNow: () -> Unit) {
+    val text = when {
+        status.isSyncing -> stringResource(R.string.account_sync_syncing)
+        status.lastAttemptFailed -> stringResource(R.string.account_sync_failed)
+        status.lastSyncedAt != null -> stringResource(
+            R.string.account_sync_done,
+            DateUtils.getRelativeTimeSpanString(
+                status.lastSyncedAt, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS
+            ).toString()
+        )
+        else -> stringResource(R.string.account_sync_never)
+    }
+    ListItem(
+        headlineContent = { Text(stringResource(R.string.account_sync_title)) },
+        supportingContent = {
+            Column {
+                Text(stringResource(R.string.account_sync_desc))
+                Text(text, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge)
+            }
+        },
+        leadingContent = { Icon(Icons.Default.Sync, contentDescription = null) },
+        trailingContent = {
+            TextButton(onClick = onSyncNow, enabled = !status.isSyncing) {
+                Text(stringResource(R.string.account_sync_now))
+            }
+        }
+    )
 }
 
 private enum class Confirm { SIGN_OUT, EVERYWHERE }
