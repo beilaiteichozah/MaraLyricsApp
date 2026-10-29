@@ -5,7 +5,6 @@ import com.maralyrics.laitei.domain.model.*
 import com.maralyrics.laitei.utils.parseServerTimestamp
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
 
 private fun String?.nullIfBlank(): String? = this?.trim()?.takeIf { it.isNotEmpty() }
 
@@ -71,14 +70,19 @@ fun TeamMemberDto.toDomain(): TeamMember? {
     return TeamMember(name = label, role = TeamRole.fromApi(role), photoUrl = photo.nullIfBlank())
 }
 
-private fun JsonPrimitive?.asText(): String? = this?.takeIf { it !is JsonNull }?.content.nullIfBlank()
+fun AccountDto.toDomain() = Account(
+    id = id,
+    username = username,
+    displayName = displayName.nullIfBlank(),
+    email = contactEmail.nullIfBlank(),
+    emailVerified = emailVerified.isTruthy(),
+    // An account that says nothing about a password is assumed to have one, so the sign-out and
+    // account screens don't wrongly describe it as Google-only.
+    hasPassword = hasPassword == null || hasPassword.isTruthy(),
+    hasGoogle = google.isTruthy()
+)
 
-/** The server sends a boolean today; a 0/1 or "true" would mean the same thing. */
-private fun JsonPrimitive?.isTrue(): Boolean = when {
-    this == null || this is JsonNull -> false
-    booleanOrNull != null -> booleanOrNull == true
-    else -> content.trim().let { it == "1" || it.equals("true", ignoreCase = true) }
-}
+private fun JsonPrimitive?.asText(): String? = this?.takeIf { it !is JsonNull }?.content.nullIfBlank()
 
 fun BadgeDto.toDomain() = ProfileBadge(
     period = BadgePeriod.fromApi(period),
@@ -88,7 +92,7 @@ fun BadgeDto.toDomain() = ProfileBadge(
 
 fun ProfileExtrasDto.toDomain() = ProfileExtras(
     badges = badges.map { it.toDomain() },
-    isGreen = green.isTrue(),
+    isGreen = green.isTruthy(),
     bioHtml = bioHtml.nullIfBlank()
 )
 

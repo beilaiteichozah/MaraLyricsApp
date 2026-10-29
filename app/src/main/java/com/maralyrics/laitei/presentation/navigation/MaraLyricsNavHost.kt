@@ -19,6 +19,9 @@ import com.maralyrics.laitei.presentation.settings.SettingsScreen
 import com.maralyrics.laitei.presentation.settings.CreditsScreen
 import com.maralyrics.laitei.presentation.setup.SetupScreen
 import com.maralyrics.laitei.presentation.song_detail.SongDetailScreen
+import com.maralyrics.laitei.presentation.account.AccountScreen
+import com.maralyrics.laitei.presentation.account.AccountWebMode
+import com.maralyrics.laitei.presentation.account.AccountWebScreen
 import com.maralyrics.laitei.presentation.people.PeopleDirectoryScreen
 import com.maralyrics.laitei.presentation.profile.ProfileDetailScreen
 import com.maralyrics.laitei.presentation.category.CategorySongsScreen
@@ -265,8 +268,26 @@ fun MaraLyricsNavHost(
             saveRoute("settings")
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
-                onCreditsClick = { navController.navigate("credits") }
+                onCreditsClick = { navController.navigate("credits") },
+                onAccountClick = { navController.navigate("account") }
             )
+        }
+
+        composable("account") {
+            AccountScreen(
+                onBackClick = { navController.popBackStack() },
+                onOpenWebsite = { mode -> navController.navigate("account_web/${mode.name}") }
+            )
+        }
+
+        composable(
+            route = "account_web/{mode}",
+            arguments = listOf(navArgument("mode") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val mode = backStackEntry.arguments?.getString("mode")
+                ?.let { runCatching { AccountWebMode.valueOf(it) }.getOrNull() }
+                ?: AccountWebMode.SIGN_IN
+            AccountWebScreen(mode = mode, onClose = { navController.popBackStack() })
         }
 
         composable("credits") {

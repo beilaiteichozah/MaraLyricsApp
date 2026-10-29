@@ -497,4 +497,38 @@
         <item quantity="one">%1$d event today</item>
         <item quantity="other">%1$d events today</item>
     </plurals>
+
+    <!-- Account -->
+    <string name="account_title">Account</string>
+    <string name="account_settings_desc">Sign in to keep your favorites on all your devices</string>
+    <string name="account_sign_in_title">Sign in</string>
+    <string name="account_sign_in_intro">Sign in with your MaraLyrics account to keep your favorites in sync on all your devices.</string>
+    <string name="account_identifier">Email or username</string>
+    <string name="account_password">Password</string>
+    <string name="account_show_password">Show password</string>
+    <string name="account_hide_password">Hide password</string>
+    <string name="account_sign_in_button">Sign in</string>
+    <string name="account_create_or_forgot">Create an account or reset your password</string>
+    <string name="account_continue_on_website">Continue on the website</string>
+    <string name="account_err_invalid">That email, username or password isn\'t right.</string>
+    <string name="account_err_challenge">For your security, please finish signing in on the website.</string>
+    <string name="account_err_too_many">Too many attempts. Try again in %1$d minutes.</string>
+    <string name="account_err_too_many_generic">Too many attempts. Please try again later.</string>
+    <string name="account_err_offline">You\'re offline. Connect to the internet to sign in.</string>
+    <string name="account_err_server">Couldn\'t reach your account right now. Please try again.</string>
+    <string name="account_email_verified">Email verified</string>
+    <string name="account_email_unverified">Email not verified yet — check your inbox</string>
+    <string name="account_manage">Manage account on the website</string>
+    <string name="account_manage_desc">Photo, password, your data and more</string>
+    <string name="account_sign_out">Sign out</string>
+    <string name="account_sign_out_everywhere">Sign out of all devices</string>
+    <string name="account_sign_out_confirm_title">Sign out?</string>
+    <string name="account_sign_out_confirm">Your favorites stay on this device.</string>
+    <string name="account_sign_out_everywhere_confirm">This signs you out of every other device. You stay signed in here.</string>
+    <string name="account_signed_out_everywhere_done">Signed out of your other devices.</string>
+    <string name="account_confirm">Confirm</string>
+    <string name="account_delete">Delete my account</string>
+    <string name="account_delete_desc">Opens the website, where you can delete your account and its data</string>
+    <string name="account_web_title">MaraLyrics account</string>
+    <string name="account_web_close">Close</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.maralyrics.laitei.di
 
+import com.maralyrics.laitei.data.local.KeystoreSessionStore
+import com.maralyrics.laitei.data.local.SessionStore
 import com.maralyrics.laitei.data.repository.*
 import com.maralyrics.laitei.domain.repository.*
 import dagger.Binds
@@ -71,6 +73,24 @@ abstract class RepositoryModule {
     abstract fun bindMaraIdolRepository(
         maraIdolRepositoryImpl: MaraIdolRepositoryImpl
     ): MaraIdolRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAccountRepository(
+        accountRepositoryImpl: AccountRepositoryImpl
+    ): AccountRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionTokens(
+        accountRepositoryImpl: AccountRepositoryImpl
+    ): SessionTokens
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionStore(
+        keystoreSessionStore: KeystoreSessionStore
+    ): SessionStore
 
     @Binds
     @Singleton

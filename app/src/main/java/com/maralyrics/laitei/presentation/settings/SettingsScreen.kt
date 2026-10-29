@@ -46,6 +46,7 @@ import com.maralyrics.laitei.utils.StorageUtils
 fun SettingsScreen(
     onBackClick: () -> Unit,
     onCreditsClick: () -> Unit,
+    onAccountClick: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val settings by viewModel.settings.collectAsState()
@@ -86,6 +87,15 @@ fun SettingsScreen(
         ) {
             settings?.let { currentSettings ->
                 // 1. App Theme (Mode & Color)
+                SettingsSection(title = stringResource(R.string.account_title)) {
+                    SettingsItem(
+                        title = stringResource(R.string.account_title),
+                        description = stringResource(R.string.account_settings_desc),
+                        icon = Icons.Default.AccountCircle,
+                        onClick = onAccountClick
+                    )
+                }
+
                 SettingsSection(title = stringResource(R.string.set_theme)) {
                     ThemeSelector(
                         selected = currentSettings.theme,

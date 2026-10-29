@@ -1,6 +1,7 @@
 package com.maralyrics.laitei.di
 
 import com.maralyrics.laitei.BuildConfig
+import com.maralyrics.laitei.data.remote.AccountApiService
 import com.maralyrics.laitei.data.remote.CalendarApiService
 import com.maralyrics.laitei.data.remote.MaraLyricsApiService
 import dagger.Module
@@ -34,6 +35,7 @@ object NetworkModule {
             // Bodies carry user-submitted names/emails and, for Mara Idol, ~260 KB of base64
             // images per response — only worth logging while debugging.
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+            redactHeader("Authorization")
         }
     }
 
@@ -80,6 +82,22 @@ object NetworkModule {
     @Singleton
     fun provideCalendarApiService(@Named(CALENDAR_RETROFIT) retrofit: Retrofit): CalendarApiService {
         return retrofit.create(CalendarApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAccountApiService(okHttpClient: OkHttpClient, json: Json): AccountApiService {
+        // A client of its own without the body logger: sign-in requests carry the password and every
+        // later one a token, and debug logging would print both.
+        val client = okHttpClient.newBuilder()
+            .apply { interceptors().removeAll { it is HttpLoggingInterceptor } }
+            .build()
+        return Retrofit.Builder()
+            .baseUrl(MaraLyricsApiService.BASE_URL)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+            .create(AccountApiService::class.java)
     }
 
     private const val CALENDAR_RETROFIT = "calendar"
